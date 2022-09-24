@@ -1,0 +1,18 @@
+Improvements:
+Allow any case (upper/lower/mix)
+practice mode
+strip leading/trailing blanks
+
+Additions:
+Grammar:
+Complete the sentence
+Write the full sentence
+
+Vocab:
+ similar words
+
+Strengths & Limitations of code:
++ it ignores capitalisation in user answers
++ it ignores leading and trailing spaces in user answers
+- it does not ignore accents
+- it does not ignore apostrophes and hyphens
