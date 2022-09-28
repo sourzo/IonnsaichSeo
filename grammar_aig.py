@@ -13,19 +13,20 @@ def possession(workbook, sheet):
     #import vocabulary
     import pandas as pd
     import random as rd
-    vocab_list = pd.read_excel('C:/Users/Zoe/Documents/Python Scripts/Learn Gaelic/Vocabulary/{}.ods'.format(workbook), 
+    import datetime as dt
+    vocab_list = pd.read_excel('C:/Users/Zoe/Documents/GitHub/IonnsaichSeo/Vocabulary/{}.ods'.format(workbook), 
                                 sheet_name=sheet, 
                                 engine='odf')
-    pp = pd.read_excel('C:/Users/Zoe/Documents/Python Scripts/Learn Gaelic/Vocabulary/grammar.ods', 
+    pp = pd.read_excel('C:/Users/Zoe/Documents/GitHub/IonnsaichSeo/Vocabulary/grammar.ods', 
                                 sheet_name="prep_pronouns", 
                                 engine='odf')
-    en = pd.read_excel('C:/Users/Zoe/Documents/Python Scripts/Learn Gaelic/Vocabulary/grammar.ods', 
+    en = pd.read_excel('C:/Users/Zoe/Documents/GitHub/IonnsaichSeo/Vocabulary/grammar.ods', 
                                 sheet_name="en_grammar", 
                                 engine='odf')
     
     #Select practice mode
     practice_mode="0"
-    while int(practice_mode) not in (1,2,3,4):
+    while practice_mode not in ("1","2","3","4"):
         print("Select practice mode")
         print("1: English to Gaelic, full sentence")
         print("2: English to Gaelic, fill in the blank")
@@ -46,11 +47,11 @@ def possession(workbook, sheet):
 
     score = 0
     q_count = 0
+    start_time = dt.datetime.now()
 
     #Loop through vocab list:
     for q in questions:
         #Need indefinite article in front of object
-        print(vocab_sample.loc[q[0],"english"])
         if vocab_sample.loc[q[0],"english"][0] in ("a","e","i","o","u"):
             obj_indef = "an " + vocab_sample.loc[q[0],"english"]
         else:
@@ -121,3 +122,6 @@ def possession(workbook, sheet):
                 
     print("End of practice!")
     print("Your score is {} out of {}".format(score, q_count))
+    print("Time taken: ",dt.datetime.now() -start_time)
+    
+possession("animals","sea")

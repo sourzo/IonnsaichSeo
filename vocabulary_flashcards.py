@@ -9,13 +9,14 @@ def vocab_flashcards(workbook, sheet):
     """Practice vocabulary with flashcards"""
     #Basic vocab practice
     import pandas as pd
-    vocab_list = pd.read_excel('C:/Users/Zoe/Documents/Python Scripts/Learn Gaelic/Vocabulary/{}.ods'.format(workbook), 
+    import datetime as dt
+    vocab_list = pd.read_excel('C:/Users/Zoe/Documents/GitHub/IonnsaichSeo/Vocabulary/{}.ods'.format(workbook), 
                                 sheet_name=sheet, 
                                 engine='odf')
 
     #Select practice mode
     practice_mode="0"
-    while int(practice_mode) not in (1,2):
+    while practice_mode not in ("1","2"):
         print("Select practice mode")
         print("1: English to Gaelic")
         print("2: Gaelic to English")
@@ -28,6 +29,7 @@ def vocab_flashcards(workbook, sheet):
     vocab_sample["score"] = 0
 
     print("Type \'stop practice\' to stop")
+    start_time = dt.datetime.now()
     #Practice vocab! Don't forget accents!
     #must get each word correct 3 times in a row
     while len(vocab_sample) > 0:
@@ -66,3 +68,6 @@ def vocab_flashcards(workbook, sheet):
             break
         
     print("End of practice")
+    print("Time taken: ",dt.datetime.now() -start_time)
+
+vocab_flashcards("animals", "wild")
