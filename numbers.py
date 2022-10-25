@@ -17,13 +17,14 @@ def numbers(workbook,sheet):
 
     #Select practice mode
     practice_mode="0"
-    while practice_mode not in ("1","2","3","4","5"):
+    while practice_mode not in ("1","2","3","4"#,"5"
+                                ):
         print("Select practice mode")
         print("1: Numbers only (Digits to Gaelic)")
         print("2: Numbers only (Gaelic to digits)")
         print("3: Plurals only (from Gaelic)")
         print("4: Plurals only (from English)")
-        print("5: Numbers and plurals")
+        #print("5: Numbers and plurals") - not available yet
         practice_mode = input("Practice mode: ")
 
     if practice_mode in ("3","4", "5"):
@@ -107,7 +108,7 @@ def numbers(workbook,sheet):
         print()
         print("Your score is {} out of {}".format(score,q_count))
                 
-    #Plurals only
+    #plurals only
     if practice_mode in ("3","4"):
         print("Type \'stop practice\' to stop")
         start_time = dt.datetime.now()
@@ -141,6 +142,9 @@ def numbers(workbook,sheet):
                 if len(vocab_sample) == 0:
                     break
 
+    #numbers and plurals together
+    if practice_mode == "5":
+        print("This bit not available at the moment")
 
 
     print("End of practice")
