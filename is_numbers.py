@@ -9,7 +9,7 @@ To do:
     
 """
 
-def numbers(workbook,sheet):
+def numbers(vocab_file):
     """Practice numbers and plurals"""
     import pandas as pd
     import datetime as dt
@@ -29,9 +29,7 @@ def numbers(workbook,sheet):
 
     if practice_mode in ("3","4", "5"):
         #Practicing plurals
-        vocab_list = pd.read_excel('C:/Users/Zoe/Documents/GitHub/IonnsaichSeo/Vocabulary/{}.ods'.format(workbook), 
-                                   sheet_name=sheet, 
-                                   engine='odf')
+        vocab_list = pd.read_csv('Vocabulary/{}.csv'.format(vocab_file))
         #Pick vocab list sample size
         sample_size = max(1,min(int(input("Select number of words to practice, must be no more than {}: ".format(len(vocab_list)))),len(vocab_list)))
         print("Selecting {} words for practice".format(sample_size))
@@ -40,9 +38,7 @@ def numbers(workbook,sheet):
 
     if practice_mode in ("1","2","4"):
         #Practicing numbers
-        numbers = pd.read_excel('C:/Users/Zoe/Documents/GitHub/IonnsaichSeo/Vocabulary/numbers.ods', 
-                                sheet_name="numbers", 
-                                engine='odf')
+        numbers = pd.read_csv('Vocabulary/grammar_numbers.csv')
         code_max = 100
         max_num = max(1,min(int(input("Select maximum number to practice, must be less than {}: ".format(code_max))),(code_max-1)))
         print("Practicing numbers 1 to {}".format(max_num))
@@ -150,4 +146,4 @@ def numbers(workbook,sheet):
     print("End of practice")
     print("Time taken: ",dt.datetime.now() -start_time)
 
-numbers("animals","pets")
+numbers("animals_pets")
