@@ -5,14 +5,12 @@ Created on Wed Sep 21 18:52:47 2022
 @author: Zoe
 """
 
-def vocab_flashcards(workbook, sheet):
+def vocab_flashcards(vocab_file):
     """Practice vocabulary with flashcards"""
     #Basic vocab practice
     import pandas as pd
     import datetime as dt
-    vocab_list = pd.read_excel('C:/Users/Zoe/Documents/GitHub/IonnsaichSeo/Vocabulary/{}.ods'.format(workbook), 
-                                sheet_name=sheet, 
-                                engine='odf')
+    vocab_list = pd.read_csv('Vocabulary/{}.csv'.format(vocab_file))
 
     #Select practice mode
     practice_mode="0"
@@ -70,4 +68,4 @@ def vocab_flashcards(workbook, sheet):
     print("End of practice")
     print("Time taken: ",dt.datetime.now() -start_time)
 
-vocab_flashcards("animals", "wild")
+vocab_flashcards("animals_wild")

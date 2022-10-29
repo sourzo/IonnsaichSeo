@@ -6,7 +6,8 @@ Created on Wed Sep 28 17:57:58 2022
 
 To do:
     Imperative?
-    a/an + gift (English sentence)
+    add the indefinite article to english sentences
+    switch the English "get" sentences to the more natural order
     questions & negatives?
 """
 def lenite(word):
@@ -16,7 +17,7 @@ def lenite(word):
             
     return word
 
-def give_get(workbook,sheet):
+def give_get(vocab_file):
     """practice tense, to/from, prepositional pronouns for to/from"""
     
     #Select practice mode
@@ -38,18 +39,10 @@ def give_get(workbook,sheet):
 
     #load vocabulary
     import pandas as pd
-    grammar_en = pd.read_excel('C:/Users/Zoe/Documents/GitHub/IonnsaichSeo/Vocabulary/grammar.ods',
-                               sheet_name="en_grammar",
-                               engine='odf')
-    pronouns = pd.read_excel('C:/Users/Zoe/Documents/GitHub/IonnsaichSeo/Vocabulary/grammar.ods',
-                               sheet_name="prep_pronouns",
-                               engine='odf')
-    names = pd.read_excel('C:/Users/Zoe/Documents/GitHub/IonnsaichSeo/Vocabulary/people.ods',
-                               sheet_name="names",
-                               engine='odf')
-    gifts = pd.read_excel('C:/Users/Zoe/Documents/GitHub/IonnsaichSeo/Vocabulary/{}.ods'.format(workbook),
-                               sheet_name=sheet,
-                               engine='odf')
+    grammar_en = pd.read_csv('Vocabulary/grammar_english.csv')
+    pronouns = pd.read_csv('Vocabulary/grammar_prepPronouns.csv')
+    names = pd.read_csv('Vocabulary/people_names.csv')
+    gifts = pd.read_csv('Vocabulary/{}.csv'.format(vocab_file))
     import random as rd
 
     subject_num = rd.randrange(8)
@@ -131,4 +124,4 @@ def give_get(workbook,sheet):
         print(give_get_gd.capitalize(), subject_gd, gift_gd, object_gd)
 
     
-give_get("food_drink","drink")
+give_get("food_drink")

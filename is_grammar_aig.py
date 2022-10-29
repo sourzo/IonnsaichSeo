@@ -7,22 +7,16 @@ Created on Wed Sep 21 18:50:34 2022
 
 #to do: add [name] has a [object]
 
-def possession(workbook, sheet):
+def possession(vocab_file):
     """Practice possession with 'aig' prepositional pronoun"""
     
     #import vocabulary
     import pandas as pd
     import random as rd
     import datetime as dt
-    vocab_list = pd.read_excel('C:/Users/Zoe/Documents/GitHub/IonnsaichSeo/Vocabulary/{}.ods'.format(workbook), 
-                                sheet_name=sheet, 
-                                engine='odf')
-    pp = pd.read_excel('C:/Users/Zoe/Documents/GitHub/IonnsaichSeo/Vocabulary/grammar.ods', 
-                                sheet_name="prep_pronouns", 
-                                engine='odf')
-    en = pd.read_excel('C:/Users/Zoe/Documents/GitHub/IonnsaichSeo/Vocabulary/grammar.ods', 
-                                sheet_name="en_grammar", 
-                                engine='odf')
+    vocab_list = pd.read_csv('Vocabulary/{}.csv'.format(vocab_file))
+    pp = pd.read_csv('Vocabulary/grammar_prepPronouns.csv')
+    en = pd.read_csv('Vocabulary/grammar_english.csv')
     
     #Select practice mode
     practice_mode="0"
@@ -124,4 +118,4 @@ def possession(workbook, sheet):
     print("Your score is {} out of {}".format(score, q_count))
     print("Time taken: ",dt.datetime.now() -start_time)
     
-possession("animals","sea")
+possession("animals_sea")
