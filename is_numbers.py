@@ -11,13 +11,14 @@ To do:
 
 def numbers(vocab_file):
     """Practice numbers and plurals"""
+    import is_utility
     import pandas as pd
     import datetime as dt
     import random as rd
 
     #Select practice mode
     practice_mode="0"
-    while practice_mode not in ("1","2","3","4"#,"5"
+    while practice_mode not in ("X","1","2","3","4"#,"5"
                                 ):
         print("Select practice mode")
         print("1: Numbers only (Digits to Gaelic)")
@@ -25,7 +26,10 @@ def numbers(vocab_file):
         print("3: Plurals only (from Gaelic)")
         print("4: Plurals only (from English)")
         #print("5: Numbers and plurals") - not available yet
+        print("X: Exit")
         practice_mode = input("Practice mode: ")
+    if practice_mode == "X":
+        return
 
     if practice_mode in ("3","4", "5"):
         #Practicing plurals
@@ -83,7 +87,7 @@ def numbers(vocab_file):
                 if user_answer.lower() == "stop practice":
                     break
                 elif user_answer.lower() == num_gd.lower():
-                    print("Yes!")
+                    is_utility.encourage()
                     score = score + 1
                 else:
                     print("No! Correct answer is:", num_gd)
@@ -95,7 +99,7 @@ def numbers(vocab_file):
                 if user_answer.lower() == "stop practice":
                     break
                 elif user_answer == str(num):
-                    print("Yes!")
+                    is_utility.encourage()
                     score = score + 1
                 else:
                     print("No! Correct answer is:", num)
@@ -125,7 +129,7 @@ def numbers(vocab_file):
                     break
                 elif word.lower() == r["nom_pl"].lower():
                     vocab_sample.loc[i,"score"] = r["score"] + 1
-                    print("Well done!")
+                    is_utility.encourage()
                 else :
                     print("Nope, correct answer was: {}".format(r["nom_pl"]))
                     vocab_sample.loc[i,"score"] = 0
@@ -146,4 +150,3 @@ def numbers(vocab_file):
     print("End of practice")
     print("Time taken: ",dt.datetime.now() -start_time)
 
-numbers("animals_pets")

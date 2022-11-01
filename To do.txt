@@ -1,6 +1,12 @@
 Why is "to be" not an irregular verb??
 
-Improvements:
+Overall app:
+Work out how to turn this into an app
+Create utility modules which contain:
+ grammatical things (lenition, indefinite articles, definite articles, etc)
+Put a bit more documentation in the code
+
+Improvements for each bit of code:
 Allow any case (upper/lower/mix)
 practice mode
 strip leading/trailing blanks
@@ -11,7 +17,6 @@ Complete the sentence
 Write the full sentence
 
 Vocab:
- similar words
 
 Strengths & Limitations of code:
 + it ignores capitalisation in user answers

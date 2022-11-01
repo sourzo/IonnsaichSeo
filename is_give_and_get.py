@@ -10,32 +10,35 @@ To do:
     switch the English "get" sentences to the more natural order
     questions & negatives?
 """
-def lenite(word):
-    if word[0].lower() not in ("l","n","r","a","e","i","o","u","à","è","ì","ò","ù"):
-        if word[0:2].lower() not in ("sm","st","sg","sp"):
-            word = word[0] + "h" + word[1:]
-            
-    return word
+
 
 def give_get(vocab_file):
     """practice tense, to/from, prepositional pronouns for to/from"""
+    import is_utility
     
     #Select practice mode
     tense="0"
-    while tense not in ("1","2","3"#,"4"
+    while tense not in ("X","1","2","3"#,"4"
                         ):
         print("Select tense")
         print("1: Present tense")
         print("2: Past tense")
         print("3: Future tense")
         #print("4: All tenses")
+        print("X: Exit")
         tense = input("Tense: ")
+    if tense=="X":
+        return
+    
     translate="0"
-    while translate not in ("1","2"):
+    while translate not in ("X","1","2"):
         print("Select translation direction")
         print("1: English to Gaelic")
         print("2: Gaelic to English")
+        print("X: Exit")
         translate = input("Translation direction: ")
+    if translate=="X":
+        return
 
     #load vocabulary
     import pandas as pd
@@ -101,7 +104,7 @@ def give_get(vocab_file):
     elif object_num == 7:
         name = rd.randrange(names["english"].count())
         object_en = names["english"][name]
-        lenited_name = lenite(names["nom_sing"][name])
+        lenited_name = is_utility.lenite(names["nom_sing"][name])
         if give_get_num==0:
             if lenited_name[0].lower() in ("a","e","i","o","u","à","è","ì","ò","ù"):
                 object_gd = "do dh'" + lenited_name
@@ -122,6 +125,3 @@ def give_get(vocab_file):
     elif tense in ("2", "3"):
         #Gaelic
         print(give_get_gd.capitalize(), subject_gd, gift_gd, object_gd)
-
-    
-give_get("food_drink")

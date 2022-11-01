@@ -8,17 +8,21 @@ Created on Wed Sep 21 18:52:47 2022
 def vocab_flashcards(vocab_file):
     """Practice vocabulary with flashcards"""
     #Basic vocab practice
+    import is_utility
     import pandas as pd
     import datetime as dt
     vocab_list = pd.read_csv('Vocabulary/{}.csv'.format(vocab_file))
 
     #Select practice mode
     practice_mode="0"
-    while practice_mode not in ("1","2"):
+    while practice_mode not in ("X","1","2"):
         print("Select practice mode")
         print("1: English to Gaelic")
         print("2: Gaelic to English")
+        print("X: Exit")
         practice_mode = input("Practice mode: ")
+    if practice_mode == "X":
+        return
 
     #Pick vocab list sample size
     sample_size = max(1,min(int(input("Select number of words to practice, must be no more than {}: ".format(len(vocab_list)))),len(vocab_list)))
@@ -41,7 +45,7 @@ def vocab_flashcards(vocab_file):
                     break
                 elif word.lower() == r["nom_sing"].lower():
                     vocab_sample.loc[i,"score"] = r["score"] + 1
-                    print("Well done!")
+                    is_utility.encourage()
                 else :
                     print("Nope, correct answer was: {}".format(r["nom_sing"]))
                     vocab_sample.loc[i,"score"] = 0
@@ -52,7 +56,7 @@ def vocab_flashcards(vocab_file):
                     break
                 elif word.lower() == r["english"].lower():
                     vocab_sample.loc[i,"score"] = r["score"] + 1
-                    print("Well done!")
+                    is_utility.encourage()
                 else :
                     print("Nope, correct answer was: {}".format(r["nom_sing"]))
                     vocab_sample.loc[i,"score"] = 0            
@@ -67,5 +71,3 @@ def vocab_flashcards(vocab_file):
         
     print("End of practice")
     print("Time taken: ",dt.datetime.now() -start_time)
-
-vocab_flashcards("animals_wild")

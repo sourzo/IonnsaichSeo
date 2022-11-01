@@ -11,6 +11,7 @@ def possession(vocab_file):
     """Practice possession with 'aig' prepositional pronoun"""
     
     #import vocabulary
+    import is_utility
     import pandas as pd
     import random as rd
     import datetime as dt
@@ -20,13 +21,16 @@ def possession(vocab_file):
     
     #Select practice mode
     practice_mode="0"
-    while practice_mode not in ("1","2","3","4"):
+    while practice_mode not in ("X","1","2","3","4"):
         print("Select practice mode")
         print("1: English to Gaelic, full sentence")
         print("2: English to Gaelic, fill in the blank")
         print("3: Gaelic to English, full sentence")
         print("4: Gaelic to English, fill in the blank")
+        print("X: Exit")
         practice_mode = input("Practice mode: ")
+    if practice_mode == "X":
+        return
 
     #Pick vocab list sample size
     sample_size = max(1,min(int(input("Select number of words to practice, must be no more than {}: ".format(len(vocab_list)))),len(vocab_list)))
@@ -64,7 +68,7 @@ def possession(vocab_file):
                 if phrase.lower() == "stop practice":
                     break
                 elif phrase.lower().strip() == "tha " + vocab_sample.loc[q[0],"nom_sing"].lower() + " " + pp.loc[q[1],"aig"].lower():
-                    print("Correct!")
+                    is_utility.encourage()
                     score = score + 1
                 else:
                     print("Nope, correct answer was: ", "Tha " + vocab_sample.loc[q[0],"nom_sing"] + " " + pp.loc[q[1],"aig"])
@@ -76,7 +80,7 @@ def possession(vocab_file):
                 if phrase.lower() == "stop practice":
                     break
                 elif phrase.lower().strip() == pp.loc[q[1],"aig"].lower():
-                    print("Correct!")
+                    is_utility.encourage()
                     score = score + 1
                 else:
                     print("Nope, correct answer was: ", "Tha " + vocab_sample.loc[q[0],"nom_sing"] + " " + pp.loc[q[1],"aig"])
@@ -95,7 +99,7 @@ def possession(vocab_file):
                 if phrase.lower() == "stop practice":
                     break
                 elif phrase.lower().strip() == en.loc[q[1],"en_subj"].lower() + " " + en.loc[q[1],"have_pres"].lower() + " " + obj_indef.lower():
-                    print("Correct!")
+                    is_utility.encourage()
                     score = score + 1
                 else:
                     print("Nope, correct answer was: ", en.loc[q[1],"en_subj"].capitalize() + " " + en.loc[q[1],"have_pres"].lower() + " " + obj_indef.lower())
@@ -108,7 +112,7 @@ def possession(vocab_file):
                 if phrase.lower() == "stop practice":
                     break
                 elif phrase.lower().strip() == en.loc[q[1],"en_subj"].lower() + " " + en.loc[q[1],"have_pres"].lower():
-                    print("Correct!")
+                    is_utility.encourage()
                     score = score + 1
                 else:
                     print("Nope, correct answer was: ", en.loc[q[1],"en_subj"].capitalize() + " " + en.loc[q[1],"have_pres"].lower() + " " + obj_indef.lower())
@@ -118,4 +122,3 @@ def possession(vocab_file):
     print("Your score is {} out of {}".format(score, q_count))
     print("Time taken: ",dt.datetime.now() -start_time)
     
-possession("animals_sea")
