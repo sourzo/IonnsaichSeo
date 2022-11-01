@@ -58,7 +58,7 @@ def vocab_flashcards(vocab_file):
                     vocab_sample.loc[i,"score"] = r["score"] + 1
                     is_utility.encourage()
                 else :
-                    print("Nope, correct answer was: {}".format(r["nom_sing"]))
+                    print("Nope, correct answer was: {}".format(r["english"]))
                     vocab_sample.loc[i,"score"] = 0            
             if vocab_sample.loc[i,"score"] == 3:
                 print()

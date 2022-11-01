@@ -10,7 +10,7 @@ def encourage():
     import pandas as pd
     import random as rd
     encouragements = pd.read_csv('Vocabulary/conversation_encouragement.csv')
-    choose = rd.randint(0, len(encouragements))
+    choose = rd.randint(0, len(encouragements)-1)
     print(encouragements.loc[choose,"gaelic"].capitalize()+"!",
           encouragements.loc[choose,"english"].capitalize()+"!")
 

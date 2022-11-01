@@ -11,7 +11,7 @@ print()
 lesson = "0"
 while lesson not in ("X","1","2","3","4"):
     print("Select lesson:")
-    print("1: Basic vovabulary flashcards")
+    print("1: Basic vocabulary flashcards")
     print("2: Numbers and plurals")
     print("3: Posession using the prepositional pronoun 'aig'")
     print("4: Giving and getting: prepositional pronouns 'bho' and 'do'")
@@ -29,13 +29,13 @@ print()
 
 if lesson == "1":
     import is_vocabulary_flashcards
-    vocab_flashcards(vocab_file)
+    is_vocabulary_flashcards.vocab_flashcards(vocab_file)
 elif lesson == "2":
     import is_numbers
-    numbers(vocab_file)
+    is_numbers.numbers(vocab_file)
 elif lesson == "3":
     import is_grammar_aig
-    possession(vocab_file)
+    is_grammar_aig.possession(vocab_file)
 elif lesson == "4":
     import is_give_and_get
-    give_get(vocab_file)
+    is_give_and_get.give_get(vocab_file)
