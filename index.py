@@ -14,7 +14,7 @@ while lesson not in ("X","1","2","3","4"):
     print("1: Basic vocabulary flashcards")
     print("2: Numbers and plurals")
     print("3: Posession using the prepositional pronoun 'aig'")
-    print("4: Giving and getting: prepositional pronouns 'bho' and 'do'")
+    print("4: Giving and getting: prepositional pronouns 'bho' and 'do' (work-in-progress)")
     print("X: Exit")
     print()
     lesson = input("Lesson number: ")
