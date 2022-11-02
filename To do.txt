@@ -5,6 +5,7 @@ Work out how to turn this into an app
 Create utility modules which contain:
  grammatical things (lenition, indefinite articles, definite articles, etc)
 Put a bit more documentation in the code
+Make the code check the suitability of the chosen vocab list.
 
 Improvements for each bit of code:
 Allow any case (upper/lower/mix)
