@@ -46,6 +46,9 @@ def give_get(vocab_file):
     pronouns = pd.read_csv('Vocabulary/grammar_prepPronouns.csv')
     names = pd.read_csv('Vocabulary/people_names.csv')
     gifts = pd.read_csv('Vocabulary/{}.csv'.format(vocab_file))
+    if ("english" not in gifts.columns or "nom_sing" not in gifts.columns):
+        print("Error: Check format of vocabulary list, must contain columns 'english' and 'nom_sing' (lower-case)")
+        return
     import random as rd
 
     subject_num = rd.randrange(8)

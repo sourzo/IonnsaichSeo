@@ -21,10 +21,19 @@ while lesson not in ("X","1","2","3","4"):
 
 if lesson == "X":
     sys.exit("Ok bye")
-print()
-print("Name the vocabulary list to use in practice")
-print("For example: animals_pets")
-vocab_file = input()
+    
+#Select vocab file
+from os.path import exists
+vocab_file = ""
+while exists("Vocabulary/{}.csv".format(vocab_file)) == False :
+    print()
+    print("Name the vocabulary list to use in practice")
+    print("For example: 'animals_pets'")
+    vocab_file = input()
+    if exists("Vocabulary/{}.csv".format(vocab_file))==False:
+        print()
+        print("File not found: Check vocabulary list is a CSV file in the Vocabulary folder")
+ 
 print()
 
 if lesson == "1":

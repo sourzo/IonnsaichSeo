@@ -34,6 +34,9 @@ def numbers(vocab_file):
     if practice_mode in ("3","4", "5"):
         #Practicing plurals
         vocab_list = pd.read_csv('Vocabulary/{}.csv'.format(vocab_file))
+        if ("english" not in vocab_list.columns or "nom_sing" not in vocab_list.columns or "nom_pl" not in vocab_list.columns):
+            print("Error: Check format of vocabulary list, must contain columns 'english', 'nom_sing' and 'nom_pl' (lower-case)")
+            return
         #Pick vocab list sample size
         sample_size = max(1,min(int(input("Select number of words to practice, must be no more than {}: ".format(len(vocab_list)))),len(vocab_list)))
         print("Selecting {} words for practice".format(sample_size))

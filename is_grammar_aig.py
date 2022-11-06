@@ -16,6 +16,9 @@ def possession(vocab_file):
     import random as rd
     import datetime as dt
     vocab_list = pd.read_csv('Vocabulary/{}.csv'.format(vocab_file))
+    if ("english" not in vocab_list.columns or "nom_sing" not in vocab_list.columns):
+        print("Error: Check format of vocabulary list, must contain columns 'english' and 'nom_sing' (lower-case)")
+        return
     pp = pd.read_csv('Vocabulary/grammar_prepPronouns.csv')
     en = pd.read_csv('Vocabulary/grammar_english.csv')
     

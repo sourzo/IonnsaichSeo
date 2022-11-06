@@ -11,7 +11,11 @@ def vocab_flashcards(vocab_file):
     import is_utility
     import pandas as pd
     import datetime as dt
+    
     vocab_list = pd.read_csv('Vocabulary/{}.csv'.format(vocab_file))
+    if ("english" not in vocab_list.columns or "nom_sing" not in vocab_list.columns):
+        print("Error: Check format of vocabulary list, must contain columns 'english' and 'nom_sing' (lower-case)")
+        return
 
     #Select practice mode
     practice_mode="0"
