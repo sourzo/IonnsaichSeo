@@ -53,10 +53,7 @@ def possession(vocab_file):
     #Loop through vocab list:
     for q in questions:
         #Need indefinite article in front of object
-        if vocab_sample.loc[q[0],"english"][0] in ("a","e","i","o","u"):
-            obj_indef = "an " + vocab_sample.loc[q[0],"english"]
-        else:
-            obj_indef = "a " + vocab_sample.loc[q[0],"english"]
+        obj_indef = is_utility.indef_article(vocab_sample.loc[q[0],"english"])
 
         #Practice modes 1 & 2: English to Gaelic
         if practice_mode in ("1","2"):

@@ -22,3 +22,11 @@ def lenite(word):
             word = word[0] + "h" + word[1:]
             
     return word
+
+#English grammar---
+def indef_article(word):
+    if word[0] in ("a","e","i","o","u"):
+        obj_indef = "an " + word
+    else:
+        obj_indef = "a " + word
+    return obj_indef
