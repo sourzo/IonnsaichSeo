@@ -53,11 +53,11 @@ def give_get(vocab_file):
 
     subject_num = rd.randrange(8)
     object_num = rd.randrange(8)
-    give_get_num = rd.randrange(2)
+    give_get_num = rd.randrange(2) #0 = give to, 1 = get from
     gift_num = rd.randrange(gifts["english"].count())
     
     #the item that's being given
-    gift_en = gifts["english"][gift_num]
+    gift_en = is_utility.indef_article(gifts["english"][gift_num])
     gift_gd = gifts["nom_sing"][gift_num]
     
     #giving to
@@ -118,9 +118,13 @@ def give_get(vocab_file):
         elif give_get_num==1:
             object_gd = "bho " + lenited_name
    
-    #Present tense sentences
     #English
-    print(subject_en.capitalize(), give_get_en, gift_en, prep_en, object_en)
+    if give_get_num == 0:
+        print(subject_en.capitalize(), give_get_en, object_en, gift_en)
+        print(subject_en.capitalize(), give_get_en, gift_en, prep_en, object_en)
+    elif give_get_num == 1:
+        print(subject_en.capitalize(), give_get_en, gift_en, prep_en, object_en)
+    #Gaelic
     if tense == "1":
         #Gaelic - with verbal noun
         print("Tha", subject_gd, give_get_gd, gift_gd, object_gd)
