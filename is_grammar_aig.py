@@ -24,26 +24,26 @@ def possession(vocab_file):
     
     #Select practice mode
     practice_mode="0"
-    while practice_mode not in ("X","1","2","3","4"):
+    while practice_mode not in ("x","1","2","3","4"):
         print("Select practice mode")
         print("1: English to Gaelic, full sentence")
         print("2: English to Gaelic, fill in the blank")
         print("3: Gaelic to English, full sentence")
         print("4: Gaelic to English, fill in the blank")
         print("X: Exit")
-        practice_mode = input("Practice mode: ")
-    if practice_mode == "X":
+        practice_mode = input("Practice mode: ").lower().strip()
+    if practice_mode == "x":
         return
 
     #Pick vocab list sample size
-    sample_size = max(1,min(int(input("Select number of words to practice, must be no more than {}: ".format(len(vocab_list)))),len(vocab_list)))
+    sample_size = max(1,min(int(input("Select number of words to practice, must be no more than {}: ".format(len(vocab_list)))), len(vocab_list)))
     print("Selecting {} words for practice".format(sample_size))
     vocab_sample = vocab_list.sample(n=sample_size).reset_index(drop=True)
     
     #create question order: shuffle or unshuffled!
     questions = [(x,y) for x in range(sample_size) for y in range(6)]
-    shuffle = input("Shuffle questions? Y/N: ")
-    if shuffle.upper() == "Y":
+    shuffle = input("Shuffle questions? Y/N: ").lower().strip()
+    if shuffle == "y":
         rd.shuffle(questions)
 
     score = 0
@@ -64,10 +64,10 @@ def possession(vocab_file):
 
             if practice_mode == "1":
                 #User must write sentence in Gaelic
-                phrase = input()
-                if phrase.lower() == "stop practice":
+                answer = input().lower().strip()
+                if answer == "stop practice":
                     break
-                elif phrase.lower().strip() == "tha " + vocab_sample.loc[q[0],"nom_sing"].lower() + " " + pp.loc[q[1],"aig"].lower():
+                elif answer == "tha " + vocab_sample.loc[q[0],"nom_sing"].lower() + " " + pp.loc[q[1],"aig"].lower():
                     is_utility.encourage()
                     score = score + 1
                 else:
@@ -76,10 +76,10 @@ def possession(vocab_file):
 
             if practice_mode == "2":
                 #User must fill in the missing Gaelic
-                phrase = input("Tha " + vocab_sample.loc[q[0],"nom_sing"].lower() + " ")
-                if phrase.lower() == "stop practice":
+                answer = input("Tha " + vocab_sample.loc[q[0],"nom_sing"].lower() + " ").lower().strip()
+                if answer == "stop practice":
                     break
-                elif phrase.lower().strip() == pp.loc[q[1],"aig"].lower():
+                elif answer == pp.loc[q[1],"aig"].lower():
                     is_utility.encourage()
                     score = score + 1
                 else:
@@ -95,10 +95,10 @@ def possession(vocab_file):
 
             if practice_mode == "3":
                 #User must write sentence in English
-                phrase = input()
-                if phrase.lower() == "stop practice":
+                answer = input().lower().strip()
+                if answer == "stop practice":
                     break
-                elif phrase.lower().strip() == en.loc[q[1],"en_subj"].lower() + " " + en.loc[q[1],"have_pres"].lower() + " " + obj_indef.lower():
+                elif answer == en.loc[q[1],"en_subj"].lower() + " " + en.loc[q[1],"have_pres"].lower() + " " + obj_indef.lower():
                     is_utility.encourage()
                     score = score + 1
                 else:
@@ -108,10 +108,10 @@ def possession(vocab_file):
 
             elif practice_mode == "4":
                 #User must fill in the missing English 
-                phrase = input("____ " + obj_indef.lower() + ": ")
-                if phrase.lower() == "stop practice":
+                answer = input("____ " + obj_indef.lower() + ": ").lower().strip()
+                if answer == "stop practice":
                     break
-                elif phrase.lower().strip() == en.loc[q[1],"en_subj"].lower() + " " + en.loc[q[1],"have_pres"].lower():
+                elif answer == en.loc[q[1],"en_subj"].lower() + " " + en.loc[q[1],"have_pres"].lower():
                     is_utility.encourage()
                     score = score + 1
                 else:

@@ -9,7 +9,7 @@ while True:
     print()
     
     lesson = "0"
-    while lesson not in ("X","1","2","3","4"):
+    while lesson not in ("x","1","2","3","4"):
         print("Select lesson:")
         print("1: Basic vocabulary flashcards")
         print("2: Numbers and plurals")
@@ -17,9 +17,9 @@ while True:
         print("4: Giving and getting: prepositional pronouns 'bho' and 'do' (work-in-progress)")
         print("X: Exit")
         print()
-        lesson = input("Lesson number: ")
+        lesson = input("Lesson number: ").lower().strip()
     
-    if lesson == "X":
+    if lesson == "x":
         break
         
     #Select vocab file

@@ -21,7 +21,7 @@ def give_get(vocab_file):
     
     #Select practice mode
     tense="0"
-    while tense not in ("X","1","2","3"#,"4"
+    while tense not in ("x","1","2","3"#,"4"
                         ):
         print("Select tense")
         print("1: Present tense")
@@ -29,18 +29,18 @@ def give_get(vocab_file):
         print("3: Future tense")
         #print("4: All tenses")
         print("X: Exit")
-        tense = input("Tense: ")
-    if tense=="X":
+        tense = input("Tense: ").lower().strip()
+    if tense=="x":
         return
     
     translate="0"
-    while translate not in ("X","1","2"):
+    while translate not in ("x","1","2"):
         print("Select translation direction")
         print("1: English to Gaelic")
         print("2: Gaelic to English")
         print("X: Exit")
-        translate = input("Translation direction: ")
-    if translate=="X":
+        translate = input("Translation direction: ").lower().strip()
+    if translate=="x":
         return
 
     #load vocabulary
@@ -58,7 +58,7 @@ def give_get(vocab_file):
     score = 0
     start_time = dt.datetime.now()
     
-    while answer.lower().strip() != "stop practice":
+    while answer != "stop practice":
         q_count = q_count + 1
         #Randomise a sentence
         subject_num = rd.randrange(8)
@@ -148,17 +148,17 @@ def give_get(vocab_file):
         if translate == "1": #en to gd
             print()
             print(sentence_en)
-            answer = input()
+            answer = input().lower().strip()
         elif translate == "2": #gd to en
             print()
             print(sentence_gd)
-            answer = input()
+            answer = input().lower().strip()
             
         #Check answer
-        if answer.lower().strip() == "stop practice":
+        if answer == "stop practice":
             break
         elif translate == "1": #en to gd
-            if answer.lower().strip() == sentence_gd.lower():
+            if answer == sentence_gd.lower().strip():
                 print()
                 is_utility.encourage()
                 score = score + 1
@@ -166,7 +166,7 @@ def give_get(vocab_file):
                 print()
                 print("Nope, correct answer is: ",sentence_gd)
         elif translate == "2": #gd to en
-            if (answer.lower().strip() == sentence_en.lower() or answer.lower().strip() == sentence_en_alt.lower()):
+            if (answer == sentence_en.lower().strip() or answer == sentence_en_alt.lower().strip()):
                 print()
                 is_utility.encourage()
                 score = score + 1

@@ -18,7 +18,7 @@ def numbers(vocab_file):
 
     #Select practice mode
     practice_mode="0"
-    while practice_mode not in ("X","1","2","3","4"#,"5"
+    while practice_mode not in ("x","1","2","3","4"#,"5"
                                 ):
         print("Select practice mode")
         print("1: Numbers only (Digits to Gaelic)")
@@ -27,8 +27,8 @@ def numbers(vocab_file):
         print("4: Plurals only (from English)")
         #print("5: Numbers and plurals") - not available yet
         print("X: Exit")
-        practice_mode = input("Practice mode: ")
-    if practice_mode == "X":
+        practice_mode = input("Practice mode: ").lower().strip()
+    if practice_mode == "x":
         return
 
     if practice_mode in ("3","4", "5"):
@@ -86,10 +86,10 @@ def numbers(vocab_file):
                 print()
                 print(num)
                 #user input
-                user_answer = input()
-                if user_answer.lower() == "stop practice":
+                answer = input().lower().strip()
+                if answer == "stop practice":
                     break
-                elif user_answer.lower() == num_gd.lower():
+                elif answer == num_gd.lower():
                     is_utility.encourage()
                     score = score + 1
                 else:
@@ -98,10 +98,10 @@ def numbers(vocab_file):
                 #Gaelic to digits
                 print()
                 print(num_gd)
-                user_answer = input()
-                if user_answer.lower() == "stop practice":
+                answer = input().lower().strip()
+                if answer == "stop practice":
                     break
-                elif user_answer == str(num):
+                elif answer == str(num):
                     is_utility.encourage()
                     score = score + 1
                 else:
@@ -126,11 +126,11 @@ def numbers(vocab_file):
                 print("Pluralise: ",noun)
                     
                 #user input    
-                word = input()
+                answer = input().lower().strip()
                 
-                if word.lower() == "stop practice":
+                if answer == "stop practice":
                     break
-                elif word.lower() == r["nom_pl"].lower():
+                elif answer == r["nom_pl"].lower():
                     vocab_sample.loc[i,"score"] = r["score"] + 1
                     is_utility.encourage()
                 else :
