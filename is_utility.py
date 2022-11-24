@@ -23,8 +23,88 @@ def lenite(word):
             
     return word
 
-def gd_def_article(word):
-    """Add the definite article to a Gaelic word"""
+def anm(word):
+    """add 'an' or 'am' to the front of a word depending on its first letter"""
+    if word[0] in ("b","m","f","p"):
+        word = "am " + word
+    else:
+        word = "an " + word
+    return word
+
+def gd_common_article(word,sg_pl,gender,case):
+    """Add the common article ('the' in English) to a Gaelic word
+    sg_pl: sg/pl (singular or plural)
+    gender: masc/fem
+    case: nom/poss/prep (nominative, possessive, prepositional)
+    (no vocative - slenderisation can't be automated) """
+    
+    vowels = ["a","e","i","o","u","à","è","ì","ò","ù"]
+    
+    def art_standard(word):
+        """The common article pattern used for singular nom-fem, prep, and poss-masc."""
+        if word[0].lower() in ("b","c","g","m","p"):
+            word = "a' " + lenite(word)
+        elif word[0].lower() == "s":
+            if word[1].lower in vowels + ["l","n","r"]:
+                word = "an t-" + word
+        else:
+            word = anm(word)
+        return word
+    
+        
+    #singular
+    if sg_pl == "sg":
+        
+        #nominal case
+        if case == "nom":
+            #masculine
+            if gender == "masc":
+                if word[0].lower() in ("b","m","f","p"):
+                    word = "am " + word
+                elif word[0].lower() in vowels:
+                    word = "an t-" + word
+                else:
+                    word = anm(word)
+            #feminine
+            elif gender == "fem":
+                word = art_standard(word)
+                
+        #possessive case
+        elif case == "poss":
+            #masculine
+            if gender == "masc":
+                word = art_standard(word)
+            #feminine
+            elif gender == "fem":
+                if word[0].lower() in vowels:
+                    word = "na h-" + word
+                else:
+                    word = "na " + word
+                #blah
+                
+        #prepositional case
+        elif case == "prep":
+            #both genders
+            word = art_standard(word)
+                
+    #plural
+    elif sg_pl == "pl":
+        
+        #possessive
+        if case == "poss":
+            if word[0].lower() in ("b","m","f","p"):
+                word = "nam " + word
+            else:
+                word = "nan " + word
+
+        #nominal & prepositional
+        else:
+            if word[0].lower() in vowels:
+                word = "na h-" + word
+            else:
+                word = "na" + word
+                
+    return word
 
 #English grammar---
 def en_indef_article(word):
