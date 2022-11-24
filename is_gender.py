@@ -9,6 +9,7 @@ To do:
     add prep and possessive cases: 
         need to first understand the prep and possessive forms of nouns
         then create sentences which make sense for all nouns ("on the"?)
+    add more adjectives?
 """
 
 def gender(vocab_file):
