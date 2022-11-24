@@ -14,7 +14,8 @@ while True:
         print("1: Basic vocabulary flashcards")
         print("2: Numbers and plurals")
         print("3: Possession using the prepositional pronoun 'aig'")
-        print("4: Giving and getting: prepositional pronouns 'bho' and 'do' (work-in-progress)")
+        print("4: Giving and getting: prepositional pronouns 'bho' and 'do'")
+        print("5: Gender of nouns (using adjectives/articles)")
         print("X: Exit")
         print()
         lesson = input("Lesson number: ").lower().strip()
@@ -48,3 +49,6 @@ while True:
     elif lesson == "4":
         import is_give_and_get
         is_give_and_get.give_get(vocab_file)
+    elif lesson == "5":
+        import is_gender
+        is_gender.gender(vocab_file)
