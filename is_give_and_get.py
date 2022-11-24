@@ -6,8 +6,6 @@ Created on Wed Sep 28 17:57:58 2022
 
 To do:
     Imperative?
-    add the indefinite article to english sentences
-    switch the English "get" sentences to the more natural order
     questions & negatives?
 """
 

@@ -19,13 +19,13 @@ def vocab_flashcards(vocab_file):
 
     #Select practice mode
     practice_mode="0"
-    while practice_mode not in ("X","1","2"):
+    while practice_mode not in ("x","1","2"):
         print("Select practice mode")
         print("1: English to Gaelic")
         print("2: Gaelic to English")
         print("X: Exit")
-        practice_mode = input("Practice mode: ")
-    if practice_mode == "X":
+        practice_mode = input("Practice mode: ").lower().strip()
+    if practice_mode == "x":
         return
 
     #Pick vocab list sample size
@@ -44,10 +44,10 @@ def vocab_flashcards(vocab_file):
             print()
             if practice_mode == "1":
                 print(r["english"])
-                word = input()
-                if word.lower() == "stop practice":
+                answer = input().lower().strip()
+                if answer == "stop practice":
                     break
-                elif word.lower() == r["nom_sing"].lower():
+                elif answer == r["nom_sing"].lower():
                     vocab_sample.loc[i,"score"] = r["score"] + 1
                     is_utility.encourage()
                 else :
@@ -55,10 +55,10 @@ def vocab_flashcards(vocab_file):
                     vocab_sample.loc[i,"score"] = 0
             elif practice_mode == "2":
                 print(r["nom_sing"])
-                word = input()
-                if word.lower() == "stop practice":
+                answer = input().lower().strip()
+                if answer == "stop practice":
                     break
-                elif word.lower() == r["english"].lower():
+                elif answer == r["english"].lower():
                     vocab_sample.loc[i,"score"] = r["score"] + 1
                     is_utility.encourage()
                 else :
@@ -70,7 +70,7 @@ def vocab_flashcards(vocab_file):
                 vocab_sample.drop(i, inplace=True)
             if len(vocab_sample) == 0:
                 break
-        if word.lower() == "stop practice":
+        if answer == "stop practice":
             break
         
     print("End of practice")
