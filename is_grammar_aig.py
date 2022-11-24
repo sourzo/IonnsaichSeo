@@ -53,7 +53,7 @@ def possession(vocab_file):
     #Loop through vocab list:
     for q in questions:
         #Need indefinite article in front of object
-        obj_indef = is_utility.indef_article(vocab_sample.loc[q[0],"english"])
+        obj_indef = is_utility.en_indef_article(vocab_sample.loc[q[0],"english"])
 
         #Practice modes 1 & 2: English to Gaelic
         if practice_mode in ("1","2"):

@@ -67,7 +67,7 @@ def give_get(vocab_file):
         give_get_num = rd.randrange(2) # 0 = give to, 1 = get from
         
         #the item that's being given
-        gift_en = is_utility.indef_article(gifts["english"][gift_num])
+        gift_en = is_utility.en_indef_article(gifts["english"][gift_num])
         gift_gd = gifts["nom_sing"][gift_num]
         
         #giving to (give_get_en, give_get_gd)

@@ -23,8 +23,15 @@ def lenite(word):
             
     return word
 
+def gd_def_article(word):
+    """Add the definite article to a Gaelic word"""
+
 #English grammar---
-def indef_article(word):
+def en_indef_article(word):
+    """Add a/an to a word (using vowels)
+    Note, a/an is applied in English by sound rather than spelling,
+    so this will be wrong sometimes (eg "an unicorn")
+    """
     if word[0] in ("a","e","i","o","u"):
         obj_indef = "an " + word
     else:
