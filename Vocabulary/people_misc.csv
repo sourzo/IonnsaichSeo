@@ -1,12 +1,12 @@
-english,nom_sing,nom_pl
-friend,caraid,càirdean
-neighbour,nàbaidh,nàbaidhean
-enemy,nàmhaid,naimhdean
-teenager,deugaire,deugairean
-adult,inbheach,inbhich
-idiot_m,amadan,amadain
-idiot_f,òinseach,òinsichean
-old man,bodach,bodaich
-old woman,cailleach,cailleachan
-girl,caileag,caileagan
-boy,balach,balaich
+english,nom_sing,nom_pl,gender
+friend,caraid,càirdean,masc
+neighbour,nàbaidh,nàbaidhean,masc
+enemy,nàmhaid,naimhdean,masc
+teenager,deugaire,deugairean,masc
+adult,inbheach,inbhich,masc
+idiot (m),amadan,amadain,masc
+idiot (f),òinseach,òinsichean,fem
+old man,bodach,bodaich,masc
+old woman,cailleach,cailleachan,fem
+girl,caileag,caileagan,fem
+boy,balach,balaich,masc

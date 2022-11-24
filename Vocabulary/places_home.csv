@@ -1,10 +1,15 @@
-english,nom_sing
-kitchen,cidsin
-bathroom,Taigh-beag
-bedroom,Seòmar-leapa
-office,oifis
-house,taigh
-flat,flat
-garden,gàrradh
-room,seòmar
-cupboard,preas
+english,nom_sing,nom_pl,gender
+kitchen,cidsin,cidsinean,masc
+bathroom,taigh-beag,taighean-beaga,masc
+bedroom,seòmar-leapa,seòmraichean-leapa,masc
+office,oifis,oifisean,fem
+house,taigh,taighean,masc
+flat,flat,flataichean,masc
+garden,gàrradh,gàrraidhean,masc
+room,seòmar,seòmraichean,masc
+cupboard,preas,preasan,masc
+garage,garaids,garaidsean,fem
+living room,seòmar-còmhnaidh,seòmraichean-còmhnaidh,masc
+sitting room,seòmar-suidhe,seòmraichean-suidhe,masc
+dining room,rùm-bìdh,rùmannan-bìdh,masc
+drawing room,seòmar-cuideachd,seòmraichean-cuideachd,masc

@@ -1,17 +1,17 @@
-english,nom_sing
-pork,muicfheòil
-venison,sitheann fèidh
-beef,mairtfheòil
-chicken,cearc
-duck,tunnag
-fish,iasg
-herring,sgadan
-salmon,bradan
-salted gannet,guga
-sausage,isbean
-mince,mions
-haggis,taigeis
-ham,hama
-lamb,uanfheòil
-steak,staoig
-turkey,cearc-fhrangach
+english,nom_sing,gender
+pork,muicfheòil,fem
+venison,sitheann fèidh,fem
+beef,mairtfheòil,fem
+chicken,cearc,fem
+duck,tunnag,fem
+fish,iasg,masc
+herring,sgadan,masc
+salmon,bradan,masc
+salted gannet,guga,masc
+sausage,isbean,masc
+mince,mions,masc
+haggis,taigeis,fem
+ham,hama,fem
+lamb,uanfheòil,fem
+steak,staoig,fem
+turkey,cearc-fhrangach,fem

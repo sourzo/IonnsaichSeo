@@ -1,6 +1,6 @@
-english,nom_sing
-lunch,lòn
-midday meal,biadh meadhan-latha
-breakfast,bracaist
-dinner,dinnear
-supper,suipear
+english,nom_sing,gender
+lunch,lòn,masc
+midday meal,biadh meadhan-latha,masc
+breakfast,bracaist,fem
+dinner,dinnear,masc
+supper,suipear,fem

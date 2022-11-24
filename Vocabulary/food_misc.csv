@@ -1,29 +1,29 @@
-english,nom_sing
-cheese,càise
-bread,aran
-salt,salann
-pepper,pìobar
-soup,brot
-porridge,brochan
-rice,rìs
-egg,ugh
-butter,ìm
-cake,cèic
-sweets,suiteas
-ice cream,reòiteag
-scone,sgona
-tattie scone,sgona buntàta
-chips,tiops
-oil,ola
-jam,silidh
-pancakes,foileagan
-sauce,sabhs
-curry sauce,sabhs coiridh
-curry,coiridh
-biscuit,briosgaid
-sandwich,ceapaire
-pizza,piotsa
-roll,roile
-shortbread,aran-milis
-black pudding,marag-dhubh
-white pudding,marag-gheal
+english,nom_sing,gender
+cheese,càise,masc
+bread,aran,masc
+salt,salann,masc
+pepper,pìobar,masc
+soup,brot,masc
+porridge,brochan,masc
+rice,rus,masc
+egg,ugh,masc
+butter,ìm,masc
+cake,cèic,fem
+sweets,suiteas,masc
+ice cream,reòiteag,fem
+scone,sgona,fem
+tattie scone,sgona buntàta,fem
+chips,tiops,masc
+oil,ola,fem
+jam,silidh,masc
+pancakes,foileagan,fem
+sauce,sabhs,masc
+curry sauce,sabhs coiridh,masc
+curry,coiridh,masc
+biscuit,briosgaid,fem
+sandwich,ceapaire,masc
+pizza,piotsa,masc
+roll,roile,masc
+shortbread,aran-milis,masc
+black pudding,marag-dhubh,fem
+white pudding,marag-gheal,fem

@@ -1,5 +1,12 @@
-english,nom_sing
-apple,ubhal
-strawberry,sùbh-làir
-raspberry,sùbh-craoibh
-pear,peur
+english,nom_sing,nom_pl,gender
+apple,ubhal,ùbhlan,masc
+strawberry,sùbh-làir,sùbhan-làir,masc
+raspberry,sùbh-craoibh,sùbhan-craoibh,masc
+pear,peur,peuran,fem
+blaeberry,fraochag,fraochagan,fem
+blueberry,fraochag-Aimeirigeach,fraochagan-Aimeirigeach,fem
+banana,banana,bananathan,masc
+pineapple,ubhal-ghiuthais,ùbhlan-ghiuthais,masc
+plum,plum,plùim,masc
+peach,peitse,peitsean,fem
+grape,fìon-chaor,fìon-chaoran,fem

@@ -1,29 +1,30 @@
-english,nom_sing
-bank,banca
-police station,stèisean a’ phoileis
-post office,oifis-phuist
-office,oifis
-shop,bùth
-university,oilthigh
-hotel,taigh-òsta
-hostel,ostail
-market,margadh
-church,eaglais
-house,taigh
-library,leabharlann
-museum,taigh-tasgaidh
-theatre,Talla-cluiche
-cinema,taigh-dealbh
-prison,prìosan
-station,stèisean
-bus stop,stad-bus
-street,sràid
-café,cafaidh
-college,colaiste
-park,pàirc
-distillery,taigh-staile
-hospital,ospadal
-pub,taigh-seinnse
-airport,port-adhar
-tenement,teanamant
-flat,flat
+english,nom_sing,nom_pl,gender
+bank,banca,bancaichean,masc
+police station,stèisean a’ phoileis,stèiseanan a’ phoileis,masc
+post office,oifis-phuist,oifisean-puist,fem
+office,oifis,oifisean,fem
+shop,bùth,bùthan,fem
+university,oilthigh,oilthighean,masc
+hotel,taigh-òsta,taighean-òsta,masc
+hostel,ostail,oistealan,fem
+market,margadh,margaidhean,masc
+church,eaglais,eaglaisean,fem
+house,taigh,taighean,masc
+library,leabharlann,leabharlannan,fem
+museum,taigh-tasgaidh,taighean-tasgaidh,masc
+theatre,talla-cluiche,tallachan-cluiche,masc
+cinema,taigh-dhealbh,taighean-dhealbh,masc
+prison,prìosan,prìosanan,masc
+station,stèisean,stèiseanan,masc
+bus stop,stad-bus,stadan-bus,masc
+street,sràid,sràidean,fem
+café,cafaidh,cafaidhean,masc
+college,colaiste,colaistean,fem
+park,pàirc,pàircean,fem
+distillery,taigh-staile,taighean-staile,masc
+hospital,ospadal,ospadalan,masc
+pub,taigh-seinnse,taighean-seinnse,masc
+airport,port-adhair,puirt-adhair,masc
+tenement,teanamant,teanamantan,masc
+flat,flat,flataichean,masc
+port,port,puirt,masc
