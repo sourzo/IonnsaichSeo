@@ -23,7 +23,7 @@ def gender(vocab_file):
     if any(["english" not in vocab_list.columns,
         "nom_sing" not in vocab_list.columns,
         "gender" not in vocab_list.columns]):
-        print("Error: Check format of vocabulary list, must contain columns 'english' and 'nom_sing' (lower-case)")
+        print("Error: Check format of vocabulary list, must contain columns 'english' and 'nom_sing' and 'gender' (lower-case))
         return
 
     #Select practice mode
