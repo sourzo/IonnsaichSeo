@@ -19,6 +19,7 @@ Make the code check the suitability of the chosen vocab list.
 Additional modules:
 verbs & tense (regular & irreg)
 possessive article (mo/do/...) - family, body parts, clothes
+I like / would like / prefer / would prefer (& negative)
 
 Vocab:
 add vocative to names list
