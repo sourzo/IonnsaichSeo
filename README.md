@@ -1,14 +1,18 @@
-# IonnsaichSeo
+# Ionnsaich Seo!
 Learn Scottish Gaelic through repetition.
 
+This is a text-based application which allows you to translate words and sentences at random to and from Gaelic.
+
+You can add your own vocabulary lists by creating a csv file in the format shown by the csv's in the Vocabulary folder.
+
 INSTRUCTIONS
-First download the Vocabulary folder (containing CSV files) and place it in a designated folder along with the .py files. For example:
-C:/My Documents/Ionnsaich Seo/__main__.py
-C:/My Documents/Ionnsaich Seo/is_numbers.py
-C:/My Documents/Ionnsaich Seo/Vocabulary/animals_pets.csv
-C:/My Documents/Ionnsaich Seo/Vocabulary/food_fruit.csv
-... and so on.
 
-To run the application, run index.py using Python. Make sure your IDE has set the working folder to be the one in which __main__.py is located.
+Option 1: Run it in Python
+You need all the .py files and the Vocabulary folder in the working directory. Run __main__.py
 
-You will first pick the lesson you want to run, and then pick the main vocabulary list to use for that lesson. 
+Option 2: Run the executable file
+Download the zip file from the latest release. Extract the files and double-click the executable. It'll run in a command prompt.
+
+Notes:
+1) When translating "you" into English, you need to specify "you (sg)" or "you (pl)"
+2) Don't forget accents, apostrophes, hyphens, etc

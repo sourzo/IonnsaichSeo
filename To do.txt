@@ -1,26 +1,24 @@
 Q: Why is "to be" (either one) not an irregular verb??
 
 Overall app:
-Work out how to turn this into an app
-Create utility modules which contain:
- grammatical things (lenition, indefinite articles, definite articles, etc)
-Put a bit more documentation in the code
-Put vocab list checks into utilities functions
-add recommended/suggested vocab lists - automate??
+ - Create utility modules which contain:
+   - grammatical things (lenition, indefinite articles, definite articles, etc)
+ - Put vocab list checks into utilities functions
+ - add recommended/suggested vocab lists - automate??
 
 Improvements for each generated question set:
-Make the code check the suitability of the chosen vocab list.
+ - Make the code check the suitability of the chosen vocab list.
 
 Additional modules:
-verbs & tense (regular & irreg)
-possessive article (mo/do/...) - family, body parts, clothes
-I like / would like / prefer / would prefer (& negative)
+ - verbs & tense (regular & irreg)
+ - possessive article (mo/do/...) - family, body parts, clothes
 
 Vocab:
-add vocative to names list
+ - add vocative to names list
 
 Strengths & Limitations of code:
 + it ignores capitalisation in user answers
 + it ignores leading and trailing spaces in user answers
 - it does not ignore accents
 - it does not ignore apostrophes and hyphens
+- you have to specify singular or plural when translating "you" into English
