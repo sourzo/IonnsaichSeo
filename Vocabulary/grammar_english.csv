@@ -1,9 +1,9 @@
-en_subj,en_obj,have_pres,be_pres,be_past
-I,me,have,am,was
-you (sg),you (sg),have,are,were
-he,him,has,is,was
-she,her,has,is,was
-we,us,have,are,were
-you (pl),you (pl),have,are,were
-they,them,have,are,were
-Name,Name,has,is,was
+en_subj,en_obj,have_pres,be_pres,be_past,do_pres
+I,me,have,am,was,do
+you (sg),you (sg),have,are,were,do
+he,him,has,is,was,does
+she,her,has,is,was,does
+we,us,have,are,were,do
+you (pl),you (pl),have,are,were,do
+they,them,have,are,were,do
+Name,Name,has,is,was,does

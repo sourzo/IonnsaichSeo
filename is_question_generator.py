@@ -403,4 +403,117 @@ def vocab(vocab_file, translate):
     #Output -------------------------------------------------------------------
 
     ##Return (question, main solution, alternative solution, prompt)
-    return (q, sol1, sol1, prompt1)    
+    return (q, sol1, sol1, prompt1)
+
+def preferences(vocab_file, translate, sentence):
+    #Load packages and vocab --------------------------------------------------
+    import is_utility
+    import random as rd
+    import pandas as pd
+
+    pp = pd.read_csv('Vocabulary/grammar_prepPronouns.csv')
+    en = pd.read_csv('Vocabulary/grammar_english.csv')
+    
+    vocab_sample = pd.read_csv('Vocabulary/{}.csv'.format(vocab_file))
+    if ("english" not in vocab_sample.columns or "nom_sing" not in vocab_sample.columns):
+        print("Error: Check format of vocabulary list, must contain columns 'english' and 'nom_sing' (lower-case)")
+        return
+
+    #Randomiser ---------------------------------------------------------------
+    subject_num = rd.randrange(6)
+    object_num = rd.randrange(len(vocab_sample))
+    obj_indef = is_utility.en_indef_article(vocab_sample.loc[object_num,"english"])
+    
+    tense = rd.randrange(2) # 0 = present tense, 1 = future conditional
+    pos_neg = rd.randrange(2) # 0 = positive, 1 = negative
+    likepref = rd.randrange(2) # 0 = like, 1 = prefer
+
+        
+    #Parts of sentence --------------------------------------------------------
+    
+    ##English
+
+    if tense == 0:
+        if pos_neg == 0:
+            like_prefer_en = ""
+        else:
+            like_prefer_en = en.loc[subject_num,"do_pres"].lower() + "n't "
+    else:
+        if pos_neg == 0:
+            like_prefer_en = "would "
+        else:
+            like_prefer_en = "wouldn't "
+            
+    if likepref == 0:
+        like_prefer_en = like_prefer_en + "like"
+    else:
+        like_prefer_en = like_prefer_en + "prefer"
+        
+    if tense == 0 and pos_neg == 0:
+        if en.loc[subject_num,"en_subj"].lower() in ("he", "she", "name"):
+            like_prefer_en = like_prefer_en + "s"
+        
+    ##Gaelic
+    if pos_neg == 0:
+        if likepref == 0:
+            if tense == 0:
+                like_prefer_gd = "is toil"
+            else:
+                like_prefer_gd = "bu toil"
+        else:
+            if tense == 0:
+                like_prefer_gd = "is fheàrr"
+            else:
+                like_prefer_gd = "b' fheàrr"
+    else:
+        if likepref == 0:
+            if tense == 0:
+                like_prefer_gd = "cha toil"
+            else:
+                like_prefer_gd = "cha bu toil"
+        else:
+            if tense == 0:
+                like_prefer_gd = "chan fheàrr"
+            else:
+                like_prefer_gd = "cha b' fheàrr"
+        
+    
+    #Construct sentences ------------------------------------------------------
+    sentence_en = en.loc[subject_num,"en_subj"].capitalize() + " " + like_prefer_en.lower() + " " + obj_indef.lower()
+    sentence_gd = like_prefer_gd.capitalize() + " " + pp.loc[subject_num,"le"].lower() + " " + vocab_sample.loc[object_num,"nom_sing"].lower()
+
+    #Questions ----------------------------------------------------------------
+    if translate == "1": #en-gd
+        q = sentence_en
+    elif translate == "2": #gd-en
+        q = sentence_gd
+    
+    #Prompts ------------------------------------------------------------------
+    if sentence == "1": # Full sentence, no prompt
+        prompt1 = ""
+    elif sentence == "2": #Fill in the blank
+        if translate == "1": #en-gd
+            prompt1 = like_prefer_gd.capitalize() + " ____ " + vocab_sample.loc[object_num,"nom_sing"].lower() + ": "
+        elif translate == "2": #gd-en
+            prompt1 = "____ " + like_prefer_en.lower() + " " + obj_indef.lower() + ": "
+            
+    #Solutions ----------------------------------------------------------------
+    if sentence == "1": #Full sentence
+        if translate == "1": #en-gd
+            sol1 = sentence_gd
+            sol2 = sol1
+        elif translate == "2": #gd-en
+            sol1 = sentence_en
+            sol2 = sol1.replace("n't", " not")
+            
+    elif sentence == "2": #Fill in the blank
+        if translate == "1": #en-gd
+            sol1 = pp.loc[subject_num,"le"].lower()
+        elif translate == "2": #gd-en
+            sol1 = en.loc[subject_num,"en_subj"].lower()
+        sol2 = sol1
+
+    #Output -------------------------------------------------------------------
+    
+    ##Return (question, main solution, alternative solution, prompt)
+    return (q, sol1, sol2, prompt1)

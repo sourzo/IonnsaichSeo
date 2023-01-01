@@ -75,7 +75,7 @@ def run_lesson(lesson, vocab_file):
             return
     
     ##Translation direction
-    if lesson.__name__ in ("give_get", "possession_aig", "vocab"):
+    if lesson.__name__ in ("give_get", "possession_aig", "vocab", "preferences"):
         options["translate"] = "0"
         while options["translate"] not in ("x","1","2"):
             print()
@@ -88,8 +88,7 @@ def run_lesson(lesson, vocab_file):
             return
     
     ##Full sentence or fill in the blank
-    if lesson.__name__ in ("give_get", 
-                       "possession_aig"):
+    if lesson.__name__ in ("give_get", "preferences", "possession_aig"):
         options["sentence"] = "0"
         while options["sentence"] not in ("x","1","2"):
             print()
@@ -133,3 +132,5 @@ def run_lesson(lesson, vocab_file):
     print("End of practice!")
     print("Your score is {} out of {}".format(score, q_count))
     print("Time taken: ", dt.datetime.now() -start_time)
+    print()
+    print()

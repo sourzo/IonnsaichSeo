@@ -8,12 +8,7 @@ Put a bit more documentation in the code
 Put vocab list checks into utilities functions
 add recommended/suggested vocab lists - automate??
 
-Improvements for each module:
-answer = input(...).lower().strip()
-make sure solution is all lower-case
-practice mode
-Complete the sentence / Write the full sentence
-"stop practice" option
+Improvements for each generated question set:
 Make the code check the suitability of the chosen vocab list.
 
 Additional modules:
