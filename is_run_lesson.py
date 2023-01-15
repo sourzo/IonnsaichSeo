@@ -5,7 +5,7 @@ Created on Sun Nov 27 16:48:05 2022
 @author: Zoe
 """
 
-def run_lesson(lesson, vocab_file):
+def run_lesson(lesson):
     """Generic code to run any module"""
     import is_utility
     import datetime as dt
@@ -59,7 +59,7 @@ def run_lesson(lesson, vocab_file):
             options["max_num"] = 1
         
     ##Modules involving verbs: select tense
-    if lesson.__name__ in ("give_get"):
+    if lesson.__name__ in ("give_get", "verbs_reg"):
         options["tense"] = "0"
         while options["tense"] not in ("x","1","2","3"#,"4"
                             ):
@@ -73,6 +73,30 @@ def run_lesson(lesson, vocab_file):
             options["tense"] = input("Tense: ").lower().strip()
         if options["tense"] == "x":
             return
+
+    ##Verbs option 2 - verbal noun (past and present)
+    if lesson.__name__ in ("verbs_reg"):
+        if options["tense"] in ("2","3"):
+            options["verbal_noun"] = "0"
+            while options["verbal_noun"] not in ("y","n"):
+                print()
+                print("Practice verbal nouns ('-ing' words)?")
+                print("Y: Yes")
+                print("N: No")
+                options["verbal_noun"] = input("Verbal nouns: ").lower().strip()
+        elif options["tense"] == "1":
+            options["verbal_noun"] = "y"
+            
+    ##Verbs option 3 - Verb form (question/statement, positive/negative)
+    if lesson.__name__ in ("verbs_reg"):
+        options["verb_form"] = "0"
+        while options["verb_form"] not in ("1", "2", "3"):
+            print()
+            print("Practice which verb forms?")
+            print("1: Positive statements only")
+            print("2: Positive and negative statements")
+            print("3: Positive and negative statements and questions")
+            options["verb_form"] = input("Verb forms: ").lower().strip()
     
     ##Translation direction
     if lesson.__name__ in ("give_get", "possession_aig", "vocab", "preferences"):
@@ -99,6 +123,22 @@ def run_lesson(lesson, vocab_file):
             options["sentence"] = input("Practice mode: ").lower().strip()
         if options["sentence"] == "x":
             return
+        
+    #Select vocab file
+    if lesson.__name__ not in ("verbs_reg"):
+        if lesson.__name__ == "numbers" and options["num_mode"] in ("1","2"):
+            options["vocab_file"] = "xxx"
+        else:
+            from os.path import exists
+            options["vocab_file"] = "xxx"
+            while exists("Vocabulary/{}.csv".format(options["vocab_file"])) == False :
+                print()
+                print("Name the vocabulary list to use in practice")
+                print("For example: 'animals_pets'")
+                options["vocab_file"] = input()
+                if exists("Vocabulary/{}.csv".format(options["vocab_file"]))==False:
+                    print()
+                    print("File not found: Check vocabulary list is a CSV file in the Vocabulary folder")
             
     # Practice ----------------------------------------------------------------
     print()
@@ -110,7 +150,7 @@ def run_lesson(lesson, vocab_file):
     
     while answer != "stop practice":
         q_count = q_count + 1
-        question, solution1, solution2, prompt = lesson(vocab_file, **options)
+        question, solution1, solution2, prompt = lesson(**options)
             
         #Display sentence to translate
         print()

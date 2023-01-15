@@ -23,6 +23,14 @@ def lenite(word):
             
     return word
 
+def lenite_dt(word):
+    """lenite words - but not d and t words"""
+    if word[0].lower() not in ("d","t","l","n","r","a","e","i","o","u","à","è","ì","ò","ù"):
+        if word[0:2].lower() not in ("sm","st","sg","sp"):
+            word = word[0] + "h" + word[1:]
+            
+    return word
+
 def anm(word):
     """add 'an' or 'am' to the front of a word depending on its first letter"""
     if word[0] in ("b","m","f","p"):
@@ -105,6 +113,14 @@ def gd_common_article(word,sg_pl,gender,case):
                 word = "na" + word
                 
     return word
+
+def end_width(word):
+    vowels = {"a","e","i","o","u","à","è","ì","ò","ù"}
+    test = [char for char in word if char in vowels]
+    if test[-1] in {"a","o","u","à","ò","ù"}:
+        return "broad"
+    elif test[-1] in {"e","i","è","ì"}:
+        return "slender"
 
 #English grammar---
 def en_indef_article(word):

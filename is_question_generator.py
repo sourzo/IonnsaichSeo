@@ -517,3 +517,116 @@ def preferences(vocab_file, translate, sentence):
     
     ##Return (question, main solution, alternative solution, prompt)
     return (q, sol1, sol2, prompt1)
+
+def verbs_reg(tense, verbal_noun, verb_form):
+    #Load packages and vocab --------------------------------------------------
+    import is_utility
+    import random as rd
+    import pandas as pd
+
+    vb = pd.read_csv('Vocabulary/verbs_regular.csv')
+    pp = pd.read_csv('Vocabulary/grammar_prepPronouns.csv')
+    
+    #Randomiser ---------------------------------------------------------------
+    
+    ## form: Positive (0), negative (1), questioning positive (2), questioning negative (3)
+    if verb_form == "1":
+        form = 0
+    elif verb_form == "2":
+        form = rd.randrange(2)
+    else:
+        form = rd.randrange(4)
+    ## verb
+    verb_num = rd.randrange(len(vb))
+    ## person
+    pers_num = rd.randrange(len(pp))
+    
+    #Parts of sentence --------------------------------------------------------
+    person_gd = pp.loc[pers_num, "pronoun_gd"]
+    person_en = pp.loc[pers_num, "en_subj"]
+    
+    if verbal_noun == "y":
+        ## verbal noun
+        if vb.loc[verb_num,"verbal_noun"][0] in ("a","e","i","o","u","à","è","ì","ò","ù"):
+            vn = "ag " + vb.loc[verb_num,"verbal_noun"]
+        else:
+            vn = "a' " + vb.loc[verb_num,"verbal_noun"]
+            
+        #the verb bi
+        bi_past = ["bha", "cha robh", "an robh", "nach robh"]
+        bi_pres = ["tha", "chan eil", "a bheil", "nach eil"]
+        bi_fut = ["bidh", "cha bhi", "am bi", "nach bi"]
+    
+    #root form of verb
+    v_root = vb.loc[verb_num,"root"]
+    
+    #form type
+    form_type = ["positive statement", "negative statement", "positive question", "negative question"]
+    
+    #Construct sentences ------------------------------------------------------
+    
+    if verbal_noun == "y":
+    
+        if tense == "1":
+            ## verbal noun present
+            verb = bi_pres[form] + " " + person_gd + " " + vn
+            
+        elif tense == "2":
+            ## verbal noun past
+            verb = bi_past[form] + " " + person_gd + " " + vn
+        
+        elif tense == "3":
+            ## verbal noun future
+            verb = bi_fut[form] + " " + person_gd + " " + vn
+    
+    else:
+        if tense == "2":
+            ## past
+            verb = is_utility.lenite(v_root)
+            
+            if verb[0] in ("f","a","e","i","o","u","à","è","ì","ò","ù"):
+                verb = "dh'" + verb
+            
+            if form == 1:
+                #negative
+                verb = "cha do " + verb
+            elif form == 2:
+                #positive question
+                verb = "an do " + verb
+            elif form == 3:
+                #negative question
+                verb = "nach do " + verb
+            
+            verb = verb + " " + person_gd
+        
+        elif tense == "3":
+            ## future
+            if form == 0: #positive statement
+                if is_utility.end_width(v_root) == "broad":
+                    verb = v_root + "aidh"
+                else:
+                    verb = v_root + "idh"
+            elif form == 1: #negative statement
+                if v_root[0] in {"f","a","e","i","o","u","à","è","ì","ò","ù"}:
+                    verb = "chan " + is_utility.lenite_dt(v_root)
+                else:
+                    verb = "cha " + is_utility.lenite_dt(v_root)
+            elif form == 2: #positive question
+                verb = is_utility.anm(v_root)
+            elif form == 3: #negative question
+                verb = "nach " + v_root
+            verb = verb + " " + person_gd
+    
+    #Questions ----------------------------------------------------------------
+    if verb_form == "1":
+        q = vb.loc[verb_num,"english"].capitalize() + " (" + person_en.capitalize() + ")"
+    else:
+        q = vb.loc[verb_num,"english"].capitalize() + " (" + person_en.capitalize() + ", " + form_type[form] + ")"
+    #Prompts ------------------------------------------------------------------
+    prompt1 = ""
+    #Solutions ----------------------------------------------------------------
+    sol1 = verb.capitalize()
+    sol2 = verb.capitalize()
+    #Output -------------------------------------------------------------------
+    ## Return (question, main solution, alternative solution, prompt)
+    return (q, sol1, sol2, prompt1)

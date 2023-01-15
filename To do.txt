@@ -22,3 +22,11 @@ Strengths & Limitations of code:
 - it does not ignore accents
 - it does not ignore apostrophes and hyphens
 - you have to specify singular or plural when translating "you" into English
+
+Vocab files:
+ - checking them for columns
+ - listing suitable vocab files for modules
+ - not requiring a vocab file if not used
+
+Regular verbs:
+ - improve question format
