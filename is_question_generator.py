@@ -4,17 +4,21 @@ Created on Sun Nov 27 16:53:44 2022
 
 @author: Zoe
 """
+import is_utility
+import pandas as pd
+import random as rd
+
+en = pd.read_csv('Vocabulary/grammar_english.csv')
+pp = pd.read_csv('Vocabulary/grammar_prepPronouns.csv')
+names = pd.read_csv('Vocabulary/people_names.csv')
+numbers = pd.read_csv('Vocabulary/grammar_numbers.csv')
+vb = pd.read_csv('Vocabulary/verbs_regular.csv')
+professions = pd.read_csv('Vocabulary/people_professions.csv')
+adjectives = pd.read_csv('Vocabulary/adjectives_misc.csv')
 
 def give_get(vocab_file, tense, translate, sentence):
-    #Load packages and vocab --------------------------------------------------
-    import is_utility
-    import pandas as pd
-    import random as rd
-
-    grammar_en = pd.read_csv('Vocabulary/grammar_english.csv')
-    pronouns = pd.read_csv('Vocabulary/grammar_prepPronouns.csv')
-    names = pd.read_csv('Vocabulary/people_names.csv')
-    
+    #Load vocab --------------------------------------------------
+        
     gifts = pd.read_csv('Vocabulary/{}.csv'.format(vocab_file))
     if ("english" not in gifts.columns or "nom_sing" not in gifts.columns):
         print("Error: Check format of vocabulary list, must contain columns 'english' and 'nom_sing' (lower-case)")
@@ -36,7 +40,7 @@ def give_get(vocab_file, tense, translate, sentence):
     #giving to (give_get_en, give_get_gd)
     if give_get_num == 0:
         if tense == "1":
-            give_get_en = grammar_en["be_pres"][subject_num] + " giving"
+            give_get_en = en["be_pres"][subject_num] + " giving"
             give_get_gd = "a' toirt"
         elif tense == "2":
             give_get_en = "gave"
@@ -49,7 +53,7 @@ def give_get(vocab_file, tense, translate, sentence):
     #getting from (give_get_en, give_get_gd)
     elif give_get_num == 1:
         if tense == "1":
-            give_get_en = grammar_en["be_pres"][subject_num] + " getting"
+            give_get_en = en["be_pres"][subject_num] + " getting"
             give_get_gd = "a' faighinn"
         elif tense == "2":
             give_get_en = "got"
@@ -61,8 +65,8 @@ def give_get(vocab_file, tense, translate, sentence):
         
     #subject: pronouns (subject_en, subject_gd)
     if subject_num < 7:
-        subject_en = pronouns["en_subj"][subject_num]
-        subject_gd = pronouns["pronoun_gd"][subject_num]
+        subject_en = pp["en_subj"][subject_num]
+        subject_gd = pp["pronoun_gd"][subject_num]
     #subject: names
     elif subject_num == 7:
         name = rd.randrange(names["english"].count())
@@ -71,12 +75,12 @@ def give_get(vocab_file, tense, translate, sentence):
         
     #object: pronouns / names (object_en, object_gd)
     if object_num < 7:
-        object_en = grammar_en["en_obj"][object_num]
+        object_en = en["en_obj"][object_num]
         #Prep pronouns for do/bho
         if give_get_num==0:
-            object_gd = pronouns["do"][object_num]
+            object_gd = pp["do"][object_num]
         else:
-            object_gd = pronouns["bho"][object_num]
+            object_gd = pp["bho"][object_num]
     #names
     elif object_num == 7:
         name = rd.randrange(names["english"].count())
@@ -151,14 +155,8 @@ def give_get(vocab_file, tense, translate, sentence):
         return (q, sol1, sol2, prompt1)
 
 def possession_aig(vocab_file, translate, sentence):
-    #Load packages and vocab --------------------------------------------------
-    import is_utility
-    import random as rd
-    import pandas as pd
+    #Load vocab --------------------------------------------------
     
-    pp = pd.read_csv('Vocabulary/grammar_prepPronouns.csv')
-    en = pd.read_csv('Vocabulary/grammar_english.csv')
-
     vocab_sample = pd.read_csv('Vocabulary/{}.csv'.format(vocab_file))
     if ("english" not in vocab_sample.columns or "nom_sing" not in vocab_sample.columns):
         print("Error: Check format of vocabulary list, must contain columns 'english' and 'nom_sing' (lower-case)")
@@ -215,10 +213,7 @@ def possession_aig(vocab_file, translate, sentence):
         return (q, sol1, sol1, prompt1)
 
 def gender(vocab_file, gender_mode):
-    #Load packages and vocab --------------------------------------------------
-    import is_utility
-    import pandas as pd
-    import random as rd
+    #Load vocab --------------------------------------------------
     
     vocab_list = pd.read_csv('Vocabulary/{}.csv'.format(vocab_file))
     if any(["english" not in vocab_list.columns,
@@ -293,13 +288,8 @@ def gender(vocab_file, gender_mode):
 
 def numbers(vocab_file, num_mode, max_num):
     
-    #Load packages and vocab --------------------------------------------------
-    import pandas as pd
-    import random as rd
-    
-    if num_mode in ("1", "2"): #translating numbers
-        numbers = pd.read_csv('Vocabulary/grammar_numbers.csv')
-
+    #Load vocab --------------------------------------------------
+        
     if num_mode in ("3", "4", "5"): #plurals of nouns
         #Practicing plurals
         vocab_sample = pd.read_csv('Vocabulary/{}.csv'.format(vocab_file))
@@ -372,9 +362,7 @@ def numbers(vocab_file, num_mode, max_num):
     return (q, sol1, sol1, prompt1)
 
 def vocab(vocab_file, translate):
-    #Load packages and vocab --------------------------------------------------
-    import pandas as pd
-    import random as rd
+    #Load vocab --------------------------------------------------
     
     vocab_sample = pd.read_csv('Vocabulary/{}.csv'.format(vocab_file))
     if ("english" not in vocab_sample.columns or "nom_sing" not in vocab_sample.columns):
@@ -406,13 +394,7 @@ def vocab(vocab_file, translate):
     return (q, sol1, sol1, prompt1)
 
 def preferences(vocab_file, translate, sentence):
-    #Load packages and vocab --------------------------------------------------
-    import is_utility
-    import random as rd
-    import pandas as pd
-
-    pp = pd.read_csv('Vocabulary/grammar_prepPronouns.csv')
-    en = pd.read_csv('Vocabulary/grammar_english.csv')
+    #Load vocab --------------------------------------------------
     
     vocab_sample = pd.read_csv('Vocabulary/{}.csv'.format(vocab_file))
     if ("english" not in vocab_sample.columns or "nom_sing" not in vocab_sample.columns):
@@ -519,14 +501,6 @@ def preferences(vocab_file, translate, sentence):
     return (q, sol1, sol2, prompt1)
 
 def verbs_reg(tense, verbal_noun, verb_form):
-    #Load packages and vocab --------------------------------------------------
-    import is_utility
-    import random as rd
-    import pandas as pd
-
-    vb = pd.read_csv('Vocabulary/verbs_regular.csv')
-    pp = pd.read_csv('Vocabulary/grammar_prepPronouns.csv')
-    
     #Randomiser ---------------------------------------------------------------
     
     ## form: Positive (0), negative (1), questioning positive (2), questioning negative (3)
@@ -632,16 +606,7 @@ def verbs_reg(tense, verbal_noun, verb_form):
     return (q, sol1, sol2, prompt1)
 
 def professions_annan(translate, sentence):
-    #Load packages and vocab --------------------------------------------------
-    import is_utility
-    import pandas as pd
-    import random as rd
     
-    pp = pd.read_csv('Vocabulary/grammar_prepPronouns.csv')
-    en = pd.read_csv('Vocabulary/grammar_english.csv')
-
-    professions = pd.read_csv('Vocabulary/people_professions.csv')
-
     #Randomiser ---------------------------------------------------------------
     person_num = rd.randrange(6)
     profession_num = rd.randrange(len(professions))
@@ -698,16 +663,9 @@ def professions_annan(translate, sentence):
     ##Return (question, main solution, alternative solution, prompt)
     return (q, sol1, sol2, prompt1)
 
+
 def emphasis_adjectives(translate):
-    #Load packages and vocab --------------------------------------------------
-    import pandas as pd
-    import random as rd
     
-    pp = pd.read_csv('Vocabulary/grammar_prepPronouns.csv')
-    en = pd.read_csv('Vocabulary/grammar_english.csv')
-    
-    adjectives = pd.read_csv('Vocabulary/adjectives_misc.csv')
-        
     #Randomiser ---------------------------------------------------------------
     person_num = rd.randrange(6)
     adj_num = rd.randrange(len(adjectives))
@@ -744,3 +702,4 @@ def emphasis_adjectives(translate):
     
     ##Return (question, main solution, alternative solution, prompt)
     return (q, sol1, sol2, prompt1)
+
