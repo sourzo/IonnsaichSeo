@@ -12,7 +12,7 @@ while True:
     print()
     
     lesson_choice = "0"
-    while lesson_choice not in ("x","1","2","3","4","5","6", "7"):
+    while lesson_choice not in ("x","1","2","3","4","5","6", "7", "8"):
         print("Select lesson:")
         print("1: Basic vocabulary flashcards")
         print("2: Numbers and plurals")
@@ -21,6 +21,7 @@ while True:
         print("5: Gender of nouns (using adjectives/articles)")
         print("6: Preferences (I would like/prefer etc) using the prepositional pronoun 'le'")
         print("7: Regular verb tenses")
+        print("8: Professions: the prepositional pronoun 'ann an'")
         print("X: Exit")
         print()
         lesson_choice = input("Lesson number: ").lower().strip()
@@ -42,3 +43,5 @@ while True:
         rl.run_lesson(qgen.preferences)
     elif lesson_choice == "7":
         rl.run_lesson(qgen.verbs_reg)
+    elif lesson_choice == "8":
+        rl.run_lesson(qgen.professions_annan)

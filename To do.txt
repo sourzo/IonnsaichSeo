@@ -10,7 +10,7 @@ Improvements for each generated question set:
  - Make the code check the suitability of the chosen vocab list.
 
 Additional modules:
- - verbs & tense (regular & irreg)
+ - verbs & tense (irreg)
  - possessive article (mo/do/...) - family, body parts, clothes
 
 Vocab:
@@ -26,7 +26,6 @@ Strengths & Limitations of code:
 Vocab files:
  - checking them for columns
  - listing suitable vocab files for modules
- - not requiring a vocab file if not used
 
 Regular verbs:
  - improve question format

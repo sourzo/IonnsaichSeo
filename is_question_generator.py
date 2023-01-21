@@ -630,3 +630,70 @@ def verbs_reg(tense, verbal_noun, verb_form):
     #Output -------------------------------------------------------------------
     ## Return (question, main solution, alternative solution, prompt)
     return (q, sol1, sol2, prompt1)
+
+def professions_annan(translate, sentence):
+    #Load packages and vocab --------------------------------------------------
+    import is_utility
+    import pandas as pd
+    import random as rd
+    
+    pp = pd.read_csv('Vocabulary/grammar_prepPronouns.csv')
+    en = pd.read_csv('Vocabulary/grammar_english.csv')
+
+    professions = pd.read_csv('Vocabulary/people_professions.csv')
+
+    #Randomiser ---------------------------------------------------------------
+    person_num = rd.randrange(6)
+    profession_num = rd.randrange(len(professions))
+    #Parts of sentence --------------------------------------------------------
+    pp_annan = pp.loc[person_num,"ann an"]
+    
+    if person_num < 4:
+        profession_gd = professions.loc[profession_num,"nom_sing"]
+    elif person_num in (4,5,6):
+        profession_gd = professions.loc[profession_num,"nom_pl"]
+    
+    pronoun_en = pp.loc[person_num, "en_subj"]
+    be_en = en.loc[person_num, "be_pres"]
+    
+    if person_num < 4:
+        profession_en = is_utility.en_indef_article(professions.loc[profession_num,"english"])
+    elif person_num in (4,5,6):
+        profession_en = is_utility.en_pl(professions.loc[profession_num,"english"])
+    
+    #Construct sentence -------------------------------------------------------
+    sentence_gd = "'S e " + profession_gd.lower() + " a th' " + pp_annan.lower()
+    sentence_en = pronoun_en.capitalize() + " " + be_en.lower() + " " + profession_en.lower()
+    #Questions ----------------------------------------------------------------
+    if translate == "1": #en-gd
+        q = sentence_en
+    elif translate == "2": #gd-en
+        q = sentence_gd
+    #Prompts ------------------------------------------------------------------
+    if sentence == "1": # Full sentence, no prompt
+        prompt1 = ""
+    elif sentence == "2": #Fill in the blank
+        if translate == "1": #en-gd
+            prompt1 = "'S e " + profession_gd.lower() + " a th' "
+        elif translate == "2": #gd-en
+            prompt1 = "____" + profession_en.lower() + ": "
+        
+    #Solutions ----------------------------------------------------------------
+    if sentence == "1": #Full sentence
+        if translate == "1": #en-gd
+            sol1 = sentence_gd
+        elif translate == "2": #gd-en
+            sol1 = sentence_en
+            
+    elif sentence == "2": #Fill in the blank
+        if translate == "1": #en-gd
+            sol1 = pp_annan
+        elif translate == "2": #gd-en
+            sol1 = pronoun_en + " " + be_en
+    
+    sol2 = sol1
+    
+    #Output -------------------------------------------------------------------
+
+    ##Return (question, main solution, alternative solution, prompt)
+    return (q, sol1, sol2, prompt1)

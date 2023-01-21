@@ -99,7 +99,7 @@ def run_lesson(lesson):
             options["verb_form"] = input("Verb forms: ").lower().strip()
     
     ##Translation direction
-    if lesson.__name__ in ("give_get", "possession_aig", "vocab", "preferences"):
+    if lesson.__name__ in ("give_get", "possession_aig", "vocab", "preferences", "professions_annan"):
         options["translate"] = "0"
         while options["translate"] not in ("x","1","2"):
             print()
@@ -112,7 +112,7 @@ def run_lesson(lesson):
             return
     
     ##Full sentence or fill in the blank
-    if lesson.__name__ in ("give_get", "preferences", "possession_aig"):
+    if lesson.__name__ in ("give_get", "preferences", "possession_aig", "professions_annan"):
         options["sentence"] = "0"
         while options["sentence"] not in ("x","1","2"):
             print()
@@ -125,7 +125,7 @@ def run_lesson(lesson):
             return
         
     #Select vocab file
-    if lesson.__name__ not in ("verbs_reg"):
+    if lesson.__name__ not in ("verbs_reg", "professions_annan"):
         if lesson.__name__ == "numbers" and options["num_mode"] in ("1","2"):
             options["vocab_file"] = "xxx"
         else:
