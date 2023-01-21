@@ -1,8 +1,8 @@
-en_subj,pronoun_gd,aig,air,le,ann an,do,bho,ri
-I,mi,agam,orm,leam,annam,dhomh,bhuam,rium
-you (sg),thu,agad,ort,leat,annad,dhut,bhuat,riut
-he,e,aige,air,leis,ann,dha,bhuaithe,ris
-she,i,aice,oirre,leatha,innte,dhi,bhuaipe,rithe
-we,sinn,againn,oirnn,leinn,annainn,dhuinn,bhuainn,rinn
-you (pl),sibh,agaibh,oirbh,leibh,annaibh,dhuibh,bhuaibh,ribh
-they,iad,aca,orra,leotha,annta,dhaibh,bhuapa,riutha
+en_subj,pronoun_gd,emphatic,aig,air,le,ann an,do,bho,ri
+I,mi,mise,agam,orm,leam,annam,dhomh,bhuam,rium
+you (sg),thu,thusa,agad,ort,leat,annad,dhut,bhuat,riut
+he,e,esan,aige,air,leis,ann,dha,bhuaithe,ris
+she,i,ise,aice,oirre,leatha,innte,dhi,bhuaipe,rithe
+we,sinn,sinne,againn,oirnn,leinn,annainn,dhuinn,bhuainn,rinn
+you (pl),sibh,sibhse,agaibh,oirbh,leibh,annaibh,dhuibh,bhuaibh,ribh
+they,iad,iadsan,aca,orra,leotha,annta,dhaibh,bhuapa,riutha

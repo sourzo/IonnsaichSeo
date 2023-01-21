@@ -8,10 +8,16 @@ Overall app:
 
 Improvements for each generated question set:
  - Make the code check the suitability of the chosen vocab list.
+ - Make the vocab/grammar files global so they aren't read in every time a question is generated
+
+Adjectives, verbs: short and long version? (Small sample vs whole list)
 
 Additional modules:
  - verbs & tense (irreg)
  - possessive article (mo/do/...) - family, body parts, clothes
+ - emphatic pronouns and adjectives
+   ... need to create adjective file, and finish q/sol/prompt. 
+ - places in Scotland and... "I am from"? "I live in"? "I am going to"? etc?
 
 Vocab:
  - add vocative to names list

@@ -697,3 +697,50 @@ def professions_annan(translate, sentence):
 
     ##Return (question, main solution, alternative solution, prompt)
     return (q, sol1, sol2, prompt1)
+
+def emphasis_adjectives(translate):
+    #Load packages and vocab --------------------------------------------------
+    import pandas as pd
+    import random as rd
+    
+    pp = pd.read_csv('Vocabulary/grammar_prepPronouns.csv')
+    en = pd.read_csv('Vocabulary/grammar_english.csv')
+    
+    adjectives = pd.read_csv('Vocabulary/adjectives_misc.csv')
+        
+    #Randomiser ---------------------------------------------------------------
+    person_num = rd.randrange(6)
+    adj_num = rd.randrange(len(adjectives))
+    
+    #Parts of sentence --------------------------------------------------------
+    pers_emph = pp.loc[person_num,"emphatic"]
+    adjective_gd = adjectives.loc[adj_num, "gd"]
+    adjective_en = adjectives.loc[adj_num, "english"]
+    
+    pronoun_en = pp.loc[person_num, "en_subj"]
+    be_en = en.loc[person_num, "be_pres"]
+
+    #Construct sentence -------------------------------------------------------
+    sentence_gd = "Tha " + pers_emph + " " + adjective_gd
+    sentence_en = pronoun_en.capitalize() + " " + be_en.lower() + " " + adjective_en
+    
+    #Questions ----------------------------------------------------------------
+    if translate == "1": #en-gd
+        q = sentence_en
+    elif translate == "2": #gd-en
+        q = sentence_gd
+    
+    #Prompts ------------------------------------------------------------------
+    prompt1 = ""
+    
+    #Solutions ----------------------------------------------------------------
+    if translate == "1": #en-gd
+        sol1 = sentence_gd
+    elif translate == "2": #gd-en
+        sol1 = sentence_en
+    sol2 = sol1
+    
+    #Output -------------------------------------------------------------------
+    
+    ##Return (question, main solution, alternative solution, prompt)
+    return (q, sol1, sol2, prompt1)
