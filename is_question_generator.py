@@ -11,7 +11,7 @@ import random as rd
 en = pd.read_csv('Vocabulary/grammar_english.csv')
 pp = pd.read_csv('Vocabulary/grammar_prepPronouns.csv')
 names = pd.read_csv('Vocabulary/people_names.csv')
-numbers = pd.read_csv('Vocabulary/grammar_numbers.csv')
+g_numbers = pd.read_csv('Vocabulary/grammar_numbers.csv')
 vb = pd.read_csv('Vocabulary/verbs_regular.csv')
 professions = pd.read_csv('Vocabulary/people_professions.csv')
 adjectives = pd.read_csv('Vocabulary/adjectives_misc.csv')
@@ -308,16 +308,16 @@ def numbers(vocab_file, num_mode, max_num):
     #Work out the Gaelic for given number ----------------------------------
     if num_mode in ("1", "2"):
         num_unit = str(num)[-1]
-        num_unit_gd = numbers.loc[numbers["number"]==int(num_unit)].reset_index(drop=True).at[0,"cardinal"]
+        num_unit_gd = g_numbers.loc[g_numbers["number"]==int(num_unit)].reset_index(drop=True).at[0,"cardinal"]
         if num < 10: # 0-9
-            num_gd = numbers.loc[numbers["number"]==num].reset_index(drop=True).at[0,"cardinal"]
+            num_gd = g_numbers.loc[g_numbers["number"]==num].reset_index(drop=True).at[0,"cardinal"]
         elif num == 12:
             num_gd = "dà dheug" #lenition
         elif num < 20: #11-19
             num_gd = num_unit_gd + " deug"
         elif num < 100: #20-99
             num_ten = int(str(num)[-2] + "0")
-            num_ten_gd = numbers.loc[numbers["number"]==int(num_ten)].reset_index(drop=True).at[0,"cardinal"]
+            num_ten_gd = g_numbers.loc[g_numbers["number"]==int(num_ten)].reset_index(drop=True).at[0,"cardinal"]
             if num_unit == "0":
                 num_gd = num_ten_gd
             else:
