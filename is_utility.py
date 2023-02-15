@@ -136,7 +136,13 @@ def en_indef_article(word):
 
 def en_pl(word):
     """Turn a word into the plural form"""
-    if word[-1] == "y" and word[-2] not in ("a", "e", "i", "o", "u"):
+    if word in ("sheep", "deer", "fish", "trousers", "glasses"):
+        return word
+    elif word in ("tooth", "foot", "goose"):
+        return word[0] + "ee" + word[3:]
+    elif word == "mouse":
+        return "mice"
+    elif word[-1] == "y" and word[-2] not in ("a", "e", "i", "o", "u"):
         return word[0:-1] + "ies"
     elif word[-6:] == "person":
         return word[:-6] + "people"
@@ -150,7 +156,5 @@ def en_pl(word):
         return word[:-2] + "ves"
     elif word[-1] == "f" and word[-2] != "f" and word not in ("roof", "chef", "belief", "chief"):
         return word[:-1] + "ves"
-    elif word in ("sheep","deer","fish"):
-        return word
     else:
         return word + "s"
