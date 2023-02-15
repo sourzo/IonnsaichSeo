@@ -13,14 +13,50 @@ Improvements for each generated question set:
 Adjectives, verbs: short and long version? (Small sample vs whole list)
 
 Additional modules:
- - verbs & tense (irreg)
- - possessive article (mo/do/...) - family, body parts, clothes
- - emphatic pronouns and adjectives
-   ... need to create adjective file, and finish q/sol/prompt. 
- - places in Scotland and... "I am from"? "I live in"? "I am going to"? etc?
+ - verbs & tense 
+   ... irregular verbs
+   ... imperative
+   ... (in)formal
+   ... habitual action
+   ... relative future
+   ... need
+ - number and time
+   ... time
+   ... plurals & numbers?
+   ... ordinals
+   ... "in" months and seasons
+   ... personal numbers
+   ... when (this/last month/year, yesterday, d-b yesterday, etc)
+ - possessive article
+   ... mo/do/... : family, body parts, clothes
+   ... prep possessive
+ - adjectives
+   ... emhatic pronouns: need to create adjective file, and finish q/sol/prompt.
+   ... adjectives before the noun (sean/seann?)
+   ... superlatives
+   ... comparison (more/less, as..as..)
+   ... when they do(n't) lenite
+   ... adverbs
+ - place (towns, countries)
+   ... "I am from", "I live in", "I am going to"
+   ... (in)definite article
+   ... languages (pp rium?)
+   ... opposites? in/out, inside/outside, (over) here/there/yonder, this/that/yon, up/down, etc
+   ... reach/arrive, go/went, etc
+   ... bho/do + def. article
+ - greetings/conversation
+   ... vocative, fhìn/fhèin
+   ... commands, greetings, questions
+   ... how are you, feelings (different sentence structures) (also mood - interest in, etc)
+   ... questions - how, what, when, who, why
+   ... weather phrases (different sentence structures)
+ - clothes & pp-orm (also body parts: hair/head on you, other body parts at you)
+ - prepositions with(out) lenition (ro, cho, glè) 
+ - ri: talk with, meet with, etc; le (use with)
+ - dative, genitive?
 
 Vocab:
- - add vocative to names list
+ - add vocative to names list?
 
 Strengths & Limitations of code:
 + it ignores capitalisation in user answers
