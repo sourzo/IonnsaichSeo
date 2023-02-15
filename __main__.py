@@ -17,12 +17,13 @@ while True:
         print("1: Basic vocabulary flashcards")
         print("2: Numbers and plurals")
         print("3: Possession using the prepositional pronoun 'aig'")
-        print("4: Giving and getting: prepositional pronouns 'bho' and 'do'")
-        print("5: Gender of nouns (using adjectives/articles)")
-        print("6: Preferences (I would like/prefer etc) using the prepositional pronoun 'le'")
-        print("7: Regular verb tenses")
-        print("8: Professions: the prepositional pronoun 'ann an'")
-        print("9: Emphatic pronouns and adjectives")
+        print("4: Possession using the possessive pronouns 'mo', 'do', etc")
+        print("5: Giving and getting: prepositional pronouns 'bho' and 'do'")
+        print("6: Gender of nouns (using adjectives/articles)")
+        print("7: Preferences (I would like/prefer etc) using the prepositional pronoun 'le'")
+        print("8: Regular verb tenses")
+        print("9: Professions: the prepositional pronoun 'ann an'")
+        print("10: Emphatic pronouns and adjectives")
         print("X: Exit")
         print()
         lesson_choice = input("Lesson number: ").lower().strip()
@@ -37,14 +38,16 @@ while True:
     elif lesson_choice == "3":
         rl.run_lesson(qgen.possession_aig)
     elif lesson_choice == "4":
-        rl.run_lesson(qgen.give_get)
+        rl.run_lesson(qgen.possession_mo)
     elif lesson_choice == "5":
-        rl.run_lesson(qgen.gender)
+        rl.run_lesson(qgen.give_get)
     elif lesson_choice == "6":
-        rl.run_lesson(qgen.preferences)
+        rl.run_lesson(qgen.gender)
     elif lesson_choice == "7":
-        rl.run_lesson(qgen.verbs_reg)
+        rl.run_lesson(qgen.preferences)
     elif lesson_choice == "8":
-        rl.run_lesson(qgen.professions_annan)
+        rl.run_lesson(qgen.verbs_reg)
     elif lesson_choice == "9":
+        rl.run_lesson(qgen.professions_annan)
+    elif lesson_choice == "10":
         rl.run_lesson(qgen.emphasis_adjectives)

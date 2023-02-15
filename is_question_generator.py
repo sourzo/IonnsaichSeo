@@ -16,6 +16,8 @@ vb = pd.read_csv('Vocabulary/verbs_regular.csv')
 professions = pd.read_csv('Vocabulary/people_professions.csv')
 adjectives = pd.read_csv('Vocabulary/adjectives_misc.csv')
 
+vowels = ["a","e","i","o","u","à","è","ì","ò","ù"]
+
 def give_get(vocab_file, tense, translate, sentence):
     #Load vocab --------------------------------------------------
         
@@ -663,7 +665,6 @@ def professions_annan(translate, sentence):
     ##Return (question, main solution, alternative solution, prompt)
     return (q, sol1, sol2, prompt1)
 
-
 def emphasis_adjectives(translate):
     
     #Randomiser ---------------------------------------------------------------
@@ -703,3 +704,119 @@ def emphasis_adjectives(translate):
     ##Return (question, main solution, alternative solution, prompt)
     return (q, sol1, sol2, prompt1)
 
+def possession_mo(vocab_file, translate, sentence):
+    #This module is only used with family or body parts vocab files
+    #Load vocab --------------------------------------------------
+    
+    vocab_sample = pd.read_csv('Vocabulary/{}.csv'.format(vocab_file))
+    if ("english" not in vocab_sample.columns or "nom_sing" not in vocab_sample.columns):
+        print("Error: Check format of vocabulary list, must contain columns 'english' and 'nom_sing' (lower-case)")
+        return
+    
+    #Randomiser ---------------------------------------------------------------
+    whose_num = rd.randrange(7)
+    where_num = rd.randrange(3)
+    what_num = rd.randrange(len(vocab_sample))
+    
+    #Parts of sentence --------------------------------------------------------
+    ## what
+    what_en = vocab_sample.loc[what_num,"english"]
+    what_gd = vocab_sample.loc[what_num,"nom_sing"]
+    ### plurals
+    if whose_num in (4,5,6) and vocab_file in ("people_body", "people_clothes"):
+        if vocab_sample.loc[what_num,"english"] != "hair":
+            what_gd = vocab_sample.loc[what_num,"nom_pl"]
+            what_en = is_utility.en_pl(what_en)
+    
+    ##is/are
+    if whose_num in (4,5,6) and vocab_file in ("people_body", "people_clothes"):
+        is_are = "are"
+    else:
+        is_are = "is"
+    
+    ## where
+    if where_num == 0:
+        where_gd = "seo"
+        where_en = "here"
+    elif where_num == 1:
+        where_gd = "sin"
+        where_en = "there"
+    elif where_num == 2:
+        where_gd = "siud"
+        where_en = "over there"
+    
+    ## whose
+    ### note - daughter and father take different grammatical structure
+    if what_gd in ("nighean","duine"):
+        whosewhat_gd = "an " + what_gd + " " + pp.loc[whose_num, "aig"]
+        whose_en = pp.loc[whose_num,"en_poss"]
+    else:
+        ## possessive article
+        whose_en = pp.loc[whose_num,"en_poss"]
+        if what_gd[0] in vowels:
+            whose_gd = ("m'", "d'", "", "a", "àr", "ùr", "an")[whose_num]
+        elif whose_num < 6:
+            whose_gd = pp.loc[whose_num,"possessive"]
+        elif whose_num == 6:
+            if what_gd[0] in ("b","m","f","p"):
+                whose_gd = "am"
+            else:
+                whose_gd = "an"
+        
+        ## my/your/his -> lenition
+        if whose_num in (0,1,2) and what_gd[0] not in vowels:
+            what_gd = is_utility.lenite(what_gd)
+        ## her + vowel -> h-
+        elif whose_num ==3 and what_gd[0] in vowels:
+            what_gd = "h-" + what_gd
+        ## (y)our + vowel -> n-
+        elif whose_num in (4, 5) and what_gd[0] in vowels:
+            what_gd = "n-" + what_gd
+    
+    #Construct sentence -------------------------------------------------------
+    if what_gd in ("nighean","duine"):
+        sentence_gd = where_gd + " " + whosewhat_gd
+    else:
+        if len(whose_gd) == 0:
+            sentence_gd = where_gd + " " + what_gd
+        else:
+            sentence_gd = where_gd + " " + whose_gd + " " + what_gd
+    sentence_en = where_en + " " + is_are + " " + whose_en + " " + what_en
+    #Questions ----------------------------------------------------------------
+    if translate == "1": #en-gd
+        q = sentence_en
+    elif translate == "2": #gd-en
+        q = sentence_gd
+    
+    #Prompts ------------------------------------------------------------------
+    if sentence == "1": # Full sentence, no prompt
+        prompt1 = ""
+    elif sentence == "2": #Fill in the blank
+        if translate == "1": #en-gd
+            prompt1 = where_gd + " "
+        elif translate == "2": #gd-en
+            prompt1 = where_en + " " + is_are + " ____ " + what_en + ": "
+    
+    #Solutions ----------------------------------------------------------------
+    if sentence == "1": #Full sentence
+        if translate == "1": #en-gd
+            sol1 = sentence_gd
+        elif translate == "2": #gd-en
+            sol1 = sentence_en
+            
+    elif sentence == "2": #Fill in the blank
+        if translate == "1": #en-gd
+            if what_gd in ("nighean","duine"):
+                sol1 = whosewhat_gd
+            else:
+                if len(whose_gd) == 0:
+                    sol1 = what_gd
+                else:
+                    sol1 = whose_gd + " " + what_gd        
+        elif translate == "2": #gd-en
+            sol1 = whose_en
+    sol2 = sol1
+    #Output -------------------------------------------------------------------
+    
+    ##Return (question, main solution, alternative solution, prompt)
+    return (q, sol1, sol2, prompt1)

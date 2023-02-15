@@ -99,7 +99,7 @@ def run_lesson(lesson):
             options["verb_form"] = input("Verb forms: ").lower().strip()
     
     ##Translation direction
-    if lesson.__name__ in ("give_get", "possession_aig", "vocab", "preferences", "professions_annan", "emphasis_adjectives"):
+    if lesson.__name__ in ("give_get", "possession_aig", "vocab", "preferences", "professions_annan", "emphasis_adjectives", "possession_mo"):
         options["translate"] = "0"
         while options["translate"] not in ("x","1","2"):
             print()
@@ -112,7 +112,7 @@ def run_lesson(lesson):
             return
     
     ##Full sentence or fill in the blank
-    if lesson.__name__ in ("give_get", "preferences", "possession_aig", "professions_annan"):
+    if lesson.__name__ in ("give_get", "preferences", "possession_aig", "professions_annan", "possession_mo"):
         options["sentence"] = "0"
         while options["sentence"] not in ("x","1","2"):
             print()
@@ -127,7 +127,25 @@ def run_lesson(lesson):
     #Select vocab file
     if lesson.__name__ not in ("verbs_reg", "professions_annan", "emphasis_adjectives"):
         if lesson.__name__ == "numbers" and options["num_mode"] in ("1","2"):
-            options["vocab_file"] = "xxx"
+            options["vocab_file"] = "xxx" #no vocab file needed
+        elif lesson.__name__ == "possession_mo":
+            vocab_num = ""
+            while vocab_num not in ("x","1","2"):
+                print()
+                print("Select topic")
+                print("1: Body parts")
+                print("2: Clothes")
+                print("3: Family")
+                print("X: Exit")
+                vocab_num = input("Practice mode: ").lower().strip()
+            if vocab_num == "x":
+                return        
+            elif vocab_num == "1":
+                options["vocab_file"] = "people_body"        
+            elif vocab_num == "2":
+                options["vocab_file"] = "people_clothes"        
+            elif vocab_num == "3":
+                options["vocab_file"] = "people_family"        
         else:
             from os.path import exists
             options["vocab_file"] = "xxx"
