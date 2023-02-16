@@ -820,3 +820,64 @@ def possession_mo(vocab_file, translate, sentence):
     
     ##Return (question, main solution, alternative solution, prompt)
     return (q, sol1, sol2, prompt1)
+
+def where_from(vocab_file, sentence):
+    #Load vocab --------------------------------------------------
+    vocab_sample = pd.read_csv('Vocabulary/{}.csv'.format(vocab_file))
+    if ("english" not in vocab_sample.columns or "nom_sing" not in vocab_sample.columns):
+        print("Error: Check format of vocabulary list, must contain columns 'english' and 'nom_sing' (lower-case)")
+        return
+    #Randomiser ---------------------------------------------------------------
+    person_num = rd.randrange(7)
+    where_num = rd.randrange(len(vocab_sample))
+    
+    #Parts of sentence --------------------------------------------------------
+    def_articles = ("an ", "na ", "a' ", "am ", "an t-")
+    
+    if vocab_sample.loc[where_num,"nom_sing"].startswith(def_articles):
+        from_gd = "às"
+    else:
+        from_gd = "à"
+    
+    if sentence == "3":
+        who_question = ("thu", "mi", "e", "i", "sibh", "sinn", "iad")
+        
+    #Construct sentence -------------------------------------------------------
+    sentence_en = en.loc[person_num,"en_subj"].capitalize() + " " + en.loc[person_num,"be_pres"] + " from " + vocab_sample.loc[where_num,"english"]
+    sentence_gd = "Tha " + pp.loc[person_num, "pronoun_gd"] + " " + from_gd + " " + vocab_sample.loc[where_num,"nom_sing"]
+    
+    #Questions ----------------------------------------------------------------
+    if sentence in ("1", "2"): #Translate
+        q = sentence_en
+    else: #Answer question
+        q = "Cò às a tha " + who_question[person_num]
+    
+    #Prompts ------------------------------------------------------------------
+    if sentence == "1": # Full sentence, no prompt
+        prompt1 = ""
+    elif sentence == "2": #Fill in the blank
+        prompt1 = "Tha " + pp.loc[person_num, "pronoun_gd"] + " "
+    elif sentence == "3": #Answer the question
+        prompt1 = "[" + vocab_sample.loc[where_num,"english"] + "]: "
+        
+    
+    #Solutions ----------------------------------------------------------------
+    if sentence == "1": # Full sentence, no prompt
+        sol1 = sentence_gd
+        sol2 = sol1
+    elif sentence == "2": #Fill in the blank
+        sol1 = from_gd + " " + vocab_sample.loc[where_num,"nom_sing"]
+        sol2 = sol1
+    elif sentence == "3": #Fill in the blank
+        sol1 = sentence_gd
+        if person_num == 1: #mi -> thu/sibh
+            sol2 = "Tha sibh " + from_gd + " " + vocab_sample.loc[where_num,"nom_sing"]
+        elif person_num == 4: #sibh -> sinn/mi
+            sol2 = "Tha mi " + from_gd + " " + vocab_sample.loc[where_num,"nom_sing"]
+        else:
+            sol2 = sol1
+       
+    #Output -------------------------------------------------------------------
+    
+    ##Return (question, main solution, alternative solution, prompt)
+    return (q, sol1, sol2, prompt1)

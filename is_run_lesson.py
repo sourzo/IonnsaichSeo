@@ -112,13 +112,20 @@ def run_lesson(lesson):
             return
     
     ##Full sentence or fill in the blank
-    if lesson.__name__ in ("give_get", "preferences", "possession_aig", "professions_annan", "possession_mo"):
+    QandA_lessons = ("where_from")
+    if lesson.__name__ in ("give_get", "preferences", "possession_aig", "professions_annan", "possession_mo") or lesson.__name__ in QandA_lessons:
+        if lesson.__name__ in QandA_lessons:
+            sentence_tuple = ("x","1","2","3")
+        else:
+            sentence_tuple = ("x","1","2","3")    
         options["sentence"] = "0"
-        while options["sentence"] not in ("x","1","2"):
+        while options["sentence"] not in sentence_tuple:
             print()
             print("Select practice mode")
             print("1: Full sentence")
             print("2: Fill in the blank")
+            if lesson.__name__ in QandA_lessons:
+                print("3: Question and answer")
             print("X: Exit")
             options["sentence"] = input("Practice mode: ").lower().strip()
         if options["sentence"] == "x":
@@ -130,7 +137,7 @@ def run_lesson(lesson):
             options["vocab_file"] = "xxx" #no vocab file needed
         elif lesson.__name__ == "possession_mo":
             vocab_num = ""
-            while vocab_num not in ("x","1","2"):
+            while vocab_num not in ("x","1","2","3"):
                 print()
                 print("Select topic")
                 print("1: Body parts")
@@ -146,6 +153,21 @@ def run_lesson(lesson):
                 options["vocab_file"] = "people_clothes"        
             elif vocab_num == "3":
                 options["vocab_file"] = "people_family"        
+        elif lesson.__name__ == "where_from":
+            vocab_num = ""
+            while vocab_num not in ("x","1","2"):
+                print()
+                print("Select geography")
+                print("1: Countries")
+                print("2: Places in Scotland")
+                print("X: Exit")
+                vocab_num = input("Practice mode: ").lower().strip()
+            if vocab_num == "x":
+                return        
+            elif vocab_num == "1":
+                options["vocab_file"] = "places_world"        
+            elif vocab_num == "2":
+                options["vocab_file"] = "places_scotland"        
         else:
             from os.path import exists
             options["vocab_file"] = "xxx"
