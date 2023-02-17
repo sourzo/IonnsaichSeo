@@ -112,8 +112,9 @@ def run_lesson(lesson):
             return
     
     ##Full sentence or fill in the blank
-    QandA_lessons = ("where_from")
-    if lesson.__name__ in ("give_get", "preferences", "possession_aig", "professions_annan", "possession_mo") or lesson.__name__ in QandA_lessons:
+    QandA_lessons = ("where_from", "where_in")
+    other_lessons = ("give_get", "preferences", "possession_aig", "professions_annan", "possession_mo")
+    if lesson.__name__ in QandA_lessons + other_lessons:
         if lesson.__name__ in QandA_lessons:
             sentence_tuple = ("x","1","2","3")
         else:
@@ -168,6 +169,27 @@ def run_lesson(lesson):
                 options["vocab_file"] = "places_world"        
             elif vocab_num == "2":
                 options["vocab_file"] = "places_scotland"        
+        elif lesson.__name__ == "where_in":
+            vocab_num = ""
+            while vocab_num not in ("x","1","2","3","4"):
+                print()
+                print("Select places")
+                print("1: Countries")
+                print("2: Places in Scotland")
+                print("3: Around town")
+                print("4: In the house")
+                print("X: Exit")
+                vocab_num = input("Practice mode: ").lower().strip()
+            if vocab_num == "x":
+                return        
+            elif vocab_num == "1":
+                options["vocab_file"] = "places_world"        
+            elif vocab_num == "2":
+                options["vocab_file"] = "places_scotland"        
+            elif vocab_num == "3":
+                options["vocab_file"] = "places_town"        
+            elif vocab_num == "4":
+                options["vocab_file"] = "places_home"        
         else:
             from os.path import exists
             options["vocab_file"] = "xxx"
@@ -182,15 +204,21 @@ def run_lesson(lesson):
             
     # Practice ----------------------------------------------------------------
     print()
-    print("Type 'stop practice' to finish")
+    print("Type 'X' to finish")
     answer = ""
     q_count = 0
     score = 0
     start_time = dt.datetime.now()
     
-    while answer != "stop practice":
+    while answer != "x":
         q_count = q_count + 1
         question, solution1, solution2, prompt = lesson(**options)
+        
+        #fix apostrophe issues
+        question = question.replace("’","'")
+        solution1 = solution1.replace("’","'")
+        solution2 = solution2.replace("’","'")
+        prompt = prompt.replace("’","'")
             
         #Display sentence to translate
         print()
@@ -198,7 +226,7 @@ def run_lesson(lesson):
         answer = input(prompt).lower().strip()
             
         #Check answer
-        if answer == "stop practice":
+        if answer == "x":
             break
         elif answer in (solution1.lower().strip(), solution2.lower().strip()):
                 print()

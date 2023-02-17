@@ -1,36 +1,36 @@
-english,nom_sing
-Scotland,Alba
-England,Sasainn
-Wales,a’ Chuimrigh
-Ireland,Èireann
-Britain,Breatainn
-the UK,an Rìoghachd Aonaichte
-Iceland,Innis Tìle
-Norway,Nirribhidh
-Finland,an Fhionnlann
-Sweden,an t-Suain
-Denmark,an Danmhairg
-the Isle of Man,Eilean Mhanainn
-Cornwall,a’ Chòrn
-France,an Fhraing
-Germany,a’ Ghearmailt
-Spain,an Spàinn
-Italy,an Eadailt
-Poland,a’ Phòlann
-China,Sìona
-Japan,Iapan
-Russia,an Ruis
-Greece,a’ Ghrèic
-Turkey,an Tuirc
-Belgium,a’ Bheilg
-Switzerland,an Eiilbheis
-Austria,an Ostair
-Australia,Astràlia
-Brittany,a’ Bhreatainn
-Europe,an Roinn Eòrpa
-South Africa,Afraga a Deas
-Canada,Canada
-Nova Scotia,Alba Nuadh
-Egypt,an Èipheit
-Portugal,Portagail
-Scandinavia,Lochlann
+english,nom_sing,gender
+Scotland,Alba,fem
+England,Sasainn,fem
+Wales,a’ Chuimrigh,fem
+Ireland,Èirinn,fem
+Northern Ireland,Èirinn a Tuath,fem
+Britain,Breatainn,fem
+the UK,an Rìoghachd Aonaichte,masc
+Iceland,Innis Tìle,fem
+Norway,Nirribhidh,fem
+Finland,an Fhionnlann,fem
+Sweden,an t-Suain,fem
+Denmark,an Danmhairg,fem
+Cornwall,a’ Chòrn,fem
+France,an Fhraing,fem
+Germany,a’ Ghearmailt,fem
+Spain,an Spàinn,fem
+Italy,an Eadailt,fem
+Poland,a’ Phòlann,fem
+China,Sìona,fem
+Japan,Iapan,fem
+Russia,an Ruis,fem
+Greece,a’ Ghrèic,fem
+Turkey,an Tuirc,fem
+Belgium,a’ Bheilg,fem
+Switzerland,an Eilbheis,fem
+Austria,an Ostair,fem
+Australia,Astràlia,fem
+Brittany,a’ Bhreatainn,fem
+Europe,an Roinn Eòrpa,fem
+South Africa,Afraga a Deas,fem
+Canada,Canada,fem
+Nova Scotia,Alba Nuadh,fem
+Egypt,an Èipheit,fem
+Portugal,Portagail,fem
+Scandinavia,Lochlann,fem

@@ -1,78 +1,75 @@
-english,nom_sing
-Cumbernauld,Comar nan Allt
-Edinburgh,Dun Èidinn
-Glasgow,Glaschu
-Inverness,Inbhir Nis
-Aberdeen,Obar Dheathainn
-Perth,Peairt
-Stirling,Sruighlea
-St Andrews,Cill Rìmhinn
-Orkney,Arcaibh
-Shetland,Sealtainn
-Mull,Muile
-the Isle of Skye,Eileann Sgitheanach
-Aberfeldy,Obar Pheallaidh
-Aberfoyle,Obar Phuill
-Argyle,Earra-Ghàidheal
-Arran,Arainn
-Aviemore,an Aghaidh Mhòr
-Ayr,Inbhir Àir
-Balmoral,Baile Mhoireal
-Bannockburn,Allt a’ Bhonnaich
-Barra,Barraigh
-Benbecula,Beinn na Fadhla
-Berwick,Bearaig
-the Black Isle,an t-Eilean Dubh
-Blair Atholl,Blàr an Athaill
-the Borders,na Crìochan
-Bowmore,Bogha Mòr
-Braemar,Bràigh Mhàrr
-the Isle of Bute,Eilean Bhòid
-Crieff,Craoibh
-Culloden,Cùill Lodair
-Dingwall,Inbhir Pheofharain
-Dumbarton,Dùn Breatann
-Dunfermline,Dùn Phàrlain
-Dumfries,Dùn Phris
-Dunblane,Dùn Blathain
-Dundee,Dùn Dèagh
-Dunkeld,Dùn Chailleann
-East Kilbride,Cille Bhrìghde an Ear
-Eigg,Eige
-Eriskay,Èirisgeigh
-Falkirk,an Eaglais Bhreac
-Fife,Fìobha
-Fort William,an Gearasdan
-Galloway,Gall-Ghàidhealaibh
-Glencoe,Gleann Comhann
-Greenock,Grianaig
-Harris,na Hearadh
-the Highlands,a’ Ghàidhealtachd
-the Lowlands,a’ Ghalltachd
-the Hebrides,Innse Gall
-Inveraray,Inbhir Aora
-Jura,Diura
-Killin,Cill Fhinn
-Kilmarnock,Cille Mheàrnaig
-Kinlochleven,Ceann Lock Lìobhann
-Lanark,Lannraig
-Largs,na Leargaidh Ghallta
-Leith,Lìte
-Lewis,Leòdhas
-Lismore,Lios Mòr
-Lochaber,Loch Abar
-Loch Lomond,Loch Laomainn
-Loch Ness,Loch Nis
-Mallaig,Malaig
-Oban,an t-Òban
-Paisley,Pàslig
-Pitlochry,Baile Chloichrigh
-Plockton,am Ploc
-Portree,Port Righ
-Raasay,Ratharsair
-Rum,Rùm
-Scalpay,Sgalpaigh
-Stornoway,Steòrnabhagh
-Torridon,Toirbheartan
-Uist,Uibhist
-Vatersay,Bhatarsaigh
+english,nom_sing,gender
+the Highlands,a’ Ghàidhealtachd,fem
+the Lowlands,a’ Ghalltachd,fem
+Bannockburn,Allt a’ Bhonnaich,masc
+Plockton,am Ploc,masc
+Aviemore,an Aghaidh Mhòr,fem
+Falkirk,an Eaglais Bhreac,fem
+Fort William,an Gearasdan,masc
+the Black Isle,an t-Eilean Dubh,masc
+the Isle of Skye,An t-Eilean Sgitheanach,masc
+Oban,an t-Òban,masc
+Arran,Arainn,fem
+Orkney,Arcaibh,?
+Pitlochry,Baile Chloichrigh,masc
+Balmoral,Baile Mhoireal,masc
+Barra,Barraigh,masc
+Berwick,Bearaig,?
+Benbecula,Beinn na Fadhla,?
+Vatersay,Bhatarsaigh,masc
+Blair Atholl,Blàr an Athaill,?
+Bowmore,Bogha Mòr,masc
+Braemar,Bràigh Mhàrr,?
+Kinlochleven,Ceann Loch Lìobhann,masc
+Killin,Cill Fhinn,fem
+St Andrews,Cill Rìmhinn,fem
+East Kilbride,Cille Bhrìghde an Ear,fem
+Kilmarnock,Cille Mheàrnaig,fem
+Cumbernauld,Comar nan Allt,masc
+Crieff,Craoibh,?
+Culloden,Cùill Lodair,?
+Jura,Diura,masc
+Dunblane,Dùn Blathain,masc
+Dumbarton,Dùn Breatann,masc
+Dunkeld,Dùn Chailleann,masc
+Dundee,Dùn Dèagh,masc
+Edinburgh,Dun Èidinn,masc
+Dunfermline,Dùn Phàrlain,masc
+Dumfries,Dùn Phris,masc
+Argyle,Earra-Ghàidheal,masc
+Eigg,Eige,?
+the Isle of Bute,Eilean Bhòid,masc
+Eriskay,Èirisgeigh,?
+Fife,Fìobha,?
+Galloway,Gall-Ghàidhealaibh,?
+Glasgow,Glaschu,masc
+Glencoe,Gleann Comhann,masc
+Greenock,Grianaig,masc
+Islay,Ìle,fem
+Ayr,Inbhir Àir,masc
+Inveraray,Inbhir Aora,masc
+Inverness,Inbhir Nis,masc
+Dingwall,Inbhir Pheofharain,masc
+the Hebrides,Innse Gall,?
+Lanark,Lannraig,?
+Lewis,Leòdhas,masc
+Lismore,Lios Mòr,masc
+Leith,Lìte,?
+Lochaber,Loch Abar,masc
+Mallaig,Malaig,masc
+Mull,Muile,masc
+Harris,na Hearadh,?
+Aberdeen,Obar Dheathainn,masc
+Aberfeldy,Obar Pheallaidh,?
+Aberfoyle,Obar Phuill,?
+Paisley,Pàslig,masc
+Perth,Peairt,masc
+Portree,Port Righ,masc
+Raasay,Ratharsair,?
+Rum,Rùm,?
+Shetland,Sealtainn,?
+Scalpay,Sgalpaigh,masc
+Stirling,Sruighlea,masc
+Stornoway,Steòrnabhagh,masc
+Torridon,Toirbheartan,masc
+Uist,Uibhist,fem

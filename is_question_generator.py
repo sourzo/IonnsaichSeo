@@ -15,8 +15,11 @@ g_numbers = pd.read_csv('Vocabulary/grammar_numbers.csv')
 vb = pd.read_csv('Vocabulary/verbs_regular.csv')
 professions = pd.read_csv('Vocabulary/people_professions.csv')
 adjectives = pd.read_csv('Vocabulary/adjectives_misc.csv')
+def_articles = ("an ", "na ", "a' ", "a’ ", "am ", "an t-")
 
-vowels = ["a","e","i","o","u","à","è","ì","ò","ù"]
+vowels = ["a","e","i","o","u",
+          "à","è","ì","ò","ù",
+          "á","é","í","ó","ú"]
 
 def give_get(vocab_file, tense, translate, sentence):
     #Load vocab --------------------------------------------------
@@ -631,11 +634,13 @@ def professions_annan(translate, sentence):
     #Construct sentence -------------------------------------------------------
     sentence_gd = "'S e " + profession_gd.lower() + " a th' " + pp_annan.lower()
     sentence_en = pronoun_en.capitalize() + " " + be_en.lower() + " " + profession_en.lower()
+    
     #Questions ----------------------------------------------------------------
     if translate == "1": #en-gd
         q = sentence_en
     elif translate == "2": #gd-en
         q = sentence_gd
+        
     #Prompts ------------------------------------------------------------------
     if sentence == "1": # Full sentence, no prompt
         prompt1 = ""
@@ -711,8 +716,7 @@ def possession_mo(vocab_file, translate, sentence):
     vocab_sample = pd.read_csv('Vocabulary/{}.csv'.format(vocab_file))
     if ("english" not in vocab_sample.columns or "nom_sing" not in vocab_sample.columns):
         print("Error: Check format of vocabulary list, must contain columns 'english' and 'nom_sing' (lower-case)")
-        return
-    
+        return    
     #Randomiser ---------------------------------------------------------------
     whose_num = rd.randrange(7)
     where_num = rd.randrange(3)
@@ -782,6 +786,7 @@ def possession_mo(vocab_file, translate, sentence):
         else:
             sentence_gd = where_gd + " " + whose_gd + " " + what_gd
     sentence_en = where_en + " " + is_are + " " + whose_en + " " + what_en
+    
     #Questions ----------------------------------------------------------------
     if translate == "1": #en-gd
         q = sentence_en
@@ -824,33 +829,34 @@ def possession_mo(vocab_file, translate, sentence):
 def where_from(vocab_file, sentence):
     #Load vocab --------------------------------------------------
     vocab_sample = pd.read_csv('Vocabulary/{}.csv'.format(vocab_file))
-    if ("english" not in vocab_sample.columns or "nom_sing" not in vocab_sample.columns):
-        print("Error: Check format of vocabulary list, must contain columns 'english' and 'nom_sing' (lower-case)")
-        return
+    if any(("english" not in vocab_sample.columns,
+            "nom_sing" not in vocab_sample.columns,
+            "gender" not in vocab_sample.columns)):
+        print("Error: Check format of vocabulary list, must contain columns 'english', 'gender', and 'nom_sing' (lower-case)")
+        return  
     #Randomiser ---------------------------------------------------------------
     person_num = rd.randrange(7)
     where_num = rd.randrange(len(vocab_sample))
     
     #Parts of sentence --------------------------------------------------------
-    def_articles = ("an ", "na ", "a' ", "am ", "an t-")
     
     if vocab_sample.loc[where_num,"nom_sing"].startswith(def_articles):
-        from_gd = "às"
+        from_gd = "às " + is_utility.prep_def(vocab_sample, where_num)
     else:
-        from_gd = "à"
+        from_gd = "à " + vocab_sample.loc[where_num,"nom_sing"]
     
     if sentence == "3":
         who_question = ("thu", "mi", "e", "i", "sibh", "sinn", "iad")
         
     #Construct sentence -------------------------------------------------------
     sentence_en = en.loc[person_num,"en_subj"].capitalize() + " " + en.loc[person_num,"be_pres"] + " from " + vocab_sample.loc[where_num,"english"]
-    sentence_gd = "Tha " + pp.loc[person_num, "pronoun_gd"] + " " + from_gd + " " + vocab_sample.loc[where_num,"nom_sing"]
+    sentence_gd = "Tha " + pp.loc[person_num, "pronoun_gd"] + " " + from_gd
     
     #Questions ----------------------------------------------------------------
     if sentence in ("1", "2"): #Translate
         q = sentence_en
     else: #Answer question
-        q = "Cò às a tha " + who_question[person_num]
+        q = "Cò às a tha " + who_question[person_num] + "?"
     
     #Prompts ------------------------------------------------------------------
     if sentence == "1": # Full sentence, no prompt
@@ -866,14 +872,14 @@ def where_from(vocab_file, sentence):
         sol1 = sentence_gd
         sol2 = sol1
     elif sentence == "2": #Fill in the blank
-        sol1 = from_gd + " " + vocab_sample.loc[where_num,"nom_sing"]
+        sol1 = from_gd
         sol2 = sol1
     elif sentence == "3": #Fill in the blank
         sol1 = sentence_gd
         if person_num == 1: #mi -> thu/sibh
-            sol2 = "Tha sibh " + from_gd + " " + vocab_sample.loc[where_num,"nom_sing"]
+            sol2 = "Tha sibh " + from_gd
         elif person_num == 4: #sibh -> sinn/mi
-            sol2 = "Tha mi " + from_gd + " " + vocab_sample.loc[where_num,"nom_sing"]
+            sol2 = "Tha mi " + from_gd
         else:
             sol2 = sol1
        
@@ -881,3 +887,80 @@ def where_from(vocab_file, sentence):
     
     ##Return (question, main solution, alternative solution, prompt)
     return (q, sol1, sol2, prompt1)
+
+def where_in(vocab_file, sentence):
+    #Load vocab --------------------------------------------------
+    vocab_sample = pd.read_csv('Vocabulary/{}.csv'.format(vocab_file))
+    #Vocab files which contain the definite article in Gaelic for some words
+    contains_articles = ("places_scotland", "places_world")
+    
+    #Randomiser ---------------------------------------------------------------
+    person_num = rd.randrange(7)
+    where_num = rd.randrange(len(vocab_sample))
+    if vocab_file not in contains_articles:
+        article_switch = rd.randrange(2)
+    else:
+        if vocab_sample.loc[where_num,"nom_sing"].startswith(def_articles):
+            article_switch = 1
+        else:
+            article_switch = 0
+        
+    #Parts of sentence --------------------------------------------------------
+    
+    ##Indefinite article
+    if article_switch == 0:
+        if vocab_file not in contains_articles:
+            where_en = is_utility.en_indef_article(vocab_sample.loc[where_num,"english"])
+        else:
+            where_en = vocab_sample.loc[where_num,"english"]
+        where_gd = "ann " + is_utility.anm(vocab_sample.loc[where_num,"nom_sing"])
+    ##Definite article
+    else:
+        if vocab_file not in contains_articles:
+            where_en = "the " + vocab_sample.loc[where_num,"english"]
+        else:
+            where_en = vocab_sample.loc[where_num,"english"]
+        where_gd = "anns " + is_utility.prep_def(vocab_sample, where_num)
+    
+    if sentence == "3":
+        who_question = ("thu", "mi", "e", "i", "sibh", "sinn", "iad")
+    
+    #Construct sentence -------------------------------------------------------
+    sentence_en = en.loc[person_num,"en_subj"].capitalize() + " " + en.loc[person_num, "be_pres"] + " in " + where_en
+    sentence_gd = "Tha " + pp.loc[person_num, "pronoun_gd"] + " " + where_gd
+    
+    #Questions ----------------------------------------------------------------
+    if sentence in ("1", "2"): #Translate
+        q = sentence_en
+    else: #Answer question
+        q = "Càite a bheil " + who_question[person_num] + "?"
+    
+    #Prompts ------------------------------------------------------------------
+    if sentence == "1": # Full sentence, no prompt
+        prompt1 = ""
+    elif sentence == "2": #Fill in the blank
+        prompt1 = "Tha " + pp.loc[person_num, "pronoun_gd"] + " "
+    elif sentence == "3": #Answer the question
+        prompt1 = "[" + where_en + "]: "
+        
+    #Solutions ----------------------------------------------------------------
+    if sentence == "1": # Full sentence, no prompt
+        sol1 = sentence_gd
+        sol2 = sol1
+    elif sentence == "2": #Fill in the blank
+        sol1 = where_gd
+        sol2 = sol1
+    elif sentence == "3": #Fill in the blank
+        sol1 = sentence_gd
+        if person_num == 1: #mi -> thu/sibh
+            sol2 = "Tha sibh " + where_gd
+        elif person_num == 4: #sibh -> sinn/mi
+            sol2 = "Tha mi " + where_gd
+        else:
+            sol2 = sol1
+    
+    #Output -------------------------------------------------------------------
+    
+    ##Return (question, main solution, alternative solution, prompt)
+    return (q, sol1, sol2, prompt1)
+

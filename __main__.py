@@ -8,23 +8,24 @@ import is_question_generator as qgen
 import is_run_lesson as rl
 
 while True:
-    print("Welcome to Ionnsaich Seo!")
+    print("Fàilte gu Ionnsaich Seo!")
     print()
     
     lesson_choice = "0"
-    while lesson_choice not in ("x","1","2","3","4","5","6", "7", "8", "9", "10", "11"):
+    while lesson_choice not in ("x","1","2","3","4","5","6", "7", "8", "9", "10", "11", "12"):
         print("Select lesson:")
         print("1: Basic vocabulary flashcards")
         print("2: Numbers and plurals")
         print("3: Possession using the prepositional pronoun 'aig'")
-        print("4: Possession using the possessive pronouns 'mo', 'do', etc")
+        print("4: Possession using the possessive articles 'mo', 'do', etc")
         print("5: Giving and getting: prepositional pronouns 'bho' and 'do'")
         print("6: Gender of nouns (using adjectives/articles)")
         print("7: Preferences (I would like/prefer etc) using the prepositional pronoun 'le'")
         print("8: Regular verb tenses")
         print("9: Professions: the prepositional pronoun 'ann an'")
         print("10: Emphatic pronouns and adjectives")
-        print("11: Where are you from?")
+        print("11: Where are they from? [Prepositions]")
+        print("12: Where are they (in)? [Prepositions]")
         print("X: Exit")
         print()
         lesson_choice = input("Lesson number: ").lower().strip()
@@ -54,3 +55,5 @@ while True:
         rl.run_lesson(qgen.emphasis_adjectives)
     elif lesson_choice == "11":
         rl.run_lesson(qgen.where_from)
+    elif lesson_choice == "12":
+        rl.run_lesson(qgen.where_in)
