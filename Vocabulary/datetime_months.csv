@@ -1,13 +1,13 @@
-english,nom_sing
-January,am Faoilleach
-February,an Gearran
-March,am Màrt
-April,an Giblean
-May,an Cèitean
-June,an t-Ògmhios
-July,an t-Iuchar
-August,an Lùnastal
-September,an t-Sultain
-October,an Dàmhair
-November,an t-Samhain
-December,an Dùbhlachd
+english,nom_sing,season_en,season_gd
+January,am Faoilleach,Winter,an Geamhradh
+February,an Gearran,Winter,an Geamhradh
+March,am Màrt,Spring,an t-Earrach
+April,an Giblean,Spring,an t-Earrach
+May,an Cèitean,Spring,an t-Earrach
+June,an t-Ògmhios,Summer,an Samhradh
+July,an t-Iuchar,Summer,an Samhradh
+August,an Lùnastal,Summer,an Samhradh
+September,an t-Sultain,Autumn,am Foghal
+October,an Dàmhair,Autumn,am Foghal
+November,an t-Samhain,Autumn,am Foghal
+December,an Dùbhlachd,Winter,an Geamhradh
