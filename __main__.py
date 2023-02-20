@@ -18,7 +18,7 @@ while True:
         print("2: Numbers and plurals")
         print("3: Possession using the prepositional pronoun 'aig'")
         print("4: Possession using the possessive articles 'mo', 'do', etc")
-        print("5: Giving and getting: prepositional pronouns 'bho' and 'do'")
+        print("5: Giving and getting: prepositional pronouns 'do' and 'bho'")
         print("6: Gender of nouns (using adjectives/articles)")
         print("7: Preferences (I would like/prefer etc) using the prepositional pronoun 'le'")
         print("8: Regular verb tenses")
