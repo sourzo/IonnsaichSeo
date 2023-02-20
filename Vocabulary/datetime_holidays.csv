@@ -1,12 +1,13 @@
-english,nom_sing
-Hogmanay,Oidhche Chalainn
-New Year’s Day,Là Chalainn
-Valentine’s Day,Là nam Pòg
-Mother’s Day,Là nam Màthraichean
-Father’s Day,Là nan Athraichean
-April Fool’s Day,Là na Gogaireachd
-Christmas,Nollaig
-Christmas Day,Là na Nollaig
-Christmas Eve,Oidhche na Nollaig
-Halloween,Oidhche Shamhna
-Beltane,Bealtainn
+english,nom_sing,month_en
+Hogmanay,Oidhche Chalainn,December
+New Year’s Day,Là Chalainn,January
+Valentine’s Day,Là nam Pòg,February
+Mother’s Day,Là nam Màthraichean,May
+Father’s Day,Là nan Athraichean,June
+April Fool’s Day,Là na Gogaireachd,April
+Christmas,Nollaig,December
+Christmas Day,Là na Nollaig,December
+Christmas Eve,Oidhche na Nollaig,December
+Halloween,Oidhche Shamhna,October
+Beltane,Bealtainn,May
+The Mod,am Mòd,October
