@@ -742,12 +742,15 @@ def possession_mo(vocab_file, translate, sentence):
     if where_num == 0:
         where_gd = "seo"
         where_en = "here"
+        where_en_alt = "this"
     elif where_num == 1:
         where_gd = "sin"
         where_en = "there"
+        where_en_alt = "that"
     elif where_num == 2:
         where_gd = "siud"
         where_en = "over there"
+        where_en_alt = "over there"
     
     ## whose
     ### note - daughter and father take different grammatical structure
@@ -806,8 +809,10 @@ def possession_mo(vocab_file, translate, sentence):
     if sentence == "1": #Full sentence
         if translate == "1": #en-gd
             sol1 = sentence_gd
+            sol2 = sol1
         elif translate == "2": #gd-en
             sol1 = sentence_en
+            sol2 = where_en_alt + " " + is_are + " " + whose_en + " " + what_en
             
     elif sentence == "2": #Fill in the blank
         if translate == "1": #en-gd
@@ -817,10 +822,12 @@ def possession_mo(vocab_file, translate, sentence):
                 if len(whose_gd) == 0:
                     sol1 = what_gd
                 else:
-                    sol1 = whose_gd + " " + what_gd        
+                    sol1 = whose_gd + " " + what_gd
+            sol2 = sol1
         elif translate == "2": #gd-en
             sol1 = whose_en
-    sol2 = sol1
+            sol2 = sol1
+    
     #Output -------------------------------------------------------------------
     
     ##Return (question, main solution, alternative solution, prompt)
