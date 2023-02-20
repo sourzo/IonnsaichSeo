@@ -78,12 +78,14 @@ def guess_gender(word):
     #no definite articles
     else:
         w1, w2 = extract_firstword(w)
-        if any((w1.endswith(("ag","achd","id")) and w1 not in ("caraid","nàmhaid"),
-                end_width(w1) == "slender")):
+        if any((w1.endswith(("ag","achd")),
+                w1 == "cailleach")):
             return "fem"
-        elif any((w1.endswith(("ach", "adh", "an", "as")) and w1 != "cailleach",
-                  w1.endswith(("ir","iche")),
-                  end_width(w1) == "broad")):
+        elif w1 in ("caraid","nàmhaid"):
+            return "masc"
+        elif end_width(w1) == "slender":
+            return "fem"
+        else: #broad endings not otherwise specified
             return "masc"
 
 #------------------
