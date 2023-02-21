@@ -505,18 +505,33 @@ def preferences(vocab_file, translate, sentence):
     ##Return (question, main solution, alternative solution, prompt)
     return (q, sol1, sol2, prompt1)
 
-def verbs_reg(tense, verbal_noun, verb_form):
+def verbs_reg(chosen_tense, verbal_noun, verb_form):
     #Randomiser ---------------------------------------------------------------
     
-    ## form: Positive (0), negative (1), questioning positive (2), questioning negative (3)
+    ## verb forms: statement/question, positive/negative
     if verb_form == "1":
-        form = 0
-    elif verb_form == "2":
-        form = rd.randrange(2)
+        p_n = False #positive only
+        q_s = False #statements only
     else:
-        form = rd.randrange(4)
+        p_n = bool(rd.getrandbits(1)) #positive or negative
+        if verb_form == "2":
+            q_s = False #statements only
+        else:
+            q_s = bool(rd.getrandbits(1)) #statement or question
+    
+    ##Write the chosen verb form as a string
+    if p_n == True:
+        vf_str = "Negative "
+    else:
+        vf_str = "Positive "
+    if q_s == True:
+        vf_str = vf_str + "question"
+    else:
+        vf_str = vf_str + "statement"
+        
     ## verb
     verb_num = rd.randrange(len(vb))
+    
     ## person
     pers_num = rd.randrange(len(pp))
     
@@ -526,86 +541,41 @@ def verbs_reg(tense, verbal_noun, verb_form):
     
     if verbal_noun == "y":
         ## verbal noun
-        if vb.loc[verb_num,"verbal_noun"][0] in ("a","e","i","o","u","à","è","ì","ò","ù"):
+        if vb.loc[verb_num,"verbal_noun"][0] in is_utility.vowels:
             vn = "ag " + vb.loc[verb_num,"verbal_noun"]
         else:
             vn = "a' " + vb.loc[verb_num,"verbal_noun"]
             
-        #the verb bi
-        bi_past = ["bha", "cha robh", "an robh", "nach robh"]
-        bi_pres = ["tha", "chan eil", "a bheil", "nach eil"]
-        bi_fut = ["bidh", "cha bhi", "am bi", "nach bi"]
+        #English verb
+        verb_en = vb.loc[verb_num,"en_vn"]
+    else:
+        verb_en = vb.loc[verb_num,"english"]
+        
+        
     
     #root form of verb
     v_root = vb.loc[verb_num,"root"]
     
-    #form type
-    form_type = ["positive statement", "negative statement", "positive question", "negative question"]
-    
     #Construct sentences ------------------------------------------------------
-    
     if verbal_noun == "y":
-    
-        if tense == "1":
-            ## verbal noun present
-            verb = bi_pres[form] + " " + person_gd + " " + vn
-            
-        elif tense == "2":
-            ## verbal noun past
-            verb = bi_past[form] + " " + person_gd + " " + vn
-        
-        elif tense == "3":
-            ## verbal noun future
-            verb = bi_fut[form] + " " + person_gd + " " + vn
-    
+        sentence = is_utility.transform_verb("bi", tense = chosen_tense, 
+                                             negative = p_n, 
+                                             question = q_s) + " " + person_gd + " " + vn
     else:
-        if tense == "2":
-            ## past
-            verb = is_utility.lenite(v_root)
-            
-            if verb[0] in ("f","a","e","i","o","u","à","è","ì","ò","ù"):
-                verb = "dh'" + verb
-            
-            if form == 1:
-                #negative
-                verb = "cha do " + verb
-            elif form == 2:
-                #positive question
-                verb = "an do " + verb
-            elif form == 3:
-                #negative question
-                verb = "nach do " + verb
-            
-            verb = verb + " " + person_gd
-        
-        elif tense == "3":
-            ## future
-            if form == 0: #positive statement
-                if is_utility.end_width(v_root) == "broad":
-                    verb = v_root + "aidh"
-                else:
-                    verb = v_root + "idh"
-            elif form == 1: #negative statement
-                if v_root[0] in {"f","a","e","i","o","u","à","è","ì","ò","ù"}:
-                    verb = "chan " + is_utility.lenite_dt(v_root)
-                else:
-                    verb = "cha " + is_utility.lenite_dt(v_root)
-            elif form == 2: #positive question
-                verb = is_utility.anm(v_root)
-            elif form == 3: #negative question
-                verb = "nach " + v_root
-            verb = verb + " " + person_gd
+        sentence = is_utility.transform_verb(v_root, tense = chosen_tense, 
+                                             negative = p_n, 
+                                             question = q_s) + " " + person_gd
     
     #Questions ----------------------------------------------------------------
     if verb_form == "1":
-        q = vb.loc[verb_num,"english"].capitalize() + " (" + person_en.capitalize() + ")"
+        q = verb_en.capitalize() + " (" + person_en.capitalize() + ")"
     else:
-        q = vb.loc[verb_num,"english"].capitalize() + " (" + person_en.capitalize() + ", " + form_type[form] + ")"
+        q = verb_en.capitalize() + " (" + person_en.capitalize() + ", " + vf_str + ")"
     #Prompts ------------------------------------------------------------------
     prompt1 = ""
     #Solutions ----------------------------------------------------------------
-    sol1 = verb.capitalize()
-    sol2 = verb.capitalize()
+    sol1 = sentence.capitalize()
+    sol2 = sentence.capitalize()
     #Output -------------------------------------------------------------------
     ## Return (question, main solution, alternative solution, prompt)
     return (q, sol1, sol2, prompt1)

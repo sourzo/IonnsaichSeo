@@ -60,8 +60,8 @@ def run_lesson(lesson):
         
     ##Modules involving verbs: select tense
     if lesson.__name__ in ("give_get", "verbs_reg"):
-        options["tense"] = "0"
-        while options["tense"] not in ("x","1","2","3"#,"4"
+        ct = "0"
+        while ct not in ("x","1","2","3"#,"4"
                             ):
             print()
             print("Select tense")
@@ -70,13 +70,19 @@ def run_lesson(lesson):
             print("3: Future tense")
             #print("4: All tenses")
             print("X: Exit")
-            options["tense"] = input("Tense: ").lower().strip()
-        if options["tense"] == "x":
+            ct = input("Tense: ").lower().strip()
+        if ct == "1":
+            options["chosen_tense"] = "present"
+        elif ct == "2":
+            options["chosen_tense"] = "past"
+        elif ct == "3":
+            options["chosen_tense"] = "future"
+        elif ct == "x":
             return
 
     ##Verbs option 2 - verbal noun (past and present)
     if lesson.__name__ in ("verbs_reg"):
-        if options["tense"] in ("2","3"):
+        if options["chosen_tense"] in ("past","future"):
             options["verbal_noun"] = "0"
             while options["verbal_noun"] not in ("y","n"):
                 print()
@@ -84,7 +90,7 @@ def run_lesson(lesson):
                 print("Y: Yes")
                 print("N: No")
                 options["verbal_noun"] = input("Verbal nouns: ").lower().strip()
-        elif options["tense"] == "1":
+        elif options["chosen_tense"] == "present":
             options["verbal_noun"] = "y"
             
     ##Verbs option 3 - Verb form (question/statement, positive/negative)

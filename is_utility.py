@@ -19,12 +19,34 @@ def encourage():
     print(encouragements.loc[choose,"gaelic"].capitalize()+"!",
           encouragements.loc[choose,"english"].capitalize()+"!")
 
-vowels = ["a","e","i","o","u",
+vowels = {"a","e","i","o","u",
           "à","è","ì","ò","ù",
-          "á","é","í","ó","ú"]
-broad_vowels = ["a","o","u","à","ò","ù","á","ó","ú"]
-slender_vowels = ["e","i","è","ì","é","í"]
-def_articles = ("an ", "na ", "a' ", "a’ ", "am ", "an t-")
+          "á","é","í","ó","ú"}
+broad_vowels = {"a","o","u","à","ò","ù","á","ó","ú"}
+slender_vowels = {"e","i","è","ì","é","í"}
+def_articles = {"an ", "na ", "a' ", "a’ ", "am ", "an t-"}
+labials = {"b","m","f","p"}
+never_lenite = ("l","r","n","sm","st","sg","sp") + tuple(vowels)
+irreg_past = {"rach" : ["chaidh", "deach"],
+              "abair" : ["thuirt", "tuirt"],
+              "dèan" : ["rinn", "do rinn"],
+              "cluinn" : ["chuala", "cuala"],
+              "faic" : ["chunnaic", "faca"],
+              "thig" : ["thàinig", "tàinig"],
+              "thoir" : ["thug", "tug"],
+              "ruig" : ["ràinig", "do ràinig"],
+              "beir" : ["rug", "do rug"],
+              "faigh" : ["fhuair", "d' fhuair"],
+              "bi" : ["bha", "robh"]}
+irreg_future = {"rach" : ["thèid", "tèid"],
+                "abair" : ["canaidh", "can"],
+                "dèan" : ["nì", "dèan"],
+                "faic" : ["chì", "faic"],
+                "thig" : ["thig", "tig"],
+                "thoir" : ["bheir", "toir"],
+                "faigh" : ["gheibh", "faigh"],
+                "bi" : ["bidh", "bi"]}
+
 
 #--------------------
 #Helper functions----
@@ -70,7 +92,7 @@ def guess_gender(word):
     #definite articles may help
     if w.startswith(def_articles):
         if any((w.startswith(("a' ", "an fh")),
-                w.startswith("an t-s") and w[6] in vowels + ["l","r","n"],
+                w.startswith("an t-s") and w[6] in vowels.union({"l","r","n"}),
                 w.startswith("an ") and w[3] in vowels)):
             return "fem"
         else:
@@ -97,18 +119,15 @@ def guess_gender(word):
 def lenite(word):
     """lenite words"""
     w = word.lower()
-    if w[0] not in ("l","n","r","a","e","i","o","u","à","è","ì","ò","ù"):
-        if w[0:2] not in ("sm","st","sg","sp"):
+    if not w.startswith(never_lenite):
             if w[1] != "h":
                 word = word[0] + "h" + word[1:]
-            
     return word
 
 def lenite_dt(word):
     """lenite words - but not d and t words"""
     w = word.lower()
-    if w[0] not in ("d","t","l","n","r","a","e","i","o","u","à","è","ì","ò","ù"):
-        if w[0:2] not in ("sm","st","sg","sp"):
+    if not w.startswith(never_lenite + ("d","t")):
             if w[1] != "h":
                 word = word[0] + "h" + word[1:]
     return word
@@ -139,19 +158,30 @@ def slenderise(word):
 
 def anm(word):
     """add 'an' or 'am' to the front of a word depending on its first letter"""
-    if word[0] in ("b","m","f","p"):
+    if word[0] in labials:
         word = "am " + word
     else:
         word = "an " + word
     return word
 
+def cha(word):
+    """Add 'cha' or 'chan' to the front of a word"""
+    if word[0] in vowels.union("f"):
+        word = "chan " + lenite_dt(word)
+    else:
+        word = "cha " + lenite_dt(word)
+    return word
+
+
 def art_standard(word):
     """The common article pattern used for singular nom-fem, prep, and poss-masc."""
-    if word[0].lower() in ("b","c","g","m","p"):
+    if word[0].lower() in {"b","c","g","m","p"}:
         return "a' " + lenite_dt(word)
     elif word[0].lower() == "s":
-        if word[1].lower() in vowels + ["l","n","r"]:
+        if word[1].lower() in vowels.union({"l","n","r"}):
             return "an t-" + word
+        else:
+            return "an " + word #Does this lenite??
     elif word[0].lower() == "f":
         return "an fh" + word[1:]
     else:
@@ -171,7 +201,7 @@ def gd_common_article(word,sg_pl,gender,case):
         if case == "nom":
             #masculine
             if gender == "masc":
-                if word[0].lower() in ("b","m","f","p"):
+                if word[0].lower() in labials:
                     word = "am " + word
                 elif word[0].lower() in vowels:
                     word = "an t-" + word
@@ -204,7 +234,7 @@ def gd_common_article(word,sg_pl,gender,case):
         
         #possessive
         if case == "poss":
-            if word[0].lower() in ("b","m","f","p"):
+            if word[0].lower() in labials:
                 word = "nam " + word
             else:
                 word = "nan " + word
@@ -241,6 +271,76 @@ def prep_def(df,row_num):
         word = gd_common_article(word, sg_pl, "masc", "prep")
     return word
 
+def transform_verb(root, tense, negative, question):
+    """Simple past/future tense of a verb"""
+    if tense == "past":
+        if root in irreg_past:
+            if question == False and negative == False:
+                ##Primary form
+                verb = irreg_past[root][0]
+            else:
+                #Secondary form
+                verb = irreg_past[root][1]
+        else:
+            #regular past
+            if root[0] in vowels:
+                verb = "dh'" + root
+            else: 
+                verb = lenite(root)
+            #secondary form
+            if question == True or negative == True:
+                verb = "do " + verb
+    
+    elif tense == "future":
+        if root in irreg_future:
+            if question == False and negative == False:
+                ##Primary form
+                verb = irreg_future[root][0]
+            else:
+                #Secondary form
+                verb = irreg_future[root][1]
+        else:
+            #regular future
+            if question == False and negative == False:
+                #primary form
+                if end_width(verb) == "broad":
+                    verb = verb + "aidh"
+                else:
+                    verb = verb + "idh"
+            else:
+                #secondary form
+                if question == False:
+                    verb = lenite(root)
+                else:
+                    verb = root
+    elif tense == "present":
+        if root == "bi":
+            if question == False and negative == False:
+                #primary form
+                verb = "tha"
+            else:
+                #secondary form
+                verb = "eil"
+    
+    ##Negative prefixes
+    if negative == True:
+        if question == True:
+            if verb == "faca":
+                verb = "nach fhaca"
+            else:
+                verb = "nach " + verb
+        else:
+            verb = cha(verb)
+    
+    #Positive prefixes
+    else:
+        if question == True:
+            if verb != "eil":
+                verb = anm(verb)
+            else:
+                verb = "a bh" + verb
+    return verb
+
 #------------------
 #English grammar---
 #------------------
@@ -250,7 +350,7 @@ def en_indef_article(word):
     Note, a/an is applied in English by sound rather than spelling,
     so this will be wrong sometimes (eg "an unicorn")
     """
-    if word[0] in ("a","e","i","o","u"):
+    if word[0] in vowels:
         obj_indef = "an " + word
     else:
         obj_indef = "a " + word
@@ -264,7 +364,7 @@ def en_pl(word):
         return word[0] + "ee" + word[3:]
     elif word == "mouse":
         return "mice"
-    elif word[-1] == "y" and word[-2] not in ("a", "e", "i", "o", "u"):
+    elif word[-1] == "y" and word[-2] not in vowels:
         return word[0:-1] + "ies"
     elif word[-6:] == "person":
         return word[:-6] + "people"
@@ -272,7 +372,7 @@ def en_pl(word):
         return word[:-3] + "men"
     elif word[-1] in ("s","x","z") or word[-2:] in ("sh","ch"):
         return word + "es"
-    elif word[-1] == "o" and word[-2] not in ("a", "e", "i", "o", "u"):
+    elif word[-1] == "o" and word[-2] not in vowels:
         return word + "es"
     elif word[-2:] == "fe":
         return word[:-2] + "ves"
