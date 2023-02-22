@@ -59,7 +59,7 @@ def run_lesson(lesson):
             options["max_num"] = 1
         
     ##Modules involving verbs: select tense
-    if lesson.__name__ in ("give_get", "verbs_reg"):
+    if lesson.__name__ in ("give_get", "verb_tenses"):
         ct = "0"
         while ct not in ("x","1","2","3"#,"4"
                             ):
@@ -80,21 +80,8 @@ def run_lesson(lesson):
         elif ct == "x":
             return
 
-    ##Verbs option 2 - verbal noun (past and present)
-    if lesson.__name__ in ("verbs_reg"):
-        if options["chosen_tense"] in ("past","future"):
-            options["verbal_noun"] = "0"
-            while options["verbal_noun"] not in ("y","n"):
-                print()
-                print("Practice verbal nouns ('-ing' words)?")
-                print("Y: Yes")
-                print("N: No")
-                options["verbal_noun"] = input("Verbal nouns: ").lower().strip()
-        elif options["chosen_tense"] == "present":
-            options["verbal_noun"] = "y"
-            
-    ##Verbs option 3 - Verb form (question/statement, positive/negative)
-    if lesson.__name__ in ("verbs_reg"):
+    ##Verbs option 2 - Verb form (question/statement, positive/negative)
+    if lesson.__name__ in ("verb_tenses"):
         options["verb_form"] = "0"
         while options["verb_form"] not in ("1", "2", "3"):
             print()
@@ -105,7 +92,7 @@ def run_lesson(lesson):
             options["verb_form"] = input("Verb forms: ").lower().strip()
     
     ##Translation direction
-    if lesson.__name__ in ("give_get", "possession_aig", "vocab", "preferences", "professions_annan", "emphasis_adjectives", "possession_mo"):
+    if lesson.__name__ in ("give_get", "possession_aig", "learn_nouns", "preferences", "professions_annan", "emphasis_adjectives", "possession_mo"):
         options["translate"] = "0"
         while options["translate"] not in ("x","1","2"):
             print()
@@ -139,7 +126,7 @@ def run_lesson(lesson):
             return
         
     #Select vocab file
-    if lesson.__name__ not in ("verbs_reg", "professions_annan", "emphasis_adjectives"):
+    if lesson.__name__ not in ("verb_tenses", "professions_annan", "emphasis_adjectives"):
         if lesson.__name__ == "numbers" and options["num_mode"] in ("1","2"):
             options["vocab_file"] = "xxx" #no vocab file needed
         elif lesson.__name__ == "possession_mo":
@@ -229,7 +216,7 @@ def run_lesson(lesson):
         #Display sentence to translate
         print()
         print(question)
-        answer = input(prompt).lower().strip()
+        answer = input(prompt).lower().strip().replace("?","").replace(".","").replace("!","")
             
         #Check answer
         if answer == "x":

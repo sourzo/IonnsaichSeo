@@ -15,13 +15,8 @@ g_numbers = pd.read_csv('Vocabulary/grammar_numbers.csv')
 vb = pd.read_csv('Vocabulary/verbs_regular.csv')
 professions = pd.read_csv('Vocabulary/people_professions.csv')
 adjectives = pd.read_csv('Vocabulary/adjectives_misc.csv')
-def_articles = ("an ", "na ", "a' ", "a’ ", "am ", "an t-")
 
-vowels = ["a","e","i","o","u",
-          "à","è","ì","ò","ù",
-          "á","é","í","ó","ú"]
-
-def give_get(vocab_file, tense, translate, sentence):
+def give_get(vocab_file, chosen_tense, translate, sentence):
     #Load vocab --------------------------------------------------
         
     gifts = pd.read_csv('Vocabulary/{}.csv'.format(vocab_file))
@@ -44,26 +39,26 @@ def give_get(vocab_file, tense, translate, sentence):
     
     #giving to (give_get_en, give_get_gd)
     if give_get_num == 0:
-        if tense == "1":
+        if chosen_tense == "1":
             give_get_en = en["be_pres"][subject_num] + " giving"
             give_get_gd = "a' toirt"
-        elif tense == "2":
+        elif chosen_tense == "2":
             give_get_en = "gave"
             give_get_gd = "thug"
-        elif tense == "3":
+        elif chosen_tense == "3":
             give_get_en = "will give"
             give_get_gd = "bheir"
         prep_en = "to"
         
     #getting from (give_get_en, give_get_gd)
     elif give_get_num == 1:
-        if tense == "1":
+        if chosen_tense == "1":
             give_get_en = en["be_pres"][subject_num] + " getting"
             give_get_gd = "a' faighinn"
-        elif tense == "2":
+        elif chosen_tense == "2":
             give_get_en = "got"
             give_get_gd = "fhuair"
-        elif tense == "3":
+        elif chosen_tense == "3":
             give_get_en = "will get"
             give_get_gd = "gheibh"
         prep_en = "from"
@@ -110,10 +105,10 @@ def give_get(vocab_file, tense, translate, sentence):
     elif give_get_num == 1:
        sentence_en = subject_en.capitalize() + " " + give_get_en + " " + gift_en + " " + prep_en + " " + object_en
     #Gaelic
-    if tense == "1": #Gaelic - with verbal noun
+    if chosen_tense == "1": #Gaelic - with verbal noun
         sentence_gd = "Tha " + subject_gd + " " + give_get_gd + " " + gift_gd + " " + object_gd
     
-    elif tense in ("2", "3"):  #Past / Future tense sentences
+    elif chosen_tense in ("2", "3"):  #Past / Future tense sentences
         #Gaelic
         sentence_gd = give_get_gd.capitalize() + " " + subject_gd + " " + gift_gd + " " + object_gd
 
@@ -128,10 +123,10 @@ def give_get(vocab_file, tense, translate, sentence):
         prompt1 = ""
     elif sentence == "2": #Fill in the blank
         if translate == "1": #en-gd
-            if tense == "1": #Present tense with verbal noun
+            if chosen_tense == "1": #Present tense with verbal noun
                 prompt1 = "Tha " + subject_gd + " " + give_get_gd + " " + gift_gd + " "
             #Past / Future tense sentences
-            elif tense in ("2", "3"):
+            elif chosen_tense in ("2", "3"):
                 prompt1 = give_get_gd.capitalize() + " " + subject_gd + " " + gift_gd + " "
         elif translate == "2": #gd-en
             prompt1 = subject_en.capitalize() + " " + give_get_en + " " + gift_en + " "
@@ -366,7 +361,7 @@ def numbers(vocab_file, num_mode, max_num):
     ##Return (question, main solution, alternative solution, prompt)
     return (q, sol1, sol1, prompt1)
 
-def vocab(vocab_file, translate):
+def learn_nouns(vocab_file, translate):
     #Load vocab --------------------------------------------------
     
     vocab_sample = pd.read_csv('Vocabulary/{}.csv'.format(vocab_file))
@@ -505,30 +500,26 @@ def preferences(vocab_file, translate, sentence):
     ##Return (question, main solution, alternative solution, prompt)
     return (q, sol1, sol2, prompt1)
 
-def verbs_reg(chosen_tense, verbal_noun, verb_form):
+def verb_tenses(chosen_tense, verb_form):
     #Randomiser ---------------------------------------------------------------
     
     ## verb forms: statement/question, positive/negative
     if verb_form == "1":
-        p_n = False #positive only
+        n_p = False #positive only
         q_s = False #statements only
     else:
-        p_n = bool(rd.getrandbits(1)) #positive or negative
+        n_p = bool(rd.getrandbits(1)) #negative (T) or positive (F)
         if verb_form == "2":
             q_s = False #statements only
         else:
-            q_s = bool(rd.getrandbits(1)) #statement or question
+            q_s = bool(rd.getrandbits(1)) #question (T) or statement (F)
     
-    ##Write the chosen verb form as a string
-    if p_n == True:
-        vf_str = "Negative "
-    else:
-        vf_str = "Positive "
-    if q_s == True:
-        vf_str = vf_str + "question"
-    else:
-        vf_str = vf_str + "statement"
-        
+    #Verbal noun switch
+    if chosen_tense == "past":
+        chosen_tense = rd.choice(("past", "vn_past"))
+    elif chosen_tense == "future":
+        chosen_tense = rd.choice(("future", "vn_future"))
+    
     ## verb
     verb_num = rd.randrange(len(vb))
     
@@ -539,44 +530,47 @@ def verbs_reg(chosen_tense, verbal_noun, verb_form):
     person_gd = pp.loc[pers_num, "pronoun_gd"]
     person_en = pp.loc[pers_num, "en_subj"]
     
-    if verbal_noun == "y":
-        ## verbal noun
-        if vb.loc[verb_num,"verbal_noun"][0] in is_utility.vowels:
-            vn = "ag " + vb.loc[verb_num,"verbal_noun"]
-        else:
-            vn = "a' " + vb.loc[verb_num,"verbal_noun"]
-            
-        #English verb
-        verb_en = vb.loc[verb_num,"en_vn"]
+    if chosen_tense in ("past", "future"):
+        v_root = vb.loc[verb_num,"root"]
     else:
-        verb_en = vb.loc[verb_num,"english"]
-        
-        
-    
-    #root form of verb
-    v_root = vb.loc[verb_num,"root"]
+        v_noun = vb.loc[verb_num,"verbal_noun"]
     
     #Construct sentences ------------------------------------------------------
-    if verbal_noun == "y":
-        sentence = is_utility.transform_verb("bi", tense = chosen_tense, 
-                                             negative = p_n, 
-                                             question = q_s) + " " + person_gd + " " + vn
+    if chosen_tense in ("past", "future"):
+        sentence_gd = is_utility.transform_verb(v_root,
+                                                tense = chosen_tense, 
+                                                negative = n_p, 
+                                                question = q_s) + " " + person_gd
     else:
-        sentence = is_utility.transform_verb(v_root, tense = chosen_tense, 
-                                             negative = p_n, 
-                                             question = q_s) + " " + person_gd
+        sentence_gd = is_utility.verbal_noun(vn = v_noun,
+                                             person = person_gd,
+                                             tense = chosen_tense, 
+                                             negative = n_p, 
+                                             question = q_s)
+        
+    sentence_en = is_utility.en_verb(vb, verb_num, 
+                                     pronoun = person_en, 
+                                     tense = chosen_tense, 
+                                     negative = n_p, 
+                                     question = q_s)
     
     #Questions ----------------------------------------------------------------
-    if verb_form == "1":
-        q = verb_en.capitalize() + " (" + person_en.capitalize() + ")"
+    if q_s == True:
+        q = sentence_en.capitalize() + "?"
     else:
-        q = verb_en.capitalize() + " (" + person_en.capitalize() + ", " + vf_str + ")"
+        q = sentence_en.capitalize()
+    q = q.replace(" i "," I ") #English only!
+    
     #Prompts ------------------------------------------------------------------
+    
     prompt1 = ""
+    
     #Solutions ----------------------------------------------------------------
-    sol1 = sentence.capitalize()
-    sol2 = sentence.capitalize()
+    
+    sol1 = sentence_gd.capitalize()
+    sol2 = sol1
     #Output -------------------------------------------------------------------
+    
     ## Return (question, main solution, alternative solution, prompt)
     return (q, sol1, sol2, prompt1)
 
@@ -730,7 +724,7 @@ def possession_mo(vocab_file, translate, sentence):
     else:
         ## possessive article
         whose_en = pp.loc[whose_num,"en_poss"]
-        if what_gd[0] in vowels:
+        if what_gd[0] in is_utility.vowels:
             whose_gd = ("m'", "d'", "", "a", "àr", "ùr", "an")[whose_num]
         elif whose_num < 6:
             whose_gd = pp.loc[whose_num,"possessive"]
@@ -741,13 +735,13 @@ def possession_mo(vocab_file, translate, sentence):
                 whose_gd = "an"
         
         ## my/your/his -> lenition
-        if whose_num in (0,1,2) and what_gd[0] not in vowels:
+        if whose_num in (0,1,2) and what_gd[0] not in is_utility.vowels:
             what_gd = is_utility.lenite(what_gd)
         ## her + vowel -> h-
-        elif whose_num ==3 and what_gd[0] in vowels:
+        elif whose_num ==3 and what_gd[0] in is_utility.vowels:
             what_gd = "h-" + what_gd
         ## (y)our + vowel -> n-
-        elif whose_num in (4, 5) and what_gd[0] in vowels:
+        elif whose_num in (4, 5) and what_gd[0] in is_utility.vowels:
             what_gd = "n-" + what_gd
     
     #Construct sentence -------------------------------------------------------
@@ -817,7 +811,7 @@ def where_from(vocab_file, sentence):
     
     #Parts of sentence --------------------------------------------------------
     
-    if vocab_sample.loc[where_num,"nom_sing"].startswith(def_articles):
+    if vocab_sample.loc[where_num,"nom_sing"].startswith(is_utility.def_articles):
         from_gd = "às " + is_utility.prep_def(vocab_sample, where_num)
     else:
         from_gd = "à " + vocab_sample.loc[where_num,"nom_sing"]
@@ -877,7 +871,7 @@ def where_in(vocab_file, sentence):
     if vocab_file not in contains_articles:
         article_switch = rd.randrange(2)
     else:
-        if vocab_sample.loc[where_num,"nom_sing"].startswith(def_articles):
+        if vocab_sample.loc[where_num,"nom_sing"].startswith(is_utility.def_articles):
             article_switch = 1
         else:
             article_switch = 0

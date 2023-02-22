@@ -7,26 +7,21 @@ Created on Tue Nov  1 17:30:28 2022
 
 import pandas as pd
 import random as rd
-import re
+import re #regex
+en = pd.read_csv('Vocabulary/grammar_english.csv')
 
-#-----------------
-#General stuff----
-#-----------------
-def encourage():
-    """Print a random encouraging phrase in Gaelic and English"""
-    encouragements = pd.read_csv('Vocabulary/conversation_encouragement.csv')
-    choose = rd.randint(0, len(encouragements)-1)
-    print(encouragements.loc[choose,"gaelic"].capitalize()+"!",
-          encouragements.loc[choose,"english"].capitalize()+"!")
+#---------------
+#Definitions----
+#---------------
 
-vowels = {"a","e","i","o","u",
-          "à","è","ì","ò","ù",
-          "á","é","í","ó","ú"}
-broad_vowels = {"a","o","u","à","ò","ù","á","ó","ú"}
-slender_vowels = {"e","i","è","ì","é","í"}
-def_articles = {"an ", "na ", "a' ", "a’ ", "am ", "an t-"}
-labials = {"b","m","f","p"}
-never_lenite = ("l","r","n","sm","st","sg","sp") + tuple(vowels)
+vowels = set("aàáeèéiìíoòóuùú")
+broad_vowels = set("aàáoòóuùú")
+slender_vowels = set("eèéiìí")
+labials = set("bmfp")
+never_lenite = tuple(vowels) + ("l","r","n","sm","st","sg","sp")
+dentals = tuple("dt")
+def_articles = tuple(("an ", "na ", "a' ", "a’ ", "am ", "an t-"))
+
 irreg_past = {"rach" : ["chaidh", "deach"],
               "abair" : ["thuirt", "tuirt"],
               "dèan" : ["rinn", "do rinn"],
@@ -47,6 +42,16 @@ irreg_future = {"rach" : ["thèid", "tèid"],
                 "faigh" : ["gheibh", "faigh"],
                 "bi" : ["bidh", "bi"]}
 
+#---------------------
+#General functions----
+#---------------------
+
+def encourage():
+    """Print a random encouraging phrase in Gaelic and English"""
+    encouragements = pd.read_csv('Vocabulary/conversation_encouragement.csv')
+    choose = rd.randint(0, len(encouragements)-1)
+    print(encouragements.loc[choose,"gaelic"].capitalize()+"!",
+          encouragements.loc[choose,"english"].capitalize()+"!")
 
 #--------------------
 #Helper functions----
@@ -67,6 +72,7 @@ def extract_firstword(string):
     return (s1, s2)
 
 def end_width(word):
+    """Does a word end with a broad or slender vowel?"""
     w = word.lower()
     test = [char for char in w if char in vowels]
     if test[-1] in broad_vowels:
@@ -75,8 +81,9 @@ def end_width(word):
         return "slender"
 
 def remove_articles(word):
+    """Remove the definite article from a word"""
     if word.startswith(def_articles):
-        stripword = word[3:]
+        stripword = word.split()[1]
         if stripword.startswith("t-"):
             stripword = stripword[2:]
         return stripword
@@ -92,7 +99,7 @@ def guess_gender(word):
     #definite articles may help
     if w.startswith(def_articles):
         if any((w.startswith(("a' ", "an fh")),
-                w.startswith("an t-s") and w[6] in vowels.union({"l","r","n"}),
+                w.startswith("an t-s") and w[6] in vowels.union(set("lrn")),
                 w.startswith("an ") and w[3] in vowels)):
             return "fem"
         else:
@@ -116,18 +123,10 @@ def guess_gender(word):
 
 ##Note - some of these things assume a 'word' not a string. Might need to put error message in.
 
-def lenite(word):
-    """lenite words"""
+def lenite(word, extras = ()):
+    """lenite words - can add other letters which should not lenite, eg dentals"""
     w = word.lower()
-    if not w.startswith(never_lenite):
-            if w[1] != "h":
-                word = word[0] + "h" + word[1:]
-    return word
-
-def lenite_dt(word):
-    """lenite words - but not d and t words"""
-    w = word.lower()
-    if not w.startswith(never_lenite + ("d","t")):
+    if not w.startswith(never_lenite + extras):
             if w[1] != "h":
                 word = word[0] + "h" + word[1:]
     return word
@@ -135,7 +134,7 @@ def lenite_dt(word):
 def slenderise(word):
     """This is not perfect, even with the exceptions -
     I am not sure whether to do some general rules, eg '...each' -> '...ich'...
-    ... also do this before lenition because of list matching."""
+    ... also do this before lenition because of list matching for exceptions."""
     ##Only slenderise the first word in the string
     w1, w2 = extract_firstword(word)
     ##Only slenderise broad words
@@ -156,9 +155,23 @@ def slenderise(word):
     else:
         return word
 
+def shorten(word):
+    """Removes the last set of vowels from a word, and changes nn to n"""
+    if word.endswith(("il","in","ir")):
+        consonants = [char for char in word if char not in vowels]
+        cut_pos = word.rfind(consonants[-2]) + 1
+        return word[:cut_pos] + word[-1]
+    elif word.endswith(("inn")):
+        consonants = [char for char in word if char not in vowels]
+        cut_pos = word.rfind(consonants[-3]) + 1
+        return word[:cut_pos] + "n"
+    else:
+        return word
+
 def anm(word):
     """add 'an' or 'am' to the front of a word depending on its first letter"""
-    if word[0] in labials:
+    w = word.lower()
+    if w[0] in labials:
         word = "am " + word
     else:
         word = "an " + word
@@ -166,24 +179,28 @@ def anm(word):
 
 def cha(word):
     """Add 'cha' or 'chan' to the front of a word"""
-    if word[0] in vowels.union("f"):
-        word = "chan " + lenite_dt(word)
+    w = word.lower()
+    if w[0] in vowels:
+        word = "chan " + word
+    elif w[0] == "f" and w[1] in vowels:
+        word = "chan fh" + word[1:]
     else:
-        word = "cha " + lenite_dt(word)
+        word = "cha " + lenite(word, extras = dentals)
     return word
 
 
 def art_standard(word):
     """The common article pattern used for singular nom-fem, prep, and poss-masc."""
-    if word[0].lower() in {"b","c","g","m","p"}:
-        return "a' " + lenite_dt(word)
-    elif word[0].lower() == "s":
-        if word[1].lower() in vowels.union({"l","n","r"}):
-            return "an t-" + word
+    w = word.lower()
+    if w[0] in {"b","c","g","m","p"}:
+        return "a' " + lenite(word, dentals)
+    elif w[0] == "s":
+        if w[1] in vowels.union({"l","n","r"}):
+            return "an t-" + w
         else:
-            return "an " + word #Does this lenite??
-    elif word[0].lower() == "f":
-        return "an fh" + word[1:]
+            return "an " + w #Does this lenite??
+    elif w[0] == "f":
+        return "an fh" + w[1:]
     else:
         return anm(word)
 
@@ -273,6 +290,7 @@ def prep_def(df,row_num):
 
 def transform_verb(root, tense, negative, question):
     """Simple past/future tense of a verb"""
+    root = root.lower()
     if tense == "past":
         if root in irreg_past:
             if question == False and negative == False:
@@ -285,6 +303,8 @@ def transform_verb(root, tense, negative, question):
             #regular past
             if root[0] in vowels:
                 verb = "dh'" + root
+            elif root[0] == "f" and root[1] in vowels:
+                verb = "dh'fh" + root[1:]
             else: 
                 verb = lenite(root)
             #secondary form
@@ -303,10 +323,10 @@ def transform_verb(root, tense, negative, question):
             #regular future
             if question == False and negative == False:
                 #primary form
-                if end_width(verb) == "broad":
+                if end_width(root) == "broad":
                     verb = verb + "aidh"
                 else:
-                    verb = verb + "idh"
+                    verb = shorten(root) + "idh" #some slender-ended verbs need shortening
             else:
                 #secondary form
                 if question == False:
@@ -340,6 +360,18 @@ def transform_verb(root, tense, negative, question):
             else:
                 verb = "a bh" + verb
     return verb
+
+def verbal_noun(vn, person, tense, negative, question):
+    if tense in ("vn_past", "vn_future"):
+        tense = tense[3:]
+    """Verbal noun tense of given verb, vn.
+    Input must be the verbal noun form."""
+    bi = transform_verb("bi", tense, negative, question)
+    if vn[0] in vowels:
+        vn = "ag " + vn
+    else:
+        vn = "a' " + vn
+    return bi + " " + person + " " + vn
 
 #------------------
 #English grammar---
@@ -381,8 +413,49 @@ def en_pl(word):
     else:
         return word + "s"
 
-def en_verb(pronoun, word):
-    if pronoun.lower() in ("he", "she", "name"):
-        return word + "s"
+def en_verb(vocab_sample, item, pronoun, tense, negative, question):
+    global en
+    
+    if question == False:
+        if negative == True:
+            neg = " not "
+        else:
+            neg = " "
+
+        if tense == "present":
+            return pronoun + " " + en.loc[en["en_subj"] == pronoun,"be_pres"].values[0] + neg + vocab_sample.loc[item,"en_vn"]
+        elif tense == "past":
+            if negative == False:
+                return pronoun + " " + vocab_sample.loc[item,"en_past"]
+            else:
+                return pronoun + " did not " + vocab_sample.loc[item,"english"]
+        elif tense == "vn_past":
+            return pronoun + " " + en.loc[en["en_subj"] == pronoun,"be_past"].values[0] + neg + vocab_sample.loc[item,"en_vn"]
+        elif tense == "future":
+            return pronoun + " will" + neg + vocab_sample.loc[item,"english"]
+        elif tense == "vn_future":
+            return pronoun + " will" + neg + "be " + vocab_sample.loc[item,"en_vn"]
     else:
-        return word
+        if negative == True:
+            neg = "n't "
+        else:
+            neg = " "
+
+        if tense == "present":
+            if pronoun.lower() == "i" and negative == True:
+                return "Aren't " + pronoun + " " +  vocab_sample.loc[item,"en_vn"]
+            else:
+                return en.loc[en["en_subj"] == pronoun,"be_pres"].values[0] + neg + pronoun + " " +  vocab_sample.loc[item,"en_vn"]
+        elif tense == "past":
+            return "Did" + neg + pronoun + " " + vocab_sample.loc[item,"english"]
+        elif tense == "vn_past":
+            return en.loc[en["en_subj"] == pronoun,"be_past"].values[0] + neg + pronoun + " " +  vocab_sample.loc[item,"en_vn"]
+        else:
+            if negative == True:
+                start = "Will "
+            else:
+                start = "Won't "
+            if tense == "future":
+                return start + pronoun + " " + vocab_sample.loc[item,"english"]
+            elif tense == "vn_future":
+                return start + pronoun + " be " + vocab_sample.loc[item,"en_vn"]
