@@ -10,7 +10,6 @@ def run_lesson(lesson):
     import is_utility
     import datetime as dt
     
-    
     # User options ------------------------------------------------------------
     
     options = dict()
@@ -51,7 +50,10 @@ def run_lesson(lesson):
         
         elif options["num_mode"] in ("1", "2"):
             code_max = 100
-            options["max_num"] = max(1,min(int(input("Select maximum number to practice, must be less than {}: ".format(code_max))),(code_max-1)))
+            user_max=""
+            while user_max.isdigit()==False:
+                user_max = input("Select maximum number to practice, must be less than {}: ".format(code_max))
+            options["max_num"] = max(1,min(int(user_max),(code_max-1)))
             print()
             print("Practicing numbers 1 to {}".format(options["max_num"]))
             
@@ -61,14 +63,13 @@ def run_lesson(lesson):
     ##Modules involving verbs: select tense
     if lesson.__name__ in ("give_get", "verb_tenses"):
         ct = "0"
-        while ct not in ("x","1","2","3"#,"4"
-                            ):
+        while ct not in ("x","1","2","3","4"):
             print()
             print("Select tense")
             print("1: Present tense")
             print("2: Past tense")
             print("3: Future tense")
-            #print("4: All tenses")
+            print("4: All tenses")
             print("X: Exit")
             ct = input("Tense: ").lower().strip()
         if ct == "1":
@@ -77,6 +78,8 @@ def run_lesson(lesson):
             options["chosen_tense"] = "past"
         elif ct == "3":
             options["chosen_tense"] = "future"
+        elif ct == "4":
+            options["chosen_tense"] = "any"
         elif ct == "x":
             return
 
@@ -126,75 +129,29 @@ def run_lesson(lesson):
             return
         
     #Select vocab file
-    if lesson.__name__ not in ("verb_tenses", "professions_annan", "emphasis_adjectives"):
-        if lesson.__name__ == "numbers" and options["num_mode"] in ("1","2"):
-            options["vocab_file"] = "xxx" #no vocab file needed
-        elif lesson.__name__ == "possession_mo":
-            vocab_num = ""
-            while vocab_num not in ("x","1","2","3"):
-                print()
-                print("Select topic")
-                print("1: Body parts")
-                print("2: Clothes")
-                print("3: Family")
-                print("X: Exit")
-                vocab_num = input("Practice mode: ").lower().strip()
-            if vocab_num == "x":
-                return        
-            elif vocab_num == "1":
-                options["vocab_file"] = "people_body"        
-            elif vocab_num == "2":
-                options["vocab_file"] = "people_clothes"        
-            elif vocab_num == "3":
-                options["vocab_file"] = "people_family"        
-        elif lesson.__name__ == "where_from":
-            vocab_num = ""
-            while vocab_num not in ("x","1","2"):
-                print()
-                print("Select geography")
-                print("1: Countries")
-                print("2: Places in Scotland")
-                print("X: Exit")
-                vocab_num = input("Practice mode: ").lower().strip()
-            if vocab_num == "x":
-                return        
-            elif vocab_num == "1":
-                options["vocab_file"] = "places_world"        
-            elif vocab_num == "2":
-                options["vocab_file"] = "places_scotland"        
-        elif lesson.__name__ == "where_in":
-            vocab_num = ""
-            while vocab_num not in ("x","1","2","3","4"):
-                print()
-                print("Select places")
-                print("1: Countries")
-                print("2: Places in Scotland")
-                print("3: Around town")
-                print("4: In the house")
-                print("X: Exit")
-                vocab_num = input("Practice mode: ").lower().strip()
-            if vocab_num == "x":
-                return        
-            elif vocab_num == "1":
-                options["vocab_file"] = "places_world"        
-            elif vocab_num == "2":
-                options["vocab_file"] = "places_scotland"        
-            elif vocab_num == "3":
-                options["vocab_file"] = "places_town"        
-            elif vocab_num == "4":
-                options["vocab_file"] = "places_home"        
+    vocab_list = is_utility.select_vocab(lesson, options)
+    if type(vocab_list) == str:
+        return
+    elif len(vocab_list) == 1:
+        options["vocab_sample"] = vocab_list
+    elif len(vocab_list) > 1:
+        user_size = ""
+        while user_size.isdigit()==False:
+            print()
+            print("How many words do you want to use from the list?")
+            user_size = input("(Max " + str(len(vocab_list)) + "): ")
+        user_size = max(1,min(int(user_size),len(vocab_list)))
+        if user_size == 1:
+            print()
+            print("Which word do you want to practice?")
+            print(vocab_list["english"])
+            row_num = ""
+            while row_num.isdigit()==False or int(row_num) > len(vocab_list["english"]):
+                    row_num = input("Number: ")
+            options["vocab_sample"] = vocab_list.iloc[[int(row_num)]].reset_index(drop=True)
         else:
-            from os.path import exists
-            options["vocab_file"] = "xxx"
-            while exists("Vocabulary/{}.csv".format(options["vocab_file"])) == False :
-                print()
-                print("Name the vocabulary list to use in practice")
-                print("For example: 'animals_pets'")
-                options["vocab_file"] = input()
-                if exists("Vocabulary/{}.csv".format(options["vocab_file"]))==False:
-                    print()
-                    print("File not found: Check vocabulary list is a CSV file in the Vocabulary folder")
-            
+            options["vocab_sample"] = vocab_list.sample(user_size).reset_index(drop=True)
+    
     # Practice ----------------------------------------------------------------
     print()
     print("Type 'X' to finish")
@@ -208,10 +165,14 @@ def run_lesson(lesson):
         question, solution1, solution2, prompt = lesson(**options)
         
         #fix apostrophe issues
-        question = question.replace("’","'")
-        solution1 = solution1.replace("’","'")
-        solution2 = solution2.replace("’","'")
-        prompt = prompt.replace("’","'")
+        if type(question)==str:
+            question = question.replace("’","'")
+        if type(solution1)==str:
+            solution1 = solution1.replace("’","'")
+        if type(solution2)==str:
+            solution2 = solution2.replace("’","'")
+        if type(prompt)==str:
+            prompt = prompt.replace("’","'")
             
         #Display sentence to translate
         print()
@@ -231,7 +192,7 @@ def run_lesson(lesson):
                 
     print()
     print("End of practice!")
-    print("Your score is {} out of {}".format(score, q_count))
+    print("Your score is {} out of {}".format(score, q_count-1))
     print("Time taken: ", dt.datetime.now() -start_time)
     print()
     print()

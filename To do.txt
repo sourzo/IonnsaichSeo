@@ -1,16 +1,6 @@
-Q: Why is "to be" (either one) not an irregular verb??
-
 Overall app:
- - Create utility modules which contain:
-   - grammatical things (lenition, indefinite articles, definite articles, etc)
- - Put vocab list checks into utilities functions
- - add recommended/suggested vocab lists - automate??
-
-Improvements for each generated question set:
- - Make the code check the suitability of the chosen vocab list.
- - Make the vocab/grammar files global so they aren't read in every time a question is generated
-
-Adjectives, verbs: short and long version? (Small sample vs whole list)
+ - when selecting pronouns, include names?
+ - lists where (some) vocab starts with definite article (eg place names, seasons) - need to not treat these the same as indefinite vocab lists (Need to fix some code in question generator)
 
 Additional modules:
  - verbs & tense 
@@ -28,18 +18,16 @@ Additional modules:
    ... personal numbers
    ... when (this/last month/year, yesterday, d-b yesterday, etc)
  - possessive article
-   ... mo/do/... : family, body parts, clothes
    ... prep possessive
  - adjectives
-   ... emhatic pronouns: need to create adjective file, and finish q/sol/prompt.
+   ... emphatic pronouns: need to create adjective file, and finish q/sol/prompt.
    ... adjectives before the noun (sean/seann?)
    ... superlatives
    ... comparison (more/less, as..as..)
    ... when they do(n't) lenite
    ... adverbs
  - place (towns, countries)
-   ... "I am from", "I live in", "I am going to"
-   ... (in)definite article
+   ... "I live in", "I am going to"
    ... languages (pp rium?)
    ... opposites? in/out, inside/outside, (over) here/there/yonder, this/that/yon, up/down, etc
    ... reach/arrive, go/went, etc
@@ -64,10 +52,3 @@ Strengths & Limitations of code:
 - it does not ignore accents
 - it does not ignore apostrophes and hyphens
 - you have to specify singular or plural when translating "you" into English
-
-Vocab files:
- - checking them for columns
- - listing suitable vocab files for modules
-
-Regular verbs:
- - improve question format

@@ -12,17 +12,13 @@ en = pd.read_csv('Vocabulary/grammar_english.csv')
 pp = pd.read_csv('Vocabulary/grammar_prepPronouns.csv')
 names = pd.read_csv('Vocabulary/people_names.csv')
 g_numbers = pd.read_csv('Vocabulary/grammar_numbers.csv')
-vb = pd.read_csv('Vocabulary/verbs_regular.csv')
 professions = pd.read_csv('Vocabulary/people_professions.csv')
 adjectives = pd.read_csv('Vocabulary/adjectives_misc.csv')
 
-def give_get(vocab_file, chosen_tense, translate, sentence):
+def give_get(chosen_tense, translate, sentence, vocab_sample):
     #Load vocab --------------------------------------------------
-        
-    gifts = pd.read_csv('Vocabulary/{}.csv'.format(vocab_file))
-    if ("english" not in gifts.columns or "nom_sing" not in gifts.columns):
-        print("Error: Check format of vocabulary list, must contain columns 'english' and 'nom_sing' (lower-case)")
-        return
+    
+    gifts = vocab_sample
     
     #Randomiser ---------------------------------------------------------------
     
@@ -154,14 +150,11 @@ def give_get(vocab_file, chosen_tense, translate, sentence):
     elif translate == "2": #gd-en
         return (q, sol1, sol2, prompt1)
 
-def possession_aig(vocab_file, translate, sentence):
+def possession_aig(translate, sentence, vocab_sample):
+    
     #Load vocab --------------------------------------------------
     
-    vocab_sample = pd.read_csv('Vocabulary/{}.csv'.format(vocab_file))
-    if ("english" not in vocab_sample.columns or "nom_sing" not in vocab_sample.columns):
-        print("Error: Check format of vocabulary list, must contain columns 'english' and 'nom_sing' (lower-case)")
-        return
-
+    
     #Randomiser ---------------------------------------------------------------
     
     subject_num = rd.randrange(6)
@@ -212,18 +205,12 @@ def possession_aig(vocab_file, translate, sentence):
     elif translate == "2": #gd-en
         return (q, sol1, sol1, prompt1)
 
-def gender(vocab_file, gender_mode):
+def gender(gender_mode, vocab_sample):
     #Load vocab --------------------------------------------------
     
-    vocab_list = pd.read_csv('Vocabulary/{}.csv'.format(vocab_file))
-    if any(["english" not in vocab_list.columns,
-        "nom_sing" not in vocab_list.columns,
-        "gender" not in vocab_list.columns]):
-        print("Error: Check format of vocabulary list, must contain columns 'english' and 'nom_sing' and 'gender' (lower-case)")
-        return
     
     #Randomiser ---------------------------------------------------------------
-    vocab_num = rd.randrange(len(vocab_list))
+    vocab_num = rd.randrange(len(vocab_sample))
     
     #Parts of sentence --------------------------------------------------------
     adjective_en = "small"
@@ -233,40 +220,40 @@ def gender(vocab_file, gender_mode):
     
     if gender_mode == "1": #Adjectives
     
-        sentence_en = "A " + adjective_en + " " + vocab_list["english"][vocab_num]
+        sentence_en = "A " + adjective_en + " " + vocab_sample["english"][vocab_num]
             
-        if vocab_list["gender"][vocab_num] == "masc":
-            sentence_gd = vocab_list["nom_sing"][vocab_num] + " " + adjective_gd
-        elif vocab_list["gender"][vocab_num] == "fem":
-            sentence_gd = vocab_list["nom_sing"][vocab_num] + " " + is_utility.lenite(adjective_gd)
+        if vocab_sample["gender"][vocab_num] == "masc":
+            sentence_gd = vocab_sample["nom_sing"][vocab_num] + " " + adjective_gd
+        elif vocab_sample["gender"][vocab_num] == "fem":
+            sentence_gd = vocab_sample["nom_sing"][vocab_num] + " " + is_utility.lenite(adjective_gd)
             
     elif gender_mode == "2": #Definite articles (nom.)
     
-        sentence_en = "The " + vocab_list["english"][vocab_num] + " (nominative)"
+        sentence_en = "The " + vocab_sample["english"][vocab_num] + " (nominative)"
         
-        sentence_gd = is_utility.gd_common_article(word = vocab_list["nom_sing"][vocab_num],
+        sentence_gd = is_utility.gd_common_article(word = vocab_sample["nom_sing"][vocab_num],
                                                 sg_pl = "sg",
-                                                gender = vocab_list["gender"][vocab_num],
+                                                gender = vocab_sample["gender"][vocab_num],
                                                 case = "nom")
     
     #warning - vocab lists don't have prep_sing at the moment
     elif gender_mode == "3": #Definite articles (prep.)
     
-        sentence_en = "The " + vocab_list["english"][vocab_num] + " (prepositional)"
+        sentence_en = "The " + vocab_sample["english"][vocab_num] + " (prepositional)"
         
-        sentence_gd = is_utility.gd_common_article(word = vocab_list["prep_sing"][vocab_num],
+        sentence_gd = is_utility.gd_common_article(word = vocab_sample["prep_sing"][vocab_num],
                                                 sg_pl = "sg",
-                                                gender = vocab_list["gender"][vocab_num],
+                                                gender = vocab_sample["gender"][vocab_num],
                                                 case = "prep")
     
     #warning - vocab lists don't have poss_sing at the moment
     elif gender_mode == "4": #Definite articles (poss.)
     
-        sentence_en = "The " + vocab_list["english"][vocab_num] + " (possessive)"
+        sentence_en = "The " + vocab_sample["english"][vocab_num] + " (possessive)"
         
-        sentence_gd = is_utility.gd_common_article(word = vocab_list["poss_sing"][vocab_num],
+        sentence_gd = is_utility.gd_common_article(word = vocab_sample["poss_sing"][vocab_num],
                                                 sg_pl = "sg",
-                                                gender = vocab_list["gender"][vocab_num],
+                                                gender = vocab_sample["gender"][vocab_num],
                                                 case = "poss")
     
     #Questions ----------------------------------------------------------------
@@ -286,16 +273,11 @@ def gender(vocab_file, gender_mode):
     ##Return (question, main solution, alternative solution, prompt)
     return (q, sol1, sol1, prompt1)
 
-def numbers(vocab_file, num_mode, max_num):
+def numbers(num_mode, max_num, vocab_sample):
     
     #Load vocab --------------------------------------------------
+    
         
-    if num_mode in ("3", "4", "5"): #plurals of nouns
-        #Practicing plurals
-        vocab_sample = pd.read_csv('Vocabulary/{}.csv'.format(vocab_file))
-        if ("english" not in vocab_sample.columns or "nom_sing" not in vocab_sample.columns or "nom_pl" not in vocab_sample.columns):
-            print("Error: Check format of vocabulary list, must contain columns 'english', 'nom_sing' and 'nom_pl' (lower-case)")
-            return
         
     #Randomiser ---------------------------------------------------------------
     if num_mode in ("1", "2"):
@@ -361,13 +343,9 @@ def numbers(vocab_file, num_mode, max_num):
     ##Return (question, main solution, alternative solution, prompt)
     return (q, sol1, sol1, prompt1)
 
-def learn_nouns(vocab_file, translate):
+def learn_nouns(translate, vocab_sample):
     #Load vocab --------------------------------------------------
     
-    vocab_sample = pd.read_csv('Vocabulary/{}.csv'.format(vocab_file))
-    if ("english" not in vocab_sample.columns or "nom_sing" not in vocab_sample.columns):
-        print("Error: Check format of vocabulary list, must contain columns 'english' and 'nom_sing' (lower-case)")
-        return    
     #Randomiser ---------------------------------------------------------------
     vocab_num = rd.randrange(len(vocab_sample))
         
@@ -393,13 +371,9 @@ def learn_nouns(vocab_file, translate):
     ##Return (question, main solution, alternative solution, prompt)
     return (q, sol1, sol1, prompt1)
 
-def preferences(vocab_file, translate, sentence):
+def preferences(translate, sentence, vocab_sample):
     #Load vocab --------------------------------------------------
     
-    vocab_sample = pd.read_csv('Vocabulary/{}.csv'.format(vocab_file))
-    if ("english" not in vocab_sample.columns or "nom_sing" not in vocab_sample.columns):
-        print("Error: Check format of vocabulary list, must contain columns 'english' and 'nom_sing' (lower-case)")
-        return
 
     #Randomiser ---------------------------------------------------------------
     subject_num = rd.randrange(6)
@@ -500,7 +474,7 @@ def preferences(vocab_file, translate, sentence):
     ##Return (question, main solution, alternative solution, prompt)
     return (q, sol1, sol2, prompt1)
 
-def verb_tenses(chosen_tense, verb_form):
+def verb_tenses(chosen_tense, verb_form, vocab_sample):
     #Randomiser ---------------------------------------------------------------
     
     ## verb forms: statement/question, positive/negative
@@ -514,6 +488,9 @@ def verb_tenses(chosen_tense, verb_form):
         else:
             q_s = bool(rd.getrandbits(1)) #question (T) or statement (F)
     
+    if chosen_tense == "any":
+        chosen_tense = rd.choice(("past","present","future"))
+    
     #Verbal noun switch
     if chosen_tense == "past":
         chosen_tense = rd.choice(("past", "vn_past"))
@@ -521,7 +498,7 @@ def verb_tenses(chosen_tense, verb_form):
         chosen_tense = rd.choice(("future", "vn_future"))
     
     ## verb
-    verb_num = rd.randrange(len(vb))
+    verb_num = rd.randrange(len(vocab_sample))
     
     ## person
     pers_num = rd.randrange(len(pp))
@@ -531,9 +508,11 @@ def verb_tenses(chosen_tense, verb_form):
     person_en = pp.loc[pers_num, "en_subj"]
     
     if chosen_tense in ("past", "future"):
-        v_root = vb.loc[verb_num,"root"]
+        v_root = vocab_sample.loc[verb_num,"root"]
+        print(v_root)
     else:
-        v_noun = vb.loc[verb_num,"verbal_noun"]
+        v_noun = vocab_sample.loc[verb_num,"verbal_noun"]
+        print(v_noun)
     
     #Construct sentences ------------------------------------------------------
     if chosen_tense in ("past", "future"):
@@ -548,7 +527,7 @@ def verb_tenses(chosen_tense, verb_form):
                                              negative = n_p, 
                                              question = q_s)
         
-    sentence_en = is_utility.en_verb(vb, verb_num, 
+    sentence_en = is_utility.en_verb(vocab_sample, verb_num, 
                                      pronoun = person_en, 
                                      tense = chosen_tense, 
                                      negative = n_p, 
@@ -673,14 +652,10 @@ def emphasis_adjectives(translate):
     ##Return (question, main solution, alternative solution, prompt)
     return (q, sol1, sol2, prompt1)
 
-def possession_mo(vocab_file, translate, sentence):
+def possession_mo(translate, sentence, vocab_sample):
     #This module is only used with family or body parts vocab files
     #Load vocab --------------------------------------------------
     
-    vocab_sample = pd.read_csv('Vocabulary/{}.csv'.format(vocab_file))
-    if ("english" not in vocab_sample.columns or "nom_sing" not in vocab_sample.columns):
-        print("Error: Check format of vocabulary list, must contain columns 'english' and 'nom_sing' (lower-case)")
-        return    
     #Randomiser ---------------------------------------------------------------
     whose_num = rd.randrange(7)
     where_num = rd.randrange(3)
@@ -690,15 +665,13 @@ def possession_mo(vocab_file, translate, sentence):
     ## what
     what_en = vocab_sample.loc[what_num,"english"]
     what_gd = vocab_sample.loc[what_num,"nom_sing"]
+    
     ### plurals
-    if whose_num in (4,5,6) and vocab_file in ("people_body", "people_clothes"):
+    if whose_num in (4,5,6):
         if vocab_sample.loc[what_num,"english"] != "hair":
             what_gd = vocab_sample.loc[what_num,"nom_pl"]
             what_en = is_utility.en_pl(what_en)
-    
-    ##is/are
-    if whose_num in (4,5,6) and vocab_file in ("people_body", "people_clothes"):
-        is_are = "are"
+            is_are = "are"
     else:
         is_are = "is"
     
@@ -720,6 +693,9 @@ def possession_mo(vocab_file, translate, sentence):
     ### note - daughter and father take different grammatical structure
     if what_gd in ("nighean","duine"):
         whosewhat_gd = "an " + what_gd + " " + pp.loc[whose_num, "aig"]
+        whose_en = pp.loc[whose_num,"en_poss"]
+    elif what_gd in ("nigheanan","daoine"):
+        whosewhat_gd = "na " + what_gd + " " + pp.loc[whose_num, "aig"]
         whose_en = pp.loc[whose_num,"en_poss"]
     else:
         ## possessive article
@@ -797,14 +773,9 @@ def possession_mo(vocab_file, translate, sentence):
     ##Return (question, main solution, alternative solution, prompt)
     return (q, sol1, sol2, prompt1)
 
-def where_from(vocab_file, sentence):
+def where_from(sentence, vocab_sample):
     #Load vocab --------------------------------------------------
-    vocab_sample = pd.read_csv('Vocabulary/{}.csv'.format(vocab_file))
-    if any(("english" not in vocab_sample.columns,
-            "nom_sing" not in vocab_sample.columns,
-            "gender" not in vocab_sample.columns)):
-        print("Error: Check format of vocabulary list, must contain columns 'english', 'gender', and 'nom_sing' (lower-case)")
-        return  
+    
     #Randomiser ---------------------------------------------------------------
     person_num = rd.randrange(7)
     where_num = rd.randrange(len(vocab_sample))
@@ -859,35 +830,32 @@ def where_from(vocab_file, sentence):
     ##Return (question, main solution, alternative solution, prompt)
     return (q, sol1, sol2, prompt1)
 
-def where_in(vocab_file, sentence):
+def where_in(sentence, contains_articles, vocab_sample):
     #Load vocab --------------------------------------------------
-    vocab_sample = pd.read_csv('Vocabulary/{}.csv'.format(vocab_file))
-    #Vocab files which contain the definite article in Gaelic for some words
-    contains_articles = ("places_scotland", "places_world")
     
     #Randomiser ---------------------------------------------------------------
     person_num = rd.randrange(7)
     where_num = rd.randrange(len(vocab_sample))
-    if vocab_file not in contains_articles:
-        article_switch = rd.randrange(2)
-    else:
+    if contains_articles == True:
         if vocab_sample.loc[where_num,"nom_sing"].startswith(is_utility.def_articles):
             article_switch = 1
         else:
             article_switch = 0
+    else:
+        article_switch = rd.randrange(2)
         
     #Parts of sentence --------------------------------------------------------
     
     ##Indefinite article
     if article_switch == 0:
-        if vocab_file not in contains_articles:
+        if contains_articles == False:
             where_en = is_utility.en_indef_article(vocab_sample.loc[where_num,"english"])
         else:
             where_en = vocab_sample.loc[where_num,"english"]
         where_gd = "ann " + is_utility.anm(vocab_sample.loc[where_num,"nom_sing"])
     ##Definite article
     else:
-        if vocab_file not in contains_articles:
+        if contains_articles == False:
             where_en = "the " + vocab_sample.loc[where_num,"english"]
         else:
             where_en = vocab_sample.loc[where_num,"english"]
