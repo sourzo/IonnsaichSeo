@@ -13,7 +13,6 @@ pp = pd.read_csv('Vocabulary/grammar_prepPronouns.csv')
 names = pd.read_csv('Vocabulary/people_names.csv')
 g_numbers = pd.read_csv('Vocabulary/grammar_numbers.csv')
 professions = pd.read_csv('Vocabulary/people_professions.csv')
-adjectives = pd.read_csv('Vocabulary/adjectives_misc.csv')
 
 def give_get(chosen_tense, translate, sentence, vocab_sample):
     #Load vocab --------------------------------------------------
@@ -613,23 +612,38 @@ def professions_annan(translate, sentence):
     ##Return (question, main solution, alternative solution, prompt)
     return (q, sol1, sol2, prompt1)
 
-def emphasis_adjectives(translate):
+def emphasis_adjectives(translate, vocab_sample):
+    
+    modifiers = [("", ""),
+                 ("so ", "cho "), 
+                 ("too ", "ro "), 
+                 ("very ", "glè "),
+                 ("terribly ", "uabhasach "),
+                 ("really ", "gu math "),
+                 ("a bit ", "beagan ")]
     
     #Randomiser ---------------------------------------------------------------
     person_num = rd.randrange(6)
-    adj_num = rd.randrange(len(adjectives))
+    modifier_choice = modifiers[rd.randrange(len(modifiers))]
+    adj_num = rd.randrange(len(vocab_sample))
     
     #Parts of sentence --------------------------------------------------------
     pers_emph = pp.loc[person_num,"emphatic"]
-    adjective_gd = adjectives.loc[adj_num, "gd"]
-    adjective_en = adjectives.loc[adj_num, "english"]
-    
     pronoun_en = pp.loc[person_num, "en_subj"]
+        
+    adjective_gd = vocab_sample.loc[adj_num, "adj_gd"]
+    adjective_en = modifier_choice[0] + vocab_sample.loc[adj_num, "english"]
+    
+    if modifier_choice[1] in ("ro ", "glè "):
+        adjective_gd = modifier_choice[1] + is_utility.lenite(adjective_gd)
+    else:
+        adjective_gd = modifier_choice[1] + adjective_gd
+    
     be_en = en.loc[person_num, "be_pres"]
-
+    
     #Construct sentence -------------------------------------------------------
     sentence_gd = "Tha " + pers_emph + " " + adjective_gd
-    sentence_en = pronoun_en.capitalize() + " " + be_en.lower() + " " + adjective_en
+    sentence_en = "*" + pronoun_en.capitalize() + "* " + be_en.lower() + " " + adjective_en
     
     #Questions ----------------------------------------------------------------
     if translate == "1": #en-gd
@@ -651,6 +665,7 @@ def emphasis_adjectives(translate):
     
     ##Return (question, main solution, alternative solution, prompt)
     return (q, sol1, sol2, prompt1)
+
 
 def possession_mo(translate, sentence, vocab_sample):
     #This module is only used with family or body parts vocab files
