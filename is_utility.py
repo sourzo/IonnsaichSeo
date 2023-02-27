@@ -26,7 +26,8 @@ required_columns = {"give_get" : ("english", "nom_sing"),
                     "possession_mo" : ("english", "nom_sing", "nom_pl"),
                     "where_from" : ("english", "nom_sing", "gender"),
                     "where_in" : ("english", "nom_sing", "gender"),
-                    "comparisons" : ()}
+                    "comparisons" : (),
+                    "comparatives_superlatives": ("english", "nom_sing", "gender")}
 
 vowels = set("aàáeèéiìíoòóuùú")
 broad_vowels = set("aàáoòóuùú")

@@ -948,3 +948,103 @@ def comparisons(translate):
     
     ##Return (question, main solution, alternative solution, prompt)
     return (q, sol1, sol2, prompt1)
+
+def comparatives_superlatives(vocab_sample, comp_sup, sentence, translate):
+    #Load vocab --------------------------------------------------
+    nouns = vocab_sample
+    adjectives = pd.read_csv("Vocabulary/adjectives_misc.csv").sample(10).reset_index(drop=True)
+    #Randomiser ---------------------------------------------------------------
+    subject_num = rd.randrange(len(nouns))
+    object_num = rd.randrange(len(nouns))
+    adj_num = rd.randrange(len(adjectives))
+    
+    if comp_sup not in ("comp", "sup"):
+        comp_sup = rd.choice(("comp","sup"))
+    
+    #Parts of sentence --------------------------------------------------------
+    subject_en = nouns.loc[subject_num,"english"]
+    subject_gd = nouns.loc[subject_num,"nom_sing"]
+        
+    if comp_sup == "comp":
+        
+        object_en = nouns.loc[object_num,"english"]
+        object_gd = nouns.loc[object_num,"nom_sing"]
+        
+        comparative_gd = "nas " + adjectives.loc[adj_num, "comp_sup"]
+        
+        comparative_en = adjectives.loc[adj_num, "comp_en"]
+        comparative_en_alt = "more " + adjectives.loc[adj_num, "english"]
+    
+    elif comp_sup == "sup":
+        subject_en = nouns.loc[subject_num, "english"]
+        subject_gd = is_utility.gd_common_article(nouns.loc[subject_num, "nom_sing"],
+                                                  "sg", 
+                                                  nouns.loc[subject_num, "gender"],
+                                                  "nom")
+        
+        superlative_gd = "as " + adjectives.loc[adj_num, "comp_sup"]
+    
+        superlative_en = adjectives.loc[adj_num, "sup_en"]
+        superlative_en_alt = "most " + adjectives.loc[adj_num, "english"]
+    #Construct sentence -------------------------------------------------------
+    if comp_sup == "comp":
+        sentence_gd = "A bheil " + subject_gd + " " + comparative_gd + " na " + object_gd
+        sentence_en = "Is " + is_utility.en_indef_article(subject_en) + " " + comparative_en + " than " + is_utility.en_indef_article(object_en)
+        sentence_en_alt = "Is " + is_utility.en_indef_article(subject_en) + " " + comparative_en_alt + " than " + is_utility.en_indef_article(object_en)
+    elif comp_sup == "sup":
+        sentence_gd = subject_gd.capitalize() + " " + superlative_gd
+        sentence_en = "The " + superlative_en + " " + subject_en
+        sentence_en_alt = "The " + superlative_en_alt + " " + subject_en
+    #Questions ----------------------------------------------------------------
+    if translate == "1": #en-gd
+        q = sentence_en
+        if comp_sup == "comp":
+            q = q + "?"
+    elif translate == "2": #gd-en
+        q = sentence_gd
+        if comp_sup == "comp":
+            q = q + "?"
+    #Prompts ------------------------------------------------------------------
+    if sentence == "1": # Full sentence, no prompt
+        prompt1 = "Translation: "
+    elif sentence == "2": #Fill in the blank
+        if translate == "1": #en-gd
+            if comp_sup == "comp":
+                prompt1 = "A bheil " + subject_gd + " _____ na " + object_gd + "? : "
+            elif comp_sup == "sup":
+                prompt1 = subject_gd.captialize() + " "
+        elif translate == "2": #gd-en
+            if comp_sup == "comp":
+                prompt1 = "Is " + is_utility.en_indef_article(subject_en) + " ____ than " + is_utility.en_indef_article(object_en) + "? : "
+            elif comp_sup == "sup":
+                prompt1 = "The ____ " + subject_en + ": "
+    
+    #Solutions ----------------------------------------------------------------
+    if sentence == "1": #Full sentence
+        if translate == "1": #en-gd
+            sol1 = sentence_gd
+            sol2 = sol1
+        elif translate == "2": #gd-en
+            sol1 = sentence_en
+            sol2 = sentence_en_alt
+            
+    elif sentence == "2": #Fill in the blank
+        if translate == "1": #en-gd
+            if comp_sup == "comp":
+                sol1 = comparative_gd
+            elif comp_sup == "sup":
+                sol1 = superlative_gd
+            sol2 = sol1
+        elif translate == "2": #gd-en
+            if comp_sup == "comp":
+                sol1 = comparative_en
+                sol2 = comparative_en_alt
+            elif comp_sup == "sup":
+                sol1 = superlative_en
+                sol2 = superlative_en_alt
+    
+    #Output -------------------------------------------------------------------
+    
+    ##Return (question, main solution, alternative solution, prompt)
+    return (q, sol1, sol2, prompt1)
+

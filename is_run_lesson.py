@@ -29,6 +29,24 @@ def run_lesson(lesson):
             options["gender_mode"] = input("Practice option: ").lower().strip()
         if options["gender_mode"] == "x":
             return
+    ##Adjectives: Comparatives or superlatives
+    if lesson.__name__ == "comparatives_superlatives":
+        c_s = "0"
+        while c_s not in ("x","1","2","3"):
+            print("Select practice option")
+            print("1: Comparatives ('better', 'faster', etc)")
+            print("2: Superlatives ('best', 'fastest', etc)")
+            print("3: Both")
+            print("X: Exit")
+            c_s = input("Practice option: ").lower().strip()
+        if c_s == "x":
+            return
+        elif c_s == "1":
+            options["comp_sup"] = "comp"
+        elif c_s == "2":
+            options["comp_sup"] = "sup"
+        elif c_s == "3":
+            options["comp_sup"] = "both"
     
     ##Numbers module - special options
     elif lesson.__name__ == "numbers":
@@ -95,7 +113,7 @@ def run_lesson(lesson):
             options["verb_form"] = input("Verb forms: ").lower().strip()
     
     ##Translation direction
-    if lesson.__name__ in ("give_get", "possession_aig", "learn_nouns", "preferences", "professions_annan", "emphasis_adjectives", "possession_mo", "comparisons"):
+    if lesson.__name__ in ("give_get", "possession_aig", "learn_nouns", "preferences", "professions_annan", "emphasis_adjectives", "possession_mo", "comparisons", "comparatives_superlatives"):
         options["translate"] = "0"
         while options["translate"] not in ("x","1","2"):
             print()
@@ -109,7 +127,7 @@ def run_lesson(lesson):
     
     ##Full sentence or fill in the blank
     QandA_lessons = ("where_from", "where_in")
-    other_lessons = ("give_get", "preferences", "possession_aig", "professions_annan", "possession_mo")
+    other_lessons = ("give_get", "preferences", "possession_aig", "professions_annan", "possession_mo", "comparatives_superlatives")
     if lesson.__name__ in QandA_lessons + other_lessons:
         if lesson.__name__ in QandA_lessons:
             sentence_tuple = ("x","1","2","3")

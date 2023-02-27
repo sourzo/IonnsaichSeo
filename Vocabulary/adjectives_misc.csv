@@ -1,63 +1,72 @@
-english,adj_gd
-skilful,sgileil
-fat,reamhair
-big,mòr
-small,beag
-good,math
-bad,dona
-dreadful,sgriosail
-honest,onarach
-famous,ainmal
-fast,luath
-slow,slaodach
-happy,toilichte
-horrible,grànda
-new,ùr
-old,seann
-short,goirid
-sore,goirt
-long,fada
-strong,làidir
-weak,lag
-clever,glic
-stupid,gòrach
-marvelous,mìobhaileach
-powerful,cùmhachdach
-scary,eagalach
-friendly,càirdeal
-useful,feumail
-dirty,salach
-clean,glan
-broken,briste
-fancy,snasail
-beautiful,bòidheach
-lovely,àlainn
-shiny,gleansach
-colourful,dathach
-amazing,iongantach
-suitable,freagarrach
-tidy,soirbeachail
-quiet,sàmhach
-dangerous,cunnartach
-important,cudromach
-ready,deiseil
-disgusting,sgreamhail
-overconfident,bragail
-evil,olc
-comfortable,cofhurtail
-scruffy,robach
-dishonest,breugach
-handsome,eireachdail
-crazy,craicte
-proud,pròiseil
-valuable,prìseil
-expensive,daor
-cheap,saor
-wide,farsaing
-special,sònraichte
-difficult,doirbh
-splendid,gasta
-empty,falamh
-full,làn
-deep,domhain
-rich,beartach
+english,comp_en,sup_en,adj_gd,comp_sup
+skilful,more skilful,most skilful,sgileil,sgileile
+fat,fatter,fattest,reamhair,reamhra
+big,larger,largest,mòr,motha
+small,smaller,smallest,beag,lugha
+good,better,best,math,fhearr
+bad,worse,worst,dona,miosa
+dreadful,more dreadful,most dreadful,sgriosail,sgriosaile
+honest,more honest,most honest,onarach,onaraiche
+famous,more famous,most famous,ainmeil,ainmeile
+fast,faster,fastest,luath,luaithe
+slow,slower,slowest,slaodach,slaodaiche
+happy,happier,happiest,toilichte,toilichte
+horrible,more horrible,most horrible,grànda,gràinde
+new,newer,newest,ùr,ùire
+old,older,oldest,sean,sine
+short,shorter,shortest,goirid,giorra
+sore,more sore,most sore,goirt,goirte
+long,longer,longest,fada,fhaide
+strong,stronger,strongest,làidir,treasa
+weak,weaker,weakest,lag,laige
+clever,cleverer,cleverest,glic,glice
+stupid,stupider,stupidest,gòrach,gòraiche
+marvelous,more marvelous,most marvelous,mìobhaileach,mìorbhailiche
+powerful,more powerful,most powerful,cùmhachdach,cùmhadaiche
+scary,scarier,scariest,eagalach,eagalaiche
+friendly,friendlier,friendliest,càirdeal,càirdeile
+useful,more useful,most useful,feumail,feumaile
+dirty,dirtier,dirtiest,salach,salaiche
+clean,cleaner,cleanest,glan,glaine
+broken,more broken,most broken,briste,briste
+fancy,fancier,fanciest,snasail,snasaile
+beautiful,more beautiful,most beautiful,bòidheach,bòidhche
+lovely,lovelier,loveliest,àlainn,àlainne
+shiny,shinier,shiniest,gleansach,gleansaiche
+colourful,more colourful,most colourful,dathach,dathaiche
+amazing,more amazing,most amazing,iongantach,iongantaiche
+suitable,more suitable,most suitable,freagarrach,freagarraiche
+successful,more successful,most successful,soirbheachail,soirbheachaile
+quiet,quieter,quietest,sàmhach,sàmhaiche
+dangerous,more dangerous,most dangerous,cunnartach,cunnartaiche
+important,more important,most important,cudromach,cudromaiche
+ready,readier,readiest,deiseil,deiseile
+disgusting,more disgusting,most disgusting,sgreamhail,sgreamhaile
+overconfident,more overconfident,most overconfident,bragail,bragaile
+comfortable,more comfortable,most comfortable,cofhurtail,cofhurtaile
+scruffy,scruffier,scruffiest,robach,robaiche
+dishonest,more dishonest,most dishonest,breugach,breugaiche
+handsome,handsomer,handsomest,eireachdail,eireachdaile
+crazy,crazier,craziest,craicte,craicte
+proud,prouder,proudest,pròiseil,pròiseile
+valuable,more valuable,most valuable,prìseil,prìseile
+expensive,more expensive,most expensive,daor,daoire
+cheap,cheaper,cheapest,saor,saoire
+wide,wider,widest,farsaing,farsainge
+special,more special,most special,sònraichte,sònraichte
+difficult,more difficult,most difficult,doirbh,doirbhe
+splendid,more splendid,most splendid,gasta,gasta
+empty,emptier,emptiest,falamh,falaimhe
+full,fuller,fullest,làn,làin
+deep,deeper,deepest,domhain,doimhne
+rich,richer,richest,beartach,beartaiche
+young,younger,youngest,òg,òige
+high,higher,highest,àrd,àirde
+heavy,heavier,heaviest,trom,truime
+wet,wetter,wettest,fliuch,fliche
+sharp,sharper,sharpest,geur,gèire
+loyal,more loyal,most loyal,dìleas,dìlse
+easy,easier,easiest,furasda,fasa
+hard,harder,hardest,duilich,duilghe
+hot,hotter,hottest,teth,teotha
+cold,colder,coldest,fuar,fhuaire

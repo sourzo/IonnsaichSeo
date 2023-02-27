@@ -25,8 +25,9 @@ while True:
         print("9: Professions: the prepositional pronoun 'ann an'")
         print("10: Emphatic pronouns and adjectives")
         print("11: Comparisons (sayings)")
-        print("12: Where are they from? [Prepositions]")
-        print("13: Where are they (in)? [Prepositions]")
+        print("12: Adjectives: Comparatives and superlatives")
+        print("13: Where are they from? [Prepositions]")
+        print("14: Where are they (in)? [Prepositions]")
         print("X: Exit")
         print()
         lesson_choice = input("Lesson number: ").lower().strip()
@@ -57,6 +58,8 @@ while True:
     elif lesson_choice == "11":
         rl.run_lesson(qgen.comparisons)
     elif lesson_choice == "12":
-        rl.run_lesson(qgen.where_from)
+        rl.run_lesson(qgen.comparatives_superlatives)
     elif lesson_choice == "13":
+        rl.run_lesson(qgen.where_from)
+    elif lesson_choice == "14":
         rl.run_lesson(qgen.where_in)
