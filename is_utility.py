@@ -64,7 +64,7 @@ def check_vocab(lesson_name, vocab_sample, messages = True):
                         "preferences" : ("english", "nom_sing"),
                         "verb_tenses" : ("english", "en_past", "en_vn", "root", "verbal_noun"),
                         "professions_annan" : (),
-                        "emphasis_adjectives" : (),
+                        "emphasis_adjectives" : ("english", "adj_gd"),
                         "possession_mo" : ("english", "nom_sing", "nom_pl"),
                         "where_from" : ("english", "nom_sing", "gender"),
                         "where_in" : ("english", "nom_sing", "gender")}
@@ -82,7 +82,7 @@ def check_vocab(lesson_name, vocab_sample, messages = True):
 
 def select_vocab(lesson, options):
     """Select vocabulary file to use in lesson"""
-    if lesson.__name__ in ("professions_annan", "emphasis_adjectives"):
+    if lesson.__name__ in ("professions_annan"):
         return pd.DataFrame() #no vocab file needed
     elif lesson.__name__ == "numbers" and options["num_mode"] in ("1","2"):
             return pd.DataFrame({"a" : [1]}) #dummy vocab file
@@ -311,7 +311,7 @@ def cha(word):
 
 
 def art_standard(word):
-    """The common article pattern used for singular nom-fem, prep, and poss-masc."""
+    """The common article pattern used for singular nom-fem, prep, and gen-masc."""
     w = word.lower()
     if w[0] in {"b","c","g","m","p"}:
         return "a' " + lenite(word, dentals)
@@ -329,7 +329,7 @@ def gd_common_article(word,sg_pl,gender,case):
     """Add the common article ('the' in English) to a Gaelic word with no article
     sg_pl: sg/pl (singular or plural)
     gender: masc/fem
-    case: nom/poss/prep (nominative, possessive, prepositional)
+    case: nom/gen/prep (nominative, genitive, prepositional)
     (no vocative - slenderisation can't be automated) """
     
     #singular
@@ -349,8 +349,8 @@ def gd_common_article(word,sg_pl,gender,case):
             elif gender == "fem":
                 word = art_standard(word)
                 
-        #possessive case
-        elif case == "poss":
+        #genitive case
+        elif case == "gen":
             #masculine
             if gender == "masc":
                 word = art_standard(word)
@@ -370,8 +370,8 @@ def gd_common_article(word,sg_pl,gender,case):
     #plural
     elif sg_pl == "pl":
         
-        #possessive
-        if case == "poss":
+        #genitive
+        if case == "gen":
             if word[0].lower() in labials:
                 word = "nam " + word
             else:
@@ -493,6 +493,27 @@ def verbal_noun(vn, person, tense, negative, question):
     else:
         vn = "a' " + vn
     return bi + " " + person + " " + vn
+
+def relative_time(relative_en, time_unit_en):
+    """Last/this/next/(all)/every day/month/year etc
+    Note the time unit must be in the datetime units csv"""
+   # gd_common_article(word,sg_pl,gender,case)
+    time_units = pd.read_csv("Vocabulary/datetime_units.csv")
+    gender = time_units.loc[time_units["english"] == time_unit_en,"gender"].values[0]
+    time_unit_gd = time_units.loc[time_units["english"] == time_unit_en,"nom_sing"].values[0]
+    if relative_en == "last":
+        when_gd = gd_common_article(time_unit_gd, "sg", gender, "nom") + " seo chaidh"
+    elif relative_en == "this":
+        when_gd = gd_common_article(time_unit_gd, "sg", gender, "nom") + " seo"
+    elif relative_en == "next":
+        when_gd = "an ath " + lenite(time_unit_gd)
+    #elif relative_en == "all":   #Genitive case - I'll do this when I've learned it
+    #    when_gd = ""
+    elif relative_en == "every":
+        if time_unit_gd[0] in vowels:
+            time_unit_gd = "h-" + time_unit_gd
+        when_gd = "a h-uile " + time_unit_gd
+    return when_gd
 
 #------------------
 #English grammar---
