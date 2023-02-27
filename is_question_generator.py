@@ -666,7 +666,6 @@ def emphasis_adjectives(translate, vocab_sample):
     ##Return (question, main solution, alternative solution, prompt)
     return (q, sol1, sol2, prompt1)
 
-
 def possession_mo(translate, sentence, vocab_sample):
     #This module is only used with family or body parts vocab files
     #Load vocab --------------------------------------------------
@@ -918,3 +917,34 @@ def where_in(sentence, contains_articles, vocab_sample):
     ##Return (question, main solution, alternative solution, prompt)
     return (q, sol1, sol2, prompt1)
 
+def comparisons(translate):
+    #Load vocab --------------------------------------------------
+    similes = pd.read_csv("Vocabulary/adjectives_comparisons.csv")
+    
+    #Randomiser ---------------------------------------------------------------
+    comparison_choice = rd.randrange(len(similes))
+   
+    #Construct sentence -------------------------------------------------------
+    sentence_en = "As " + similes.loc[comparison_choice,"english"] + " as " + similes.loc[comparison_choice,"simile_en"]
+    sentence_gd = "Cho " + similes.loc[comparison_choice,"adj_gd"] + " ri " + similes.loc[comparison_choice,"simile_gd"]
+    
+    #Questions ----------------------------------------------------------------
+    if translate == "1": #en-gd
+        q = sentence_en
+    elif translate == "2": #gd-en
+        q = sentence_gd
+
+    #Prompts ------------------------------------------------------------------
+    prompt1 = ""
+
+    #Solutions ----------------------------------------------------------------
+    if translate == "1": #en-gd
+        sol1 = sentence_gd
+    elif translate == "2": #gd-en
+        sol1 = sentence_en
+    sol2 = sol1
+
+    #Output -------------------------------------------------------------------
+    
+    ##Return (question, main solution, alternative solution, prompt)
+    return (q, sol1, sol2, prompt1)

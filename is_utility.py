@@ -14,6 +14,19 @@ en = pd.read_csv('Vocabulary/grammar_english.csv')
 #---------------
 #Definitions----
 #---------------
+required_columns = {"give_get" : ("english", "nom_sing"),
+                    "possession_aig" : ("english", "nom_sing"),
+                    "gender" : ("english", "nom_sing", "gender"),
+                    "numbers" : ("english", "nom_sing", "nom_pl"),
+                    "learn_nouns" : ("english", "nom_sing"),
+                    "preferences" : ("english", "nom_sing"),
+                    "verb_tenses" : ("english", "en_past", "en_vn", "root", "verbal_noun"),
+                    "professions_annan" : (),
+                    "emphasis_adjectives" : ("english", "adj_gd"),
+                    "possession_mo" : ("english", "nom_sing", "nom_pl"),
+                    "where_from" : ("english", "nom_sing", "gender"),
+                    "where_in" : ("english", "nom_sing", "gender"),
+                    "comparisons" : ()}
 
 vowels = set("aàáeèéiìíoòóuùú")
 broad_vowels = set("aàáoòóuùú")
@@ -56,18 +69,7 @@ def encourage():
 
 def check_vocab(lesson_name, vocab_sample, messages = True):
     """Check that the chosen vocab file has the right columns for the lesson"""
-    required_columns = {"give_get" : ("english", "nom_sing"),
-                        "possession_aig" : ("english", "nom_sing"),
-                        "gender" : ("english", "nom_sing", "gender"),
-                        "numbers" : ("english", "nom_sing", "nom_pl"),
-                        "learn_nouns" : ("english", "nom_sing"),
-                        "preferences" : ("english", "nom_sing"),
-                        "verb_tenses" : ("english", "en_past", "en_vn", "root", "verbal_noun"),
-                        "professions_annan" : (),
-                        "emphasis_adjectives" : ("english", "adj_gd"),
-                        "possession_mo" : ("english", "nom_sing", "nom_pl"),
-                        "where_from" : ("english", "nom_sing", "gender"),
-                        "where_in" : ("english", "nom_sing", "gender")}
+
     list_ok = True
     if len(required_columns[lesson_name]) > 0:
         for column in required_columns[lesson_name]:
@@ -82,7 +84,7 @@ def check_vocab(lesson_name, vocab_sample, messages = True):
 
 def select_vocab(lesson, options):
     """Select vocabulary file to use in lesson"""
-    if lesson.__name__ in ("professions_annan"):
+    if len(required_columns[lesson.__name__]) == 0:
         return pd.DataFrame() #no vocab file needed
     elif lesson.__name__ == "numbers" and options["num_mode"] in ("1","2"):
             return pd.DataFrame({"a" : [1]}) #dummy vocab file

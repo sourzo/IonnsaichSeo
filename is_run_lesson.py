@@ -95,7 +95,7 @@ def run_lesson(lesson):
             options["verb_form"] = input("Verb forms: ").lower().strip()
     
     ##Translation direction
-    if lesson.__name__ in ("give_get", "possession_aig", "learn_nouns", "preferences", "professions_annan", "emphasis_adjectives", "possession_mo"):
+    if lesson.__name__ in ("give_get", "possession_aig", "learn_nouns", "preferences", "professions_annan", "emphasis_adjectives", "possession_mo", "comparisons"):
         options["translate"] = "0"
         while options["translate"] not in ("x","1","2"):
             print()
