@@ -30,36 +30,6 @@ def give_get(chosen_tense, translate, sentence, vocab_sample):
     
     #Parts of sentence --------------------------------------------------------
     
-    #the item that's being given
-    gift_en = is_utility.en_indef_article(gifts["english"][gift_num])
-    gift_gd = gifts["nom_sing"][gift_num]
-    
-    #giving to (give_get_en, give_get_gd)
-    if give_get_num == 0:
-        if chosen_tense == "present":
-            give_get_en = en["be_pres"][subject_num] + " giving"
-            give_get_gd = "a' toirt"
-        elif chosen_tense == "past":
-            give_get_en = "gave"
-            give_get_gd = "thug"
-        elif chosen_tense == "future":
-            give_get_en = "will give"
-            give_get_gd = "bheir"
-        prep_en = "to"
-        
-    #getting from (give_get_en, give_get_gd)
-    elif give_get_num == 1:
-        if chosen_tense == "present":
-            give_get_en = en["be_pres"][subject_num] + " getting"
-            give_get_gd = "a' faighinn"
-        elif chosen_tense == "past":
-            give_get_en = "got"
-            give_get_gd = "fhuair"
-        elif chosen_tense == "future":
-            give_get_en = "will get"
-            give_get_gd = "gheibh"
-        prep_en = "from"
-        
     #subject: pronouns (subject_en, subject_gd)
     if subject_num < 7:
         subject_en = pp["en_subj"][subject_num]
@@ -70,6 +40,39 @@ def give_get(chosen_tense, translate, sentence, vocab_sample):
         subject_en = names["english"][name]
         subject_gd = names["nom_sing"][name]
         
+    
+    #Subject and verb: giving to
+    if give_get_num == 0:
+        if chosen_tense == "present":
+            verb_subj_gd = is_utility.verbal_noun("toirt", subject_gd, chosen_tense, negative=False, question=False).capitalize()
+            verb_subj_en = subject_en.capitalize() + " " + en["be_pres"][subject_num] + " giving"
+        elif chosen_tense == "past":
+            verb_subj_gd = is_utility.transform_verb("thig", chosen_tense, negative=False, question=False).capitalize() + " " + subject_gd
+            verb_subj_en = subject_en.capitalize() + " gave"
+        elif chosen_tense == "future":
+            verb_subj_gd = is_utility.transform_verb("thig", chosen_tense, negative=False, question=False).capitalize() + " " + subject_gd
+            verb_subj_en = subject_en.capitalize() + " will give"
+        prep_en = "to"
+        
+    #Subject and verb: getting from
+    elif give_get_num == 1:
+        if chosen_tense == "present":
+            verb_subj_gd = is_utility.verbal_noun("faighinn", subject_gd, chosen_tense, negative=False, question=False).capitalize()
+            verb_subj_en = subject_en.capitalize() + " " + en["be_pres"][subject_num] + " getting"
+        elif chosen_tense == "past":
+            verb_subj_gd = is_utility.transform_verb("faigh", chosen_tense, negative=False, question=False).capitalize() + " " + subject_gd
+            verb_subj_en = subject_en.capitalize() + " got"
+        elif chosen_tense == "future":
+            verb_subj_gd = is_utility.transform_verb("faigh", chosen_tense, negative=False, question=False).capitalize() + " " + subject_gd
+            verb_subj_en = subject_en.capitalize() + " will get"
+        prep_en = "from"
+        
+        
+    #the item that's being given
+    gift_en = is_utility.en_indef_article(gifts["english"][gift_num])
+    gift_gd = gifts["nom_sing"][gift_num]
+        
+        
     #object: pronouns / names (object_en, object_gd)
     if object_num < 7:
         object_en = en["en_obj"][object_num]
@@ -78,6 +81,7 @@ def give_get(chosen_tense, translate, sentence, vocab_sample):
             object_gd = pp["do"][object_num]
         else:
             object_gd = pp["bho"][object_num]
+            
     #names
     elif object_num == 7:
         name = rd.randrange(names["english"].count())
@@ -92,22 +96,20 @@ def give_get(chosen_tense, translate, sentence, vocab_sample):
                 object_gd = "do " + lenited_name
         elif give_get_num==1:
             object_gd = "bho " + lenited_name
+    
+
        
     #Construct sentences ------------------------------------------------------
     
     #English
     if give_get_num == 0:
-        sentence_en = subject_en.capitalize() + " " + give_get_en + " " + object_en + " " + gift_en
-        sentence_en_alt = subject_en.capitalize() + " " + give_get_en + " " + gift_en + " " + prep_en + " " + object_en
+        sentence_en = verb_subj_en + " " + object_en + " " + gift_en
+        sentence_en_alt = verb_subj_en + " " + gift_en + " " + prep_en + " " + object_en
     elif give_get_num == 1:
-       sentence_en = subject_en.capitalize() + " " + give_get_en + " " + gift_en + " " + prep_en + " " + object_en
+       sentence_en = verb_subj_en + " " + gift_en + " " + prep_en + " " + object_en
     #Gaelic
-    if chosen_tense == "present": #Gaelic - with verbal noun
-        sentence_gd = "Tha " + subject_gd + " " + give_get_gd + " " + gift_gd + " " + object_gd
-    
-    elif chosen_tense in ("past", "future"):  #Past / Future tense sentences
-        #Gaelic
-        sentence_gd = give_get_gd.capitalize() + " " + subject_gd + " " + gift_gd + " " + object_gd
+    sentence_gd = verb_subj_gd + " " + gift_gd + " " + object_gd
+
 
     #Questions ----------------------------------------------------------------
     if translate == "1": #en-gd
@@ -120,13 +122,9 @@ def give_get(chosen_tense, translate, sentence, vocab_sample):
         prompt1 = "Translation: "
     elif sentence == "2": #Fill in the blank
         if translate == "1": #en-gd
-            if chosen_tense == "present": #Present tense with verbal noun
-                prompt1 = "Tha " + subject_gd + " " + give_get_gd + " " + gift_gd + " "
-            #Past / Future tense sentences
-            elif chosen_tense in ("past", "future"):
-                prompt1 = give_get_gd.capitalize() + " " + subject_gd + " " + gift_gd + " "
+            prompt1 = verb_subj_gd + " " + gift_gd + " "
         elif translate == "2": #gd-en
-            prompt1 = subject_en.capitalize() + " " + give_get_en + " " + gift_en + " "
+            prompt1 = verb_subj_en + " " + gift_en + " "
             
     #Solutions ----------------------------------------------------------------
     solutions = []
@@ -134,7 +132,9 @@ def give_get(chosen_tense, translate, sentence, vocab_sample):
         if translate == "1": #en-gd
             solutions.append(sentence_gd)
         elif translate == "2": #gd-en
-            solutions.append(sentence_en, sentence_en_alt)
+            solutions.append(sentence_en)
+            if give_get_num == 0:
+                solutions.append(sentence_en_alt)
             
     elif sentence == "2": #Fill in the blank
         if translate == "1": #en-gd
@@ -808,7 +808,7 @@ def where_from(sentence, vocab_sample):
     
     #Parts of sentence --------------------------------------------------------
     
-    if vocab_sample.loc[where_num,"nom_sing"].startswith(is_utility.def_articles):
+    if vocab_sample.loc[where_num,"nom_sing"].lower().startswith(is_utility.def_articles):
         from_gd = "às " + is_utility.prep_def(vocab_sample, where_num)
     else:
         from_gd = "à " + vocab_sample.loc[where_num,"nom_sing"]
@@ -859,7 +859,7 @@ def where_in(sentence, contains_articles, vocab_sample):
     person_num = rd.randrange(7)
     where_num = rd.randrange(len(vocab_sample))
     if contains_articles == True:
-        if vocab_sample.loc[where_num,"nom_sing"].startswith(is_utility.def_articles):
+        if vocab_sample.loc[where_num,"nom_sing"].lower().startswith(is_utility.def_articles):
             article_switch = 1
         else:
             article_switch = 0

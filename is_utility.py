@@ -128,9 +128,13 @@ async def select_vocab(lesson, options):
         if vocab_num == "x":
             return "x"
         elif vocab_num == "1":
-            return pd.read_csv('Vocabulary/places_world.csv')
+            places = pd.read_csv('Vocabulary/places_world.csv')
+            places.rename(columns = {"place_en" : "english", "place_gd" : "nom_sing"}, inplace=True)
+            return places
         elif vocab_num == "2":
-            return pd.read_csv('Vocabulary/places_scotland.csv')
+            places = pd.read_csv('Vocabulary/places_scotland.csv')
+            places.rename(columns = {"place_en" : "english", "place_gd" : "nom_sing"}, inplace=True)
+            return places
     elif lesson.__name__ == "where_in":
         vocab_num = ""
         while vocab_num not in ("x","1","2","3","4"):
@@ -146,10 +150,14 @@ async def select_vocab(lesson, options):
             return "x"
         elif vocab_num == "1":
             options["contains_articles"] = True
-            return pd.read_csv('Vocabulary/places_world.csv')
+            places = pd.read_csv('Vocabulary/places_world.csv')
+            places.rename(columns = {"place_en" : "english", "place_gd" : "nom_sing"}, inplace=True)
+            return places
         elif vocab_num == "2":
             options["contains_articles"] = True
-            return pd.read_csv('Vocabulary/places_scotland.csv')
+            places = pd.read_csv('Vocabulary/places_scotland.csv')
+            places.rename(columns = {"place_en" : "english", "place_gd" : "nom_sing"}, inplace=True)
+            return places
         elif vocab_num == "3":
             options["contains_articles"] = False
             return pd.read_csv('Vocabulary/places_town.csv')
@@ -190,7 +198,7 @@ def suggest_vocab(lesson_name):
 #Helper functions----
 #--------------------
 def extract_firstword(string):
-    """Extract the first word from a string, using space and - as delimiters
+    """Separate the first word from a string, using space and '-' as delimiters
     Examples:
         an t-seòmar -> an + t-seomar
         an taigh beag -> an + taigh beag
@@ -200,7 +208,7 @@ def extract_firstword(string):
         s1 = split_st[0]
         s2 = " " + split_st[1]
     else:
-        s1 = string.lower()
+        s1 = string
         s2 = ""
     return (s1, s2)
 
@@ -215,9 +223,9 @@ def end_width(word):
 
 def remove_articles(word):
     """Remove the definite article from a word"""
-    if word.startswith(def_articles):
-        stripword = word.split()[1]
-        if stripword.startswith("t-"):
+    if word.lower().startswith(def_articles):
+        stripword = word.split(" ", maxsplit=1)[1]
+        if stripword.lower().startswith("t-"):
             stripword = stripword[2:]
         return stripword
     else:
@@ -304,10 +312,11 @@ def shorten(word):
 def anm(word):
     """add 'an' or 'am' to the front of a word depending on its first letter"""
     w = word.lower()
-    if w[0] in labials:
-        word = "am " + word
-    else:
-        word = "an " + word
+    if w.startswith(def_articles) == False:
+        if w[0] in labials:
+            word = "am " + word
+        else:
+            word = "an " + word
     return word
 
 def cha(word):
@@ -321,7 +330,6 @@ def cha(word):
         word = "cha " + lenite(word, extras = dentals)
     return word
 
-
 def art_standard(word):
     """The common article pattern used for singular nom-fem, prep, and gen-masc."""
     w = word.lower()
@@ -329,11 +337,11 @@ def art_standard(word):
         return "a' " + lenite(word, dentals)
     elif w[0] == "s":
         if w[1] in vowels.union({"l","n","r"}):
-            return "an t-" + w
+            return "an t-" + word
         else:
-            return "an " + w #Does this lenite??
+            return "an " + word #Does this lenite??
     elif w[0] == "f":
-        return "an fh" + w[1:]
+        return "an " + lenite(word)
     else:
         return anm(word)
 
@@ -343,7 +351,7 @@ def gd_common_article(word,sg_pl,gender,case):
     gender: masc/fem
     case: nom/gen/prep (nominative, genitive, prepositional)
     (no vocative - slenderisation can't be automated) """
-    
+    word_lower = word.lower()
     #singular
     if sg_pl == "sg":
         
@@ -351,9 +359,9 @@ def gd_common_article(word,sg_pl,gender,case):
         if case == "nom":
             #masculine
             if gender == "masc":
-                if word[0].lower() in labials:
+                if word_lower[0] in labials:
                     word = "am " + word
-                elif word[0].lower() in vowels:
+                elif word_lower[0] in vowels:
                     word = "an t-" + word
                 else:
                     word = anm(word)
@@ -368,7 +376,7 @@ def gd_common_article(word,sg_pl,gender,case):
                 word = art_standard(word)
             #feminine
             elif gender == "fem":
-                if word[0].lower() in vowels:
+                if word_lower[0] in vowels:
                     word = "na h-" + word
                 else:
                     word = "na " + word
@@ -384,17 +392,17 @@ def gd_common_article(word,sg_pl,gender,case):
         
         #genitive
         if case == "gen":
-            if word[0].lower() in labials:
+            if word_lower[0] in labials:
                 word = "nam " + word
             else:
                 word = "nan " + word
 
         #nominal & prepositional
         else:
-            if word[0].lower() in vowels:
+            if word_lower[0] in vowels:
                 word = "na h-" + word
             else:
-                word = "na" + word
+                word = "na " + word
                 
     return word
 
@@ -402,12 +410,13 @@ def prep_def(df,row_num):
     """Turn a word with the definite article into prepositional"""
     ##get word
     word = df.loc[row_num,"nom_sing"]
+    word_lower = word.lower()
     ##get gender
     gender = df.loc[row_num,"gender"]
     if gender not in ("masc", "fem"):
-        gender = guess_gender()
+        gender = guess_gender(word_lower)
     ##get sing/pl
-    if word.startswith("na "):
+    if word_lower.startswith("na "):
         sg_pl = "pl"
     else:
         sg_pl = "sg"

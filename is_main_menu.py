@@ -15,7 +15,7 @@ async def main():
         print()
         
         lesson_choice = "0"
-        while lesson_choice not in ("x","1","2","3","4","5","6", "7", "8", "9", "10", "11", "12"):
+        while lesson_choice not in ("x","1","2","3","4","5","6", "7", "8", "9", "10", "11", "12", "13", "14"):
             print("Select lesson:")
             print("1: Basic vocabulary flashcards - nouns")
             print("2: Numbers and plurals")
