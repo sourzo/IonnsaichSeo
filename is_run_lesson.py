@@ -180,17 +180,13 @@ def run_lesson(lesson):
     
     while answer != "x":
         q_count = q_count + 1
-        question, solution1, solution2, prompt = lesson(**options)
+        question, solutions, prompt = lesson(**options)
         
         #fix apostrophe issues
-        if type(question)==str:
-            question = question.replace("’","'")
-        if type(solution1)==str:
-            solution1 = solution1.replace("’","'")
-        if type(solution2)==str:
-            solution2 = solution2.replace("’","'")
-        if type(prompt)==str:
-            prompt = prompt.replace("’","'")
+        question = question.replace("’","'")
+        prompt = prompt.replace("’","'")
+        solutions = [x.replace("’","'") for x in solutions]
+        solutions_comparison = [x.lower().strip().replace("?","").replace(".","").replace("!","") for x in solutions]
             
         #Display sentence to translate
         print()
@@ -200,13 +196,13 @@ def run_lesson(lesson):
         #Check answer
         if answer == "x":
             break
-        elif answer in (solution1.lower().strip(), solution2.lower().strip()):
+        elif answer in solutions_comparison:
                 print()
                 is_utility.encourage()
                 score = score + 1
         else:
             print()
-            print("Nope, correct answer is: ", solution1)
+            print("Nope, correct answer is: ", solutions[0])
                 
     print()
     print("End of practice!")

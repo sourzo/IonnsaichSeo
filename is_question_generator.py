@@ -25,6 +25,8 @@ def give_get(chosen_tense, translate, sentence, vocab_sample):
     object_num = rd.randrange(8)
     gift_num = rd.randrange(gifts["english"].count())
     give_get_num = rd.randrange(2) # 0 = give to, 1 = get from
+    if chosen_tense == "any":
+        chosen_tense = rd.choice(("past", "present", "future"))
     
     #Parts of sentence --------------------------------------------------------
     
@@ -34,26 +36,26 @@ def give_get(chosen_tense, translate, sentence, vocab_sample):
     
     #giving to (give_get_en, give_get_gd)
     if give_get_num == 0:
-        if chosen_tense == "1":
+        if chosen_tense == "present":
             give_get_en = en["be_pres"][subject_num] + " giving"
             give_get_gd = "a' toirt"
-        elif chosen_tense == "2":
+        elif chosen_tense == "past":
             give_get_en = "gave"
             give_get_gd = "thug"
-        elif chosen_tense == "3":
+        elif chosen_tense == "future":
             give_get_en = "will give"
             give_get_gd = "bheir"
         prep_en = "to"
         
     #getting from (give_get_en, give_get_gd)
     elif give_get_num == 1:
-        if chosen_tense == "1":
+        if chosen_tense == "present":
             give_get_en = en["be_pres"][subject_num] + " getting"
             give_get_gd = "a' faighinn"
-        elif chosen_tense == "2":
+        elif chosen_tense == "past":
             give_get_en = "got"
             give_get_gd = "fhuair"
-        elif chosen_tense == "3":
+        elif chosen_tense == "future":
             give_get_en = "will get"
             give_get_gd = "gheibh"
         prep_en = "from"
@@ -100,10 +102,10 @@ def give_get(chosen_tense, translate, sentence, vocab_sample):
     elif give_get_num == 1:
        sentence_en = subject_en.capitalize() + " " + give_get_en + " " + gift_en + " " + prep_en + " " + object_en
     #Gaelic
-    if chosen_tense == "1": #Gaelic - with verbal noun
+    if chosen_tense == "present": #Gaelic - with verbal noun
         sentence_gd = "Tha " + subject_gd + " " + give_get_gd + " " + gift_gd + " " + object_gd
     
-    elif chosen_tense in ("2", "3"):  #Past / Future tense sentences
+    elif chosen_tense in ("past", "future"):  #Past / Future tense sentences
         #Gaelic
         sentence_gd = give_get_gd.capitalize() + " " + subject_gd + " " + gift_gd + " " + object_gd
 
@@ -115,39 +117,38 @@ def give_get(chosen_tense, translate, sentence, vocab_sample):
         
     #Prompts ------------------------------------------------------------------
     if sentence == "1": # Full sentence, no prompt
-        prompt1 = ""
+        prompt1 = "Translation: "
     elif sentence == "2": #Fill in the blank
         if translate == "1": #en-gd
-            if chosen_tense == "1": #Present tense with verbal noun
+            if chosen_tense == "present": #Present tense with verbal noun
                 prompt1 = "Tha " + subject_gd + " " + give_get_gd + " " + gift_gd + " "
             #Past / Future tense sentences
-            elif chosen_tense in ("2", "3"):
+            elif chosen_tense in ("past", "future"):
                 prompt1 = give_get_gd.capitalize() + " " + subject_gd + " " + gift_gd + " "
         elif translate == "2": #gd-en
             prompt1 = subject_en.capitalize() + " " + give_get_en + " " + gift_en + " "
             
     #Solutions ----------------------------------------------------------------
+    solutions = []
     if sentence == "1": #Full sentence
         if translate == "1": #en-gd
-            sol1 = sentence_gd
+            solutions.append(sentence_gd)
         elif translate == "2": #gd-en
-            sol1 = sentence_en
-            sol2 = sentence_en_alt
+            solutions.append(sentence_en, sentence_en_alt)
             
     elif sentence == "2": #Fill in the blank
         if translate == "1": #en-gd
-            sol1 = object_gd
+            solutions.append(object_gd)
         elif translate == "2": #gd-en
-            sol1 = prep_en + " " + object_en
-            sol2 = sol1
+           solutions.append(prep_en + " " + object_en)
             
     #Output -------------------------------------------------------------------
     
     #Return (question, main solution, alternative solution, prompt)
     if translate == "1": #en-gd
-        return (q, sol1, sol1, prompt1)
+        return (q, solutions, prompt1)
     elif translate == "2": #gd-en
-        return (q, sol1, sol2, prompt1)
+        return (q, solutions, prompt1)
 
 def possession_aig(translate, sentence, vocab_sample):
     
@@ -174,7 +175,7 @@ def possession_aig(translate, sentence, vocab_sample):
 
     #Prompts ------------------------------------------------------------------
     if sentence == "1": # Full sentence, no prompt
-        prompt1 = ""
+        prompt1 = "Translation: "
     elif sentence == "2": #Fill in the blank
         if translate == "1": #en-gd
             prompt1 = "Tha " + vocab_sample.loc[object_num,"nom_sing"].lower() + " "
@@ -183,26 +184,28 @@ def possession_aig(translate, sentence, vocab_sample):
    
 
     #Solutions ----------------------------------------------------------------
+    solutions = []
+    
     if sentence == "1": #Full sentence
         if translate == "1": #en-gd
-            sol1 = sentence_gd
+            solutions.append(sentence_gd)
         elif translate == "2": #gd-en
-            sol1 = sentence_en
+            solutions.append(sentence_en)
             
     elif sentence == "2": #Fill in the blank
         if translate == "1": #en-gd
-            sol1 = pp.loc[subject_num,"aig"].lower()
+            solutions.append(pp.loc[subject_num,"aig"].lower())
         elif translate == "2": #gd-en
-            sol1 = en.loc[subject_num,"en_subj"].lower() + " " + en.loc[subject_num,"have_pres"].lower()
+            solutions.append(en.loc[subject_num,"en_subj"].lower() + " " + en.loc[subject_num,"have_pres"].lower())
         
     
     #Output -------------------------------------------------------------------
     
     #Return (question, main solution, alternative solution, prompt)
     if translate == "1": #en-gd
-        return (q, sol1, sol1, prompt1)
+        return (q, solutions, prompt1)
     elif translate == "2": #gd-en
-        return (q, sol1, sol1, prompt1)
+        return (q, solutions, prompt1)
 
 def gender(gender_mode, vocab_sample):
     #Load vocab --------------------------------------------------
@@ -261,16 +264,18 @@ def gender(gender_mode, vocab_sample):
     
     #Prompts ------------------------------------------------------------------
     
-    prompt1 = ""
+    prompt1 = "Translation: "
     
     #Solutions ----------------------------------------------------------------
     
-    sol1 = sentence_gd
+    solutions = []
+    
+    solutions.append(sentence_gd)
     
     #Output -------------------------------------------------------------------
 
     ##Return (question, main solution, alternative solution, prompt)
-    return (q, sol1, sol1, prompt1)
+    return (q, solutions, prompt1)
 
 def numbers(num_mode, max_num, vocab_sample):
     
@@ -310,7 +315,7 @@ def numbers(num_mode, max_num, vocab_sample):
     #Questions ----------------------------------------------------------------
     
     if num_mode == "1": #digits to Gaelic
-        q = num
+        q = str(num)
         
     elif num_mode == "2": #Gaelic to digits
         q = num_gd
@@ -324,23 +329,32 @@ def numbers(num_mode, max_num, vocab_sample):
         
     #Prompts ------------------------------------------------------------------
     
-    prompt1 = ""
+    if num_mode == "1": #digits to Gaelic
+        prompt1 = "Àireamh: "
+        
+    elif num_mode == "2": #Gaelic to digits
+        prompt1 = "Number (in digits): "
+        
+    elif num_mode in ("3", "4"): #Plurals
+        prompt1 = "Plural: "
         
     #Solutions ----------------------------------------------------------------
     
+    solutions = []
+    
     if num_mode == "1": #digits to Gaelic
-        sol1 = num_gd
+        solutions.append(num_gd)
         
     elif num_mode == "2": #Gaelic to digits
-        sol1 = str(num)
+        solutions.append(str(num))
         
     elif num_mode in ("3", "4"): #Plural of noun
-        sol1 = vocab_sample["nom_pl"][vocab_num]
+        solutions.append(vocab_sample["nom_pl"][vocab_num])
             
     #Output -------------------------------------------------------------------
 
     ##Return (question, main solution, alternative solution, prompt)
-    return (q, sol1, sol1, prompt1)
+    return (q, solutions, prompt1)
 
 def learn_nouns(translate, vocab_sample):
     #Load vocab --------------------------------------------------
@@ -357,18 +371,19 @@ def learn_nouns(translate, vocab_sample):
         
     #Prompts ------------------------------------------------------------------
         
-    prompt1 = ""
+    prompt1 = "Translation: "
     
     #Solutions ----------------------------------------------------------------
+    solutions = []
     if translate == "1": #en-gd
-        sol1 = vocab_sample["nom_sing"][vocab_num]
+        solutions.append(vocab_sample["nom_sing"][vocab_num])
     if translate == "2": #gd-en
-        sol1 = vocab_sample["english"][vocab_num]
+        solutions.append(vocab_sample["english"][vocab_num])
     
     #Output -------------------------------------------------------------------
 
     ##Return (question, main solution, alternative solution, prompt)
-    return (q, sol1, sol1, prompt1)
+    return (q, solutions, prompt1)
 
 def preferences(translate, sentence, vocab_sample):
     #Load vocab --------------------------------------------------
@@ -445,7 +460,7 @@ def preferences(translate, sentence, vocab_sample):
     
     #Prompts ------------------------------------------------------------------
     if sentence == "1": # Full sentence, no prompt
-        prompt1 = ""
+        prompt1 = "Translation: "
     elif sentence == "2": #Fill in the blank
         if translate == "1": #en-gd
             prompt1 = like_prefer_gd.capitalize() + " ____ " + vocab_sample.loc[object_num,"nom_sing"].lower() + ": "
@@ -453,25 +468,24 @@ def preferences(translate, sentence, vocab_sample):
             prompt1 = "____ " + like_prefer_en.lower() + " " + obj_indef.lower() + ": "
             
     #Solutions ----------------------------------------------------------------
+    solutions = []
     if sentence == "1": #Full sentence
         if translate == "1": #en-gd
-            sol1 = sentence_gd
-            sol2 = sol1
+            solutions.append(sentence_gd)
         elif translate == "2": #gd-en
-            sol1 = sentence_en
-            sol2 = sol1.replace("n't", " not")
+            solutions.append(sentence_en)
+            solutions.append(sentence_en.replace("n't", " not"))
             
     elif sentence == "2": #Fill in the blank
         if translate == "1": #en-gd
-            sol1 = pp.loc[subject_num,"le"].lower()
+            solutions.append(pp.loc[subject_num,"le"].lower())
         elif translate == "2": #gd-en
-            sol1 = en.loc[subject_num,"en_subj"].lower()
-        sol2 = sol1
-
+            solutions.append(en.loc[subject_num,"en_subj"].lower())
+    
     #Output -------------------------------------------------------------------
     
     ##Return (question, main solution, alternative solution, prompt)
-    return (q, sol1, sol2, prompt1)
+    return (q, solutions, prompt1)
 
 def verb_tenses(chosen_tense, verb_form, vocab_sample):
     #Randomiser ---------------------------------------------------------------
@@ -525,32 +539,33 @@ def verb_tenses(chosen_tense, verb_form, vocab_sample):
                                              tense = chosen_tense, 
                                              negative = n_p, 
                                              question = q_s)
+    
+    sentence_gd = sentence_gd.capitalize()
         
     sentence_en = is_utility.en_verb(vocab_sample, verb_num, 
                                      pronoun = person_en, 
                                      tense = chosen_tense, 
                                      negative = n_p, 
                                      question = q_s)
+    sentence_en = sentence_en.capitalize().replace(" i ", " I ")
     
     #Questions ----------------------------------------------------------------
+    q = sentence_en
     if q_s == True:
-        q = sentence_en.capitalize() + "?"
-    else:
-        q = sentence_en.capitalize()
-    q = q.replace(" i "," I ") #English only!
+        q = q + "?"
     
     #Prompts ------------------------------------------------------------------
     
-    prompt1 = ""
+    prompt1 = "Translation: "
     
     #Solutions ----------------------------------------------------------------
+    solutions = []
+    solutions.append(sentence_gd.capitalize())
     
-    sol1 = sentence_gd.capitalize()
-    sol2 = sol1
     #Output -------------------------------------------------------------------
     
     ## Return (question, main solution, alternative solution, prompt)
-    return (q, sol1, sol2, prompt1)
+    return (q, solutions, prompt1)
 
 def professions_annan(translate, sentence):
     
@@ -585,7 +600,7 @@ def professions_annan(translate, sentence):
         
     #Prompts ------------------------------------------------------------------
     if sentence == "1": # Full sentence, no prompt
-        prompt1 = ""
+        prompt1 = "Translation: "
     elif sentence == "2": #Fill in the blank
         if translate == "1": #en-gd
             prompt1 = "'S e " + profession_gd.lower() + " a th' "
@@ -593,24 +608,23 @@ def professions_annan(translate, sentence):
             prompt1 = "____" + profession_en.lower() + ": "
         
     #Solutions ----------------------------------------------------------------
+    solutions = []
     if sentence == "1": #Full sentence
         if translate == "1": #en-gd
-            sol1 = sentence_gd
+            solutions.append(sentence_gd)
         elif translate == "2": #gd-en
-            sol1 = sentence_en
+            solutions.append(sentence_en)
             
     elif sentence == "2": #Fill in the blank
         if translate == "1": #en-gd
-            sol1 = pp_annan
+            solutions.append(pp_annan)
         elif translate == "2": #gd-en
-            sol1 = pronoun_en + " " + be_en
-    
-    sol2 = sol1
+            solutions.append(pronoun_en + " " + be_en)
     
     #Output -------------------------------------------------------------------
 
     ##Return (question, main solution, alternative solution, prompt)
-    return (q, sol1, sol2, prompt1)
+    return (q, solutions, prompt1)
 
 def emphasis_adjectives(translate, vocab_sample):
     
@@ -652,19 +666,19 @@ def emphasis_adjectives(translate, vocab_sample):
         q = sentence_gd
     
     #Prompts ------------------------------------------------------------------
-    prompt1 = ""
+    prompt1 = "Translation: "
     
     #Solutions ----------------------------------------------------------------
+    solutions = []
     if translate == "1": #en-gd
-        sol1 = sentence_gd
+        solutions.append(sentence_gd)
     elif translate == "2": #gd-en
-        sol1 = sentence_en
-    sol2 = sol1
+        solutions.append(sentence_en)
     
     #Output -------------------------------------------------------------------
     
     ##Return (question, main solution, alternative solution, prompt)
-    return (q, sol1, sol2, prompt1)
+    return (q, solutions, prompt1)
 
 def possession_mo(translate, sentence, vocab_sample):
     #This module is only used with family or body parts vocab files
@@ -752,7 +766,7 @@ def possession_mo(translate, sentence, vocab_sample):
     
     #Prompts ------------------------------------------------------------------
     if sentence == "1": # Full sentence, no prompt
-        prompt1 = ""
+        prompt1 = "Translation: "
     elif sentence == "2": #Fill in the blank
         if translate == "1": #en-gd
             prompt1 = where_gd + " "
@@ -760,32 +774,30 @@ def possession_mo(translate, sentence, vocab_sample):
             prompt1 = where_en + " " + is_are + " ____ " + what_en + ": "
     
     #Solutions ----------------------------------------------------------------
+    solutions = []
     if sentence == "1": #Full sentence
         if translate == "1": #en-gd
-            sol1 = sentence_gd
-            sol2 = sol1
+            solutions.append(sentence_gd)
         elif translate == "2": #gd-en
-            sol1 = sentence_en
-            sol2 = where_en_alt + " " + is_are + " " + whose_en + " " + what_en
-            
+            solutions.append(sentence_en,
+                              where_en_alt + " " + is_are + " " + whose_en + " " + what_en)
+    
     elif sentence == "2": #Fill in the blank
         if translate == "1": #en-gd
             if what_gd in ("nighean","duine"):
-                sol1 = whosewhat_gd
+                solutions.append(whosewhat_gd)
             else:
                 if len(whose_gd) == 0:
-                    sol1 = what_gd
+                    solutions.append(what_gd)
                 else:
-                    sol1 = whose_gd + " " + what_gd
-            sol2 = sol1
+                    solutions.append(whose_gd + " " + what_gd)
         elif translate == "2": #gd-en
-            sol1 = whose_en
-            sol2 = sol1
+            solutions.append(whose_en)
     
     #Output -------------------------------------------------------------------
     
     ##Return (question, main solution, alternative solution, prompt)
-    return (q, sol1, sol2, prompt1)
+    return (q, solutions, prompt1)
 
 def where_from(sentence, vocab_sample):
     #Load vocab --------------------------------------------------
@@ -816,33 +828,29 @@ def where_from(sentence, vocab_sample):
     
     #Prompts ------------------------------------------------------------------
     if sentence == "1": # Full sentence, no prompt
-        prompt1 = ""
+        prompt1 = "Translation: "
     elif sentence == "2": #Fill in the blank
         prompt1 = "Tha " + pp.loc[person_num, "pronoun_gd"] + " "
     elif sentence == "3": #Answer the question
         prompt1 = "[" + vocab_sample.loc[where_num,"english"] + "]: "
-        
     
     #Solutions ----------------------------------------------------------------
+    solutions = []
     if sentence == "1": # Full sentence, no prompt
-        sol1 = sentence_gd
-        sol2 = sol1
+        solutions.append(sentence_gd)
     elif sentence == "2": #Fill in the blank
-        sol1 = from_gd
-        sol2 = sol1
-    elif sentence == "3": #Fill in the blank
-        sol1 = sentence_gd
+        solutions.append(from_gd)
+    elif sentence == "3": #Answer the question
+        solutions.append(sentence_gd)
         if person_num == 1: #mi -> thu/sibh
-            sol2 = "Tha sibh " + from_gd
+            solutions.append("Tha sibh " + from_gd)
         elif person_num == 4: #sibh -> sinn/mi
-            sol2 = "Tha mi " + from_gd
-        else:
-            sol2 = sol1
-       
+            solutions.append("Tha mi " + from_gd)
+    
     #Output -------------------------------------------------------------------
     
     ##Return (question, main solution, alternative solution, prompt)
-    return (q, sol1, sol2, prompt1)
+    return (q, solutions, prompt1)
 
 def where_in(sentence, contains_articles, vocab_sample):
     #Load vocab --------------------------------------------------
@@ -890,32 +898,28 @@ def where_in(sentence, contains_articles, vocab_sample):
     
     #Prompts ------------------------------------------------------------------
     if sentence == "1": # Full sentence, no prompt
-        prompt1 = ""
+        prompt1 = "Translation: "
     elif sentence == "2": #Fill in the blank
         prompt1 = "Tha " + pp.loc[person_num, "pronoun_gd"] + " "
     elif sentence == "3": #Answer the question
         prompt1 = "[" + where_en + "]: "
         
-    #Solutions ----------------------------------------------------------------
+    solutions = []
     if sentence == "1": # Full sentence, no prompt
-        sol1 = sentence_gd
-        sol2 = sol1
+        solutions.append(sentence_gd)
     elif sentence == "2": #Fill in the blank
-        sol1 = where_gd
-        sol2 = sol1
+        solutions.append(where_gd)
     elif sentence == "3": #Fill in the blank
-        sol1 = sentence_gd
+        solutions.append(sentence_gd)
         if person_num == 1: #mi -> thu/sibh
-            sol2 = "Tha sibh " + where_gd
+            solutions.append("Tha sibh " + where_gd)
         elif person_num == 4: #sibh -> sinn/mi
-            sol2 = "Tha mi " + where_gd
-        else:
-            sol2 = sol1
+            solutions.append("Tha mi " + where_gd)
     
     #Output -------------------------------------------------------------------
     
     ##Return (question, main solution, alternative solution, prompt)
-    return (q, sol1, sol2, prompt1)
+    return (q, solutions, prompt1)
 
 def comparisons(translate):
     #Load vocab --------------------------------------------------
@@ -935,19 +939,19 @@ def comparisons(translate):
         q = sentence_gd
 
     #Prompts ------------------------------------------------------------------
-    prompt1 = ""
+    prompt1 = "Translation: "
 
     #Solutions ----------------------------------------------------------------
+    solutions = []
     if translate == "1": #en-gd
-        sol1 = sentence_gd
+        solutions.append(sentence_gd)
     elif translate == "2": #gd-en
-        sol1 = sentence_en
-    sol2 = sol1
+        solutions.append(sentence_en)
 
     #Output -------------------------------------------------------------------
     
     ##Return (question, main solution, alternative solution, prompt)
-    return (q, sol1, sol2, prompt1)
+    return (q, solutions, prompt1)
 
 def comparatives_superlatives(vocab_sample, comp_sup, sentence, translate):
     #Load vocab --------------------------------------------------
@@ -1020,31 +1024,27 @@ def comparatives_superlatives(vocab_sample, comp_sup, sentence, translate):
                 prompt1 = "The ____ " + subject_en + ": "
     
     #Solutions ----------------------------------------------------------------
+    solutions = []
     if sentence == "1": #Full sentence
         if translate == "1": #en-gd
-            sol1 = sentence_gd
-            sol2 = sol1
+            solutions.append(sentence_gd)
         elif translate == "2": #gd-en
-            sol1 = sentence_en
-            sol2 = sentence_en_alt
+            solutions.append(sentence_en, sentence_en_alt)
             
     elif sentence == "2": #Fill in the blank
         if translate == "1": #en-gd
             if comp_sup == "comp":
-                sol1 = comparative_gd
+                solutions.append(comparative_gd)
             elif comp_sup == "sup":
-                sol1 = superlative_gd
-            sol2 = sol1
+                solutions.append(superlative_gd)
         elif translate == "2": #gd-en
             if comp_sup == "comp":
-                sol1 = comparative_en
-                sol2 = comparative_en_alt
+                solutions.append(comparative_en, comparative_en_alt)
             elif comp_sup == "sup":
-                sol1 = superlative_en
-                sol2 = superlative_en_alt
+                solutions.append(superlative_en, superlative_en_alt)
     
     #Output -------------------------------------------------------------------
     
     ##Return (question, main solution, alternative solution, prompt)
-    return (q, sol1, sol2, prompt1)
+    return (q, solutions, prompt1)
 
