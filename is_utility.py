@@ -60,7 +60,10 @@ irreg_future = {"rach" : ["thèid", "tèid"],
 #---------------------
 #General functions----
 #---------------------
-
+async def user_input(prompt):
+    """This is useful for the browser implementation where asynchronous input is needed"""
+    return input(prompt)
+    
 def encourage():
     """Print a random encouraging phrase in Gaelic and English"""
     encouragements = pd.read_csv('Vocabulary/conversation_encouragement.csv')
@@ -83,7 +86,7 @@ def check_vocab(lesson_name, vocab_sample, messages = True):
         print("Try another vocabulary list or add the required columns and try again")
     return list_ok
 
-def select_vocab(lesson, options):
+async def select_vocab(lesson, options):
     """Select vocabulary file to use in lesson"""
     if len(required_columns[lesson.__name__]) == 0:
         return pd.DataFrame() #no vocab file needed
@@ -98,7 +101,7 @@ def select_vocab(lesson, options):
             print("2: Clothes")
             print("3: Family")
             print("X: Exit")
-            vocab_num = input("Practice mode: ").lower().strip()
+            vocab_num = (await user_input("Practice mode: ")).lower().strip()
         if vocab_num == "x":
             return "x"
         elif vocab_num == "1":
@@ -115,7 +118,7 @@ def select_vocab(lesson, options):
             print("1: Countries")
             print("2: Places in Scotland")
             print("X: Exit")
-            vocab_num = input("Practice mode: ").lower().strip()
+            vocab_num = (await user_input("Practice mode: ")).lower().strip()
         if vocab_num == "x":
             return "x"
         elif vocab_num == "1":
@@ -132,7 +135,7 @@ def select_vocab(lesson, options):
             print("3: Around town")
             print("4: In the house")
             print("X: Exit")
-            vocab_num = input("Practice mode: ").lower().strip()
+            vocab_num = (await user_input("Practice mode: ")).lower().strip()
         if vocab_num == "x":
             return "x"
         elif vocab_num == "1":
@@ -157,7 +160,7 @@ def select_vocab(lesson, options):
         print("or X to exit")
         while exists("Vocabulary/{}.csv".format(vocab_file)) == False or suitable == False:
             print()
-            vocab_file = input("Vocabulary list: ").lower().strip()
+            vocab_file = (await user_input("Vocabulary list: ")).lower().strip()
             if vocab_file == "x":
                 return "x"
             elif vocab_file == "help":

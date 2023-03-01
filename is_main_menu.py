@@ -7,8 +7,9 @@ Created on Wed Mar  1 13:27:09 2023
 
 import is_question_generator as qgen
 import is_run_lesson as rl
+from is_utility import user_input
 
-def main():
+async def main():
     while True:
         print("Fàilte gu Ionnsaich Seo!")
         print()
@@ -32,36 +33,36 @@ def main():
             print("14: Where are they (in)? [Prepositions]")
             print("X: Exit")
             print()
-            lesson_choice = input("Lesson number: ").lower().strip()
+            lesson_choice = (await user_input("Lesson number: ")).lower().strip()
         
         if lesson_choice == "x":
             break
         
         if lesson_choice == "1":
-            rl.run_lesson(qgen.learn_nouns)
+            await rl.run_lesson(qgen.learn_nouns)
         elif lesson_choice == "2":
-            rl.run_lesson(qgen.numbers)
+            await rl.run_lesson(qgen.numbers)
         elif lesson_choice == "3":
-            rl.run_lesson(qgen.possession_aig)
+            await rl.run_lesson(qgen.possession_aig)
         elif lesson_choice == "4":
-            rl.run_lesson(qgen.possession_mo)
+            await rl.run_lesson(qgen.possession_mo)
         elif lesson_choice == "5":
-            rl.run_lesson(qgen.give_get)
+            await rl.run_lesson(qgen.give_get)
         elif lesson_choice == "6":
-            rl.run_lesson(qgen.gender)
+            await rl.run_lesson(qgen.gender)
         elif lesson_choice == "7":
-            rl.run_lesson(qgen.preferences)
+            await rl.run_lesson(qgen.preferences)
         elif lesson_choice == "8":
-            rl.run_lesson(qgen.verb_tenses)
+            await rl.run_lesson(qgen.verb_tenses)
         elif lesson_choice == "9":
-            rl.run_lesson(qgen.professions_annan)
+            await rl.run_lesson(qgen.professions_annan)
         elif lesson_choice == "10":
-            rl.run_lesson(qgen.emphasis_adjectives)
+            await rl.run_lesson(qgen.emphasis_adjectives)
         elif lesson_choice == "11":
-            rl.run_lesson(qgen.comparisons)
+            await rl.run_lesson(qgen.comparisons)
         elif lesson_choice == "12":
-            rl.run_lesson(qgen.comparatives_superlatives)
+            await rl.run_lesson(qgen.comparatives_superlatives)
         elif lesson_choice == "13":
-            rl.run_lesson(qgen.where_from)
+            await rl.run_lesson(qgen.where_from)
         elif lesson_choice == "14":
-            rl.run_lesson(qgen.where_in)
+            await rl.run_lesson(qgen.where_in)

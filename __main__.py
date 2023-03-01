@@ -5,4 +5,5 @@ Created on Sat Oct 29 14:49:12 2022
 @author: Zoe
 """
 import is_main_menu as mm
-mm.main()
+import asyncio
+asyncio.run(mm.main())
