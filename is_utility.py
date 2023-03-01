@@ -7,6 +7,7 @@ Created on Tue Nov  1 17:30:28 2022
 
 import pandas as pd
 import random as rd
+from sys import platform
 from os import listdir
 import re #regex
 en = pd.read_csv('Vocabulary/grammar_english.csv')
@@ -61,8 +62,13 @@ irreg_future = {"rach" : ["thèid", "tèid"],
 #General functions----
 #---------------------
 async def user_input(prompt):
-    """This is useful for the browser implementation where asynchronous input is needed"""
-    return input(prompt)
+    """This is useful for the browser implementation where asynchronous input is needed
+    Note: all ancestor functions need to be asynchronous"""
+    if platform == "emscripten":
+        import js
+        return await js.user_input(prompt)
+    else:
+        return input(prompt)
     
 def encourage():
     """Print a random encouraging phrase in Gaelic and English"""
