@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Run Ionnsaich Seo! Online, in your browser</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"
+    integrity="sha384-mQ93GR66B00ZXjt0YO5KlohRA5SY2XofN4zfuZxLkoj1gXtW8ANNCe9d5Y3eG5eD"
+    crossorigin="anonymous"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.3/dist/jquery.min.js"
+    integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery.terminal@2.35.3/js/jquery.terminal.min.js"
+    integrity="sha256-1Dthf3xswQSnV+Emd0b6hpfZ41EZZUU0rK6OaPaOtjM=" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery.terminal@2.35.3/css/jquery.terminal.min.css"
+    integrity="sha256-aUC2gEi58s1oPvbcgwp4jecC+b1HFGse9EFgKxfEO1w=" crossorigin="anonymous">
+
+  <script src="https://cdn.jsdelivr.net/pyodide/v0.22.1/full/pyodide.js"
+    integrity="sha256-Q6i1RJCDrpDIb0VyM6S9WVhkF40IqPfGeZKI+W6Mn10=" crossorigin="anonymous"></script>
+
+  <script src="is-online.js"></script>
+</head>
+
+<body>
+  <header>
+    <nav class="navbar navbar-expand-sm bg-body-tertiary">
+      <div class="container-fluid">
+        <a class="navbar-brand mb-0 h1" href="/">Ionnsaich Seo!</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
+          aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarContent">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="/">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="/is-online">IS Online</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="https://github.com/sourzo/IonnsaichSeo/releases/latest">Download</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="https://github.com/sourzo/IonnsaichSeo">Source Code</a>
+            </li>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <div class="container px-4 pt-5 pb-4">
+    <h2>Ionnsaich Seo! online</h2>
+    <p class="lead">
+      On this page, you can run Ionnsaich Seo! in your web browser.
+    </p>
+
+    <div id="loadingProgressContainer" style="display: none">
+      <div class="d-flex">
+        <span class="spinner-border" role="status">
+        </span>
+        <span class="lead ms-2" id="loadingText">Loading...</span>
+      </div>
+    </div>
+    <script>
+      // JS is enabled, so show that we have started loading.
+      document.getElementById('loadingProgressContainer').style.display = ''
+    </script>
+
+    <noscript>
+      <!-- Otherwise, JS is disabled, so show error. -->
+      <div class="alert alert-warning" role="alert">
+        Error: JavaScript is disabled. Please enable JavaScript.
+      </div>
+    </noscript>
+
+    <div class="alert alert-warning" role="alert" id="loadingError" style="display: none">Error: </div>
+  </div>
+  </div>
+
+  <div id="terminal" style="--size: 1.5"></div>
+</body>
+
+</html>

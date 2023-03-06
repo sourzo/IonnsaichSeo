@@ -6,6 +6,8 @@ on:
   push:
     branches: [main]
     paths: [website/**, .github/workflows/**]
+  release:
+    types: [published, unpublished, deleted]
   workflow_dispatch: # Manually from the Actions tab
 concurrency:
   cancel-in-progress: true
@@ -20,6 +22,18 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
+      - name: Determine latest release
+        id: determine_latest_release
+        uses: octokit/request-action@v2.x
+        with:
+          route: GET /repos/:owner_slash_repo/releases/latest
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          INPUT_OWNER_SLASH_REPO: ${{ github.repository }}
+      - name: Create source zip for the IS Online page
+        env:
+          SOURCE_URL: ${{ fromJson(steps.determine_latest_release.outputs.data).zipball_url }}
+        run: bash .github/workflows/create-source-zip-for-the-online-page.sh
       - name: Create github-pages artifact
         uses: actions/upload-pages-artifact@v1
         with:
