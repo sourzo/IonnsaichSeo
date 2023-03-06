@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+
+name: Build and deploy website
+
+on:
+  push:
+    branches: [main]
+    paths: [website/**, .github/workflows/**]
+  workflow_dispatch: # Manually from the Actions tab
+concurrency:
+  cancel-in-progress: true
+  group: website
+
+defaults:
+  run:
+    shell: bash
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+      - name: Create github-pages artifact
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: website/
+
+  deploy:
+    needs: build
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    permissions: # of GITHUB_TOKEN.
+      pages: write # Can deploy to Pages...
+      id-token: write # ... and verify deployment originates from appropriate source.
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v1
