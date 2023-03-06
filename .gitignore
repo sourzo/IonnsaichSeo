@@ -1,0 +1,8 @@
+test.py
+*.pyc
+output/
+create-installer.ps1
+module template
+Archive - v1/
+notes.txt
+*.bak
