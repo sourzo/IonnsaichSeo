@@ -749,7 +749,7 @@ def possession_mo(translate, sentence, vocab_sample):
             what_gd = "n-" + what_gd
     
     #Construct sentence -------------------------------------------------------
-    if what_gd in ("nighean","duine"):
+    if what_gd in ("nighean","duine","nigheanan","daoine"):
         sentence_gd = where_gd + " " + whosewhat_gd
     else:
         if len(whose_gd) == 0:
