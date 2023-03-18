@@ -144,7 +144,7 @@ def give_get(chosen_tense, translate, sentence, vocab_sample):
             
     #Output -------------------------------------------------------------------
     
-    #Return (question, main solution, alternative solution, prompt)
+    #Return (question, solutions, prompt)
     if translate == "1": #en-gd
         return (q, solutions, prompt1)
     elif translate == "2": #gd-en
@@ -201,7 +201,7 @@ def possession_aig(translate, sentence, vocab_sample):
     
     #Output -------------------------------------------------------------------
     
-    #Return (question, main solution, alternative solution, prompt)
+    #Return (question, solutions, prompt)
     if translate == "1": #en-gd
         return (q, solutions, prompt1)
     elif translate == "2": #gd-en
@@ -274,86 +274,76 @@ def gender(gender_mode, vocab_sample):
     
     #Output -------------------------------------------------------------------
 
-    ##Return (question, main solution, alternative solution, prompt)
+    ##Return (question, solutions, prompt)
     return (q, solutions, prompt1)
 
-def numbers(num_mode, max_num, vocab_sample):
+def numbers(translate, max_num):
     
-    #Load vocab --------------------------------------------------
-    
-        
-        
     #Randomiser ---------------------------------------------------------------
-    if num_mode in ("1", "2"):
-        num = rd.randint(1,max_num)
-    
-    elif num_mode in ("3", "4", "5"):
-        vocab_num = rd.randrange(len(vocab_sample))
-
-    
+    num = rd.randint(1,max_num)
+       
     #Work out the Gaelic for given number ----------------------------------
-    if num_mode in ("1", "2"):
-        num_unit = str(num)[-1]
-        num_unit_gd = g_numbers.loc[g_numbers["number"]==int(num_unit)].reset_index(drop=True).at[0,"cardinal"]
-        if num < 10: # 0-9
-            num_gd = g_numbers.loc[g_numbers["number"]==num].reset_index(drop=True).at[0,"cardinal"]
-        elif num == 12:
-            num_gd = "dà dheug" #lenition
-        elif num < 20: #11-19
-            num_gd = num_unit_gd + " deug"
-        elif num < 100: #20-99
-            num_ten = int(str(num)[-2] + "0")
-            num_ten_gd = g_numbers.loc[g_numbers["number"]==int(num_ten)].reset_index(drop=True).at[0,"cardinal"]
-            if num_unit == "0":
-                num_gd = num_ten_gd
-            else:
-                if num_unit in ("1","8"):
-                    num_gd = num_ten_gd + " 's a h-" + num_unit_gd
-                else:
-                    num_gd = num_ten_gd + " 's a " + num_unit_gd
+    num_gd = is_utility.digits_to_gd(num)
             
     #Questions ----------------------------------------------------------------
     
-    if num_mode == "1": #digits to Gaelic
+    if translate == "1": #digits to Gaelic
         q = str(num)
         
-    elif num_mode == "2": #Gaelic to digits
+    elif translate == "2": #Gaelic to digits
         q = num_gd
+    
+    #Prompts ------------------------------------------------------------------
+    
+    if translate == "1": #digits to Gaelic
+        prompt1 = "Àireamh: "
         
-    elif num_mode == "3": #Plural from Gaelic
-        q = "Pluralise: " + vocab_sample["nom_sing"][vocab_num]
+    elif translate == "2": #Gaelic to digits
+        prompt1 = "Number (in digits): "
+    
+    #Solutions ----------------------------------------------------------------
+    
+    solutions = []
+    
+    if translate == "1": #digits to Gaelic
+        solutions.append(num_gd)
         
-    elif num_mode == "4": #Plural from English
+    elif translate == "2": #Gaelic to digits
+        solutions.append(str(num))
+    
+    #Output -------------------------------------------------------------------
+    
+    ##Return (question, solutions, prompt)
+    return (q, solutions, prompt1)
+
+def plurals(translate, vocab_sample):
+    
+    #Randomiser ---------------------------------------------------------------
+    vocab_num = rd.randrange(len(vocab_sample))
+    
+    #Work out the Gaelic for given number ----------------------------------
+            
+    #Questions ----------------------------------------------------------------
+    
+    if translate == "1": #Plural from English
         q = "Pluralise the Gaelic for: " + vocab_sample["english"][vocab_num]
     
+    elif translate == "2": #Plural from Gaelic
+        q = "Pluralise: " + vocab_sample["nom_sing"][vocab_num]
         
     #Prompts ------------------------------------------------------------------
     
-    if num_mode == "1": #digits to Gaelic
-        prompt1 = "Àireamh: "
-        
-    elif num_mode == "2": #Gaelic to digits
-        prompt1 = "Number (in digits): "
-        
-    elif num_mode in ("3", "4"): #Plurals
-        prompt1 = "Plural: "
+    prompt1 = "Plural: "
         
     #Solutions ----------------------------------------------------------------
     
     solutions = []
     
-    if num_mode == "1": #digits to Gaelic
-        solutions.append(num_gd)
-        
-    elif num_mode == "2": #Gaelic to digits
-        solutions.append(str(num))
-        
-    elif num_mode in ("3", "4"): #Plural of noun
-        solutions.append(vocab_sample["nom_pl"][vocab_num])
+    solutions.append(vocab_sample["nom_pl"][vocab_num])
             
     #Output -------------------------------------------------------------------
-
-    ##Return (question, main solution, alternative solution, prompt)
+    
+    ##Return (question, solutions, prompt)
     return (q, solutions, prompt1)
 
 def learn_nouns(translate, vocab_sample):
@@ -382,7 +372,7 @@ def learn_nouns(translate, vocab_sample):
     
     #Output -------------------------------------------------------------------
 
-    ##Return (question, main solution, alternative solution, prompt)
+    ##Return (question, solutions, prompt)
     return (q, solutions, prompt1)
 
 def preferences(translate, sentence, vocab_sample):
@@ -484,7 +474,7 @@ def preferences(translate, sentence, vocab_sample):
     
     #Output -------------------------------------------------------------------
     
-    ##Return (question, main solution, alternative solution, prompt)
+    ##Return (question, solutions, prompt)
     return (q, solutions, prompt1)
 
 def verb_tenses(chosen_tense, verb_form, vocab_sample):
@@ -564,7 +554,7 @@ def verb_tenses(chosen_tense, verb_form, vocab_sample):
     
     #Output -------------------------------------------------------------------
     
-    ## Return (question, main solution, alternative solution, prompt)
+    ## Return (question, solutions, prompt)
     return (q, solutions, prompt1)
 
 def professions_annan(translate, sentence):
@@ -623,7 +613,7 @@ def professions_annan(translate, sentence):
     
     #Output -------------------------------------------------------------------
 
-    ##Return (question, main solution, alternative solution, prompt)
+    ##Return (question, solutions, prompt)
     return (q, solutions, prompt1)
 
 def emphasis_adjectives(translate, vocab_sample):
@@ -677,7 +667,7 @@ def emphasis_adjectives(translate, vocab_sample):
     
     #Output -------------------------------------------------------------------
     
-    ##Return (question, main solution, alternative solution, prompt)
+    ##Return (question, solutions, prompt)
     return (q, solutions, prompt1)
 
 def possession_mo(translate, sentence, vocab_sample):
@@ -796,7 +786,7 @@ def possession_mo(translate, sentence, vocab_sample):
     
     #Output -------------------------------------------------------------------
     
-    ##Return (question, main solution, alternative solution, prompt)
+    ##Return (question, solutions, prompt)
     return (q, solutions, prompt1)
 
 def where_from(sentence, vocab_sample):
@@ -849,7 +839,7 @@ def where_from(sentence, vocab_sample):
     
     #Output -------------------------------------------------------------------
     
-    ##Return (question, main solution, alternative solution, prompt)
+    ##Return (question, solutions, prompt)
     return (q, solutions, prompt1)
 
 def where_in(sentence, contains_articles, vocab_sample):
@@ -918,7 +908,7 @@ def where_in(sentence, contains_articles, vocab_sample):
     
     #Output -------------------------------------------------------------------
     
-    ##Return (question, main solution, alternative solution, prompt)
+    ##Return (question, solutions, prompt)
     return (q, solutions, prompt1)
 
 def comparisons(translate):
@@ -950,7 +940,7 @@ def comparisons(translate):
 
     #Output -------------------------------------------------------------------
     
-    ##Return (question, main solution, alternative solution, prompt)
+    ##Return (question, solutions, prompt)
     return (q, solutions, prompt1)
 
 def comparatives_superlatives(vocab_sample, comp_sup, sentence, translate):
@@ -1045,6 +1035,120 @@ def comparatives_superlatives(vocab_sample, comp_sup, sentence, translate):
     
     #Output -------------------------------------------------------------------
     
-    ##Return (question, main solution, alternative solution, prompt)
+    ##Return (question, solutions, prompt)
     return (q, solutions, prompt1)
 
+def time(translate):
+    
+    #Randomiser ---------------------------------------------------------------
+    hrs_num = rd.randrange(24)
+    mins_num = rd.randrange(0, 60, 5)
+    
+    #Helper functions ---------------------------------------------------------
+    def get_12h(h24):
+        """convert 24h time to 12h time"""
+        if h24 > 12:
+            return h24 - 12
+        elif h24 == 0:
+            return 12
+        else: 
+            return h24
+    
+    def get_hrs_gd(h24):
+        hrs12 = get_12h(h24)
+        if hrs12 == 1:
+            return "uair"
+        elif hrs12 == 2:
+            return "dhà"
+        elif hrs12 <= 10:
+            return is_utility.numlist.loc[is_utility.numlist["number"] == hrs12, 
+                                          "cardinal"].values[0]
+        elif hrs12 == 11:
+            return "aon uair deug"
+        elif hrs12 == 12:
+            return "dà uair dheug"
+    
+    def get_time(hrs, mins):
+        ## hrs o'clock
+        if mins == 0:
+            hrs12 = get_12h(hrs)
+            if hrs12 == 2:
+                return "dà uair"
+            elif hrs12 in range(3,10):
+                return get_hrs_gd(hrs) + " uairean"
+            else:
+                return get_hrs_gd(hrs)
+    
+        ## quarter past
+        elif mins == 15:
+            return "cairteal an dèidh " + get_hrs_gd(hrs)
+    
+        ## quarter to
+        elif mins == 45:
+            return "cairteal gu " + get_hrs_gd(hrs + 1)
+    
+        ## half past
+        elif mins == 30:
+            return "leth-uair an dèidh " + get_hrs_gd(hrs)
+    
+        ## other times
+        else:
+            mins_tofrom = min(mins, 60-mins)
+            mins_gd = is_utility.digits_to_gd(mins_tofrom)
+            if mins_tofrom == 20:
+                mins_gd = mins_gd + " mionaid"
+            else:
+                mins_gd = mins_gd + " mionaidean"
+            if mins_tofrom == mins:
+                return mins_gd + " an dèidh " + get_hrs_gd(hrs)
+            else: 
+                return mins_gd + " gu " + get_hrs_gd(hrs + 1)
+    
+    #Questions ----------------------------------------------------------------
+    if translate == "1": #Digits to Gaelic
+        q = f"Dè an uair a tha e? ({hrs_num:02}:{mins_num:02})"
+    elif translate == "2": #Gaelic to digits
+        q = f"Tha e {get_time(hrs_num, mins_num)}"
+    
+    
+    #Prompts ------------------------------------------------------------------
+    
+    if translate == "1": #Digits to Gaelic
+        prompt1 = "Tha e "
+    elif translate == "2": #Gaelic to digits
+        prompt1 = "Time (digital): "
+        
+    #Solutions ----------------------------------------------------------------
+    
+    if translate == "1": #Digits to Gaelic
+        solutions = [get_time(hrs_num, mins_num)]
+        if mins_num == 0:
+            if hrs_num == 0:
+                solutions.append("meadhan oidhche")
+            elif hrs_num == 12:
+                solutions.append("meadhan latha")
+        
+        ## in the morning
+        if hrs_num < 12:
+            solutions.append(get_time(hrs_num, mins_num) + " anns a' mhadainn")
+        ## in the afternoon/evening
+        elif hrs_num > 12 or (hrs_num == 12 and mins_num != 0):
+            if hrs_num < 19:
+                solutions.append(get_time(hrs_num, mins_num) + " feasgar")
+            if hrs_num > 15:
+                solutions.append(get_time(hrs_num, mins_num) + " as t-oidhche")
+                
+    elif translate == "2":
+        #include a.m. and p.m. times
+        hrs_num12 = get_12h(hrs_num)
+        solutions = [f"{hrs_num:02}:{mins_num:02}", f"{hrs_num12:02}:{mins_num:02}"]
+        #include dropped leading zero for hours
+        if hrs_num12 < 10:
+            solutions.append(f"{hrs_num12:01}:{mins_num:02}")
+        elif hrs_num == 0:
+            solutions.append(f"0:{mins_num:02}")
+            
+    #Output -------------------------------------------------------------------
+
+    ##Return (question, solutions, prompt)
+    return (q, solutions, prompt1)

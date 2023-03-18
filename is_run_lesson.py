@@ -49,34 +49,14 @@ async def run_lesson(lesson):
             options["comp_sup"] = "both"
     
     ##Numbers module - special options
-    elif lesson.__name__ == "numbers":
-        options["num_mode"] = "0"
-        while options["num_mode"] not in ("x","1","2","3","4"#,"5"
-                                    ):
-            print()
-            print("Select practice mode")
-            print("1: Numbers only (Digits to Gaelic)")
-            print("2: Numbers only (Gaelic to digits)")
-            print("3: Plurals only (from Gaelic)")
-            print("4: Plurals only (from English)")
-            #print("5: Numbers and plurals") - not available yet
-            print("X: Exit")
-            options["num_mode"] = (await is_utility.user_input("Practice mode: ")).lower().strip()
-            
-        if options["num_mode"] == "x":
-            return
-        
-        elif options["num_mode"] in ("1", "2"):
-            code_max = 100
-            user_max=""
-            while user_max.isdigit()==False:
-                user_max = await is_utility.user_input("Select maximum number to practice, must be less than {}: ".format(code_max))
-            options["max_num"] = max(1,min(int(user_max),(code_max-1)))
-            print()
-            print("Practicing numbers 1 to {}".format(options["max_num"]))
-            
-        elif options["num_mode"] in ("3", "4", "5"):
-            options["max_num"] = 1
+    if lesson.__name__ == "numbers":
+        code_max = 100
+        user_max=""
+        while user_max.isdigit()==False:
+            user_max = await is_utility.user_input("Select maximum number to practice, must be less than {}: ".format(code_max))
+        options["max_num"] = max(1,min(int(user_max),(code_max-1)))
+        print()
+        print("Practicing numbers 1 to {}".format(options["max_num"]))
         
     ##Modules involving verbs: select tense
     if lesson.__name__ in ("give_get", "verb_tenses"):
@@ -113,13 +93,26 @@ async def run_lesson(lesson):
             options["verb_form"] = (await is_utility.user_input("Verb forms: ")).lower().strip()
     
     ##Translation direction
-    if lesson.__name__ in ("give_get", "possession_aig", "learn_nouns", "preferences", "professions_annan", "emphasis_adjectives", "possession_mo", "comparisons", "comparatives_superlatives"):
+    if lesson.__name__ in ("give_get", "possession_aig", "learn_nouns", "preferences", 
+                           "professions_annan", "emphasis_adjectives", "possession_mo", 
+                           "comparisons", "comparatives_superlatives", "plurals"):
         options["translate"] = "0"
         while options["translate"] not in ("x","1","2"):
             print()
             print("Select translation direction")
             print("1: English to Gaelic")
             print("2: Gaelic to English")
+            print("X: Exit")
+            options["translate"] = (await is_utility.user_input("Translation direction: ")).lower().strip()
+        if options["translate"] == "x":
+            return
+    elif lesson.__name__ in ("numbers", "time"):
+        options["translate"] = "0"
+        while options["translate"] not in ("x","1","2"):
+            print()
+            print("Select translation direction")
+            print("1: Digits to Gaelic")
+            print("2: Gaelic to Digits")
             print("X: Exit")
             options["translate"] = (await is_utility.user_input("Translation direction: ")).lower().strip()
         if options["translate"] == "x":

@@ -11,6 +11,7 @@ from sys import platform
 from os import listdir
 import re #regex
 en = pd.read_csv('Vocabulary/grammar_english.csv')
+numlist = pd.read_csv('Vocabulary/grammar_numbers.csv')
 
 #---------------
 #Definitions----
@@ -18,7 +19,8 @@ en = pd.read_csv('Vocabulary/grammar_english.csv')
 required_columns = {"give_get" : ("english", "nom_sing"),
                     "possession_aig" : ("english", "nom_sing"),
                     "gender" : ("english", "nom_sing", "gender"),
-                    "numbers" : ("english", "nom_sing", "nom_pl"),
+                    "numbers" : (),
+                    "plurals" : ("english", "nom_sing", "nom_pl"),
                     "learn_nouns" : ("english", "nom_sing"),
                     "preferences" : ("english", "nom_sing"),
                     "verb_tenses" : ("english", "en_past", "en_vn", "root", "verbal_noun"),
@@ -28,7 +30,8 @@ required_columns = {"give_get" : ("english", "nom_sing"),
                     "where_from" : ("english", "nom_sing", "gender"),
                     "where_in" : ("english", "nom_sing", "gender"),
                     "comparisons" : (),
-                    "comparatives_superlatives": ("english", "nom_sing", "gender")}
+                    "comparatives_superlatives": ("english", "nom_sing", "gender"),
+                    "time" : ()}
 
 vowels = set("aàáeèéiìíoòóuùú")
 broad_vowels = set("aàáoòóuùú")
@@ -329,6 +332,26 @@ def cha(word):
     else:
         word = "cha " + lenite(word, extras = dentals)
     return word
+
+def digits_to_gd(n):
+    num_unit = str(n)[-1]
+    num_unit_gd = numlist.loc[numlist["number"]==int(num_unit)].reset_index(drop=True).at[0,"cardinal"]
+    if n <= 10: # 0-9
+        return numlist.loc[numlist["number"]==n].reset_index(drop=True).at[0,"cardinal"]
+    elif n == 12:
+        return "dà dheug" #lenition
+    elif n < 20: #11-19
+        return num_unit_gd + " deug"
+    elif n < 100: #20-99
+        num_ten = int(str(n)[-2] + "0")
+        num_ten_gd = numlist.loc[numlist["number"]==int(num_ten)].reset_index(drop=True).at[0,"cardinal"]
+        if num_unit == "0":
+            return num_ten_gd
+        else:
+            if num_unit in ("1","8"):
+                return num_ten_gd + " 's a h-" + num_unit_gd
+            else:
+                return num_ten_gd + " 's a " + num_unit_gd
 
 def art_standard(word):
     """The common article pattern used for singular nom-fem, prep, and gen-masc."""

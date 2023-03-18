@@ -15,22 +15,24 @@ async def main():
         print()
         
         lesson_choice = "0"
-        while lesson_choice not in ("x","1","2","3","4","5","6", "7", "8", "9", "10", "11", "12", "13", "14"):
+        while lesson_choice not in ["x"] + [str(n) for n in range(1,15)]:
             print("Select lesson:")
             print("1: Basic vocabulary flashcards - nouns")
-            print("2: Numbers and plurals")
-            print("3: Possession using the prepositional pronoun 'aig'")
-            print("4: Possession using the possessive articles 'mo', 'do', etc")
-            print("5: Giving and getting: prepositional pronouns 'do' and 'bho'")
-            print("6: Gender of nouns (using adjectives/articles)")
-            print("7: Preferences (I would like/prefer etc) using the prepositional pronoun 'le'")
-            print("8: Verb tenses")
-            print("9: Professions: the prepositional pronoun 'ann an'")
-            print("10: Emphatic pronouns and adjectives")
-            print("11: Comparisons (sayings)")
-            print("12: Adjectives: Comparatives and superlatives")
-            print("13: Where are they from? [Prepositions]")
-            print("14: Where are they (in)? [Prepositions]")
+            print("2: Numbers")
+            print("3: Plurals")
+            print("4: Time")
+            print("5: Possession using the prepositional pronoun 'aig'")
+            print("6: Possession using the possessive articles 'mo', 'do', etc")
+            print("7: Giving and getting: prepositional pronouns 'do' and 'bho'")
+            print("8: Gender of nouns (using adjectives/articles)")
+            print("9: Preferences (I would like/prefer etc) using the prepositional pronoun 'le'")
+            print("10: Verb tenses")
+            print("11: Professions: the prepositional pronoun 'ann an'")
+            print("12: Emphatic pronouns and adjectives")
+            print("13: Comparisons (sayings)")
+            print("14: Adjectives: Comparatives and superlatives")
+            print("15: Where are they from? [Prepositions]")
+            print("16: Where are they (in)? [Prepositions]")
             print("X: Exit")
             print()
             lesson_choice = (await user_input("Lesson number: ")).lower().strip()
@@ -43,26 +45,30 @@ async def main():
         elif lesson_choice == "2":
             await rl.run_lesson(qgen.numbers)
         elif lesson_choice == "3":
-            await rl.run_lesson(qgen.possession_aig)
+            await rl.run_lesson(qgen.plurals)
         elif lesson_choice == "4":
-            await rl.run_lesson(qgen.possession_mo)
+            await rl.run_lesson(qgen.time)
         elif lesson_choice == "5":
-            await rl.run_lesson(qgen.give_get)
+            await rl.run_lesson(qgen.possession_aig)
         elif lesson_choice == "6":
-            await rl.run_lesson(qgen.gender)
+            await rl.run_lesson(qgen.possession_mo)
         elif lesson_choice == "7":
-            await rl.run_lesson(qgen.preferences)
+            await rl.run_lesson(qgen.give_get)
         elif lesson_choice == "8":
-            await rl.run_lesson(qgen.verb_tenses)
+            await rl.run_lesson(qgen.gender)
         elif lesson_choice == "9":
-            await rl.run_lesson(qgen.professions_annan)
+            await rl.run_lesson(qgen.preferences)
         elif lesson_choice == "10":
-            await rl.run_lesson(qgen.emphasis_adjectives)
+            await rl.run_lesson(qgen.verb_tenses)
         elif lesson_choice == "11":
-            await rl.run_lesson(qgen.comparisons)
+            await rl.run_lesson(qgen.professions_annan)
         elif lesson_choice == "12":
-            await rl.run_lesson(qgen.comparatives_superlatives)
+            await rl.run_lesson(qgen.emphasis_adjectives)
         elif lesson_choice == "13":
-            await rl.run_lesson(qgen.where_from)
+            await rl.run_lesson(qgen.comparisons)
         elif lesson_choice == "14":
+            await rl.run_lesson(qgen.comparatives_superlatives)
+        elif lesson_choice == "15":
+            await rl.run_lesson(qgen.where_from)
+        elif lesson_choice == "16":
             await rl.run_lesson(qgen.where_in)
