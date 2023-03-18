@@ -4,6 +4,9 @@ Big Plan:
 
 Overall app:
  - when selecting pronouns, include names?
+ - menu options to be split into a separate module as they're getting unwieldy
+ - is_utility file to be split into separate modules (grammar en/gd, general utility, etc)
+ - lessons to be grouped into hierarchy
 
 Issues/bugs:
  - Currently if there is more than one translation in a dictionary (e.g. in adjectives_food, searbh = sour and searbh = bitter) then it is decided by row number (index) - which might be frustrating to the user.
@@ -16,7 +19,6 @@ Additional modules:
    ... relative future
    ... need
  - number and time
-   ... time
    ... plurals & numbers?
    ... ordinals
    ... "in" months and seasons

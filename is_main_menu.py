@@ -15,7 +15,7 @@ async def main():
         print()
         
         lesson_choice = "0"
-        while lesson_choice not in ["x"] + [str(n) for n in range(1,15)]:
+        while lesson_choice not in ["x"] + [str(n) for n in range(1,17)]:
             print("Select lesson:")
             print("1: Basic vocabulary flashcards - nouns")
             print("2: Numbers")
