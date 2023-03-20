@@ -8,48 +8,33 @@ Created on Sun Nov 27 16:48:05 2022
 async def run_lesson(lesson):
     """Generic code to run any module"""
     import is_utility
+    from inspect import signature
     import datetime as dt
+    import is_lesson_options as lo
+    import re
     
     # User options ------------------------------------------------------------
     
     options = dict()
     
-    ##Gender module - special options
-    if lesson.__name__ == "gender":
-        options["gender_mode"] = "0"
-        while options["gender_mode"] not in ("x","1","2",#"3","4","5"
-                                    ):
-            print("Select practice option")
-            print("1: Adjectives")
-            print("2: Definite articles (nom.)")
-            #print("3: Definite articles (prep.)")
-            #print("4: Definite articles (poss.)")
-            #print("5: Definite articles (All)")
-            print("X: Exit")
-            options["gender_mode"] = (await is_utility.user_input("Practice option: ")).lower().strip()
-        if options["gender_mode"] == "x":
-            return
-    ##Adjectives: Comparatives or superlatives
-    if lesson.__name__ == "comparatives_superlatives":
-        c_s = "0"
-        while c_s not in ("x","1","2","3"):
-            print("Select practice option")
-            print("1: Comparatives ('better', 'faster', etc)")
-            print("2: Superlatives ('best', 'fastest', etc)")
-            print("3: Both")
-            print("X: Exit")
-            c_s = (await is_utility.user_input("Practice option: ")).lower().strip()
-        if c_s == "x":
-            return
-        elif c_s == "1":
-            options["comp_sup"] = "comp"
-        elif c_s == "2":
-            options["comp_sup"] = "sup"
-        elif c_s == "3":
-            options["comp_sup"] = "both"
+    lesson_parameters = signature(lesson).parameters
+    parameter_prompts = {"gender_mode" : "Select practice option",
+                         "comp_sup" : "Select practice option", 
+                         "chosen_tense" : "Select tense",
+                         "verb_form" : "Practice which verb forms?", 
+                         "translate_words" : "Select translation direction", 
+                         "translate_numbers" : "Select translation direction",
+                         "translate_generic" : "Select practice option", 
+                         "sentence" : "Select practice option", 
+                         "sentence_qa" : "Select practice option"}
+    for param in parameter_prompts:
+        if param in lesson_parameters:
+            await lo.options_menu(options, param, parameter_prompts[param])
+            if options[param] == "x":
+                return
     
     ##Numbers module - special options
-    if lesson.__name__ == "numbers":
+    if "max_num" in lesson_parameters:
         code_max = 100
         user_max=""
         while user_max.isdigit()==False:
@@ -57,111 +42,15 @@ async def run_lesson(lesson):
         options["max_num"] = max(1,min(int(user_max),(code_max-1)))
         print()
         print("Practicing numbers 1 to {}".format(options["max_num"]))
-        
-    ##Modules involving verbs: select tense
-    if lesson.__name__ in ("give_get", "verb_tenses"):
-        ct = "0"
-        while ct not in ("x","1","2","3","4"):
-            print()
-            print("Select tense")
-            print("1: Present tense")
-            print("2: Past tense")
-            print("3: Future tense")
-            print("4: All tenses")
-            print("X: Exit")
-            ct = (await is_utility.user_input("Tense: ")).lower().strip()
-        if ct == "1":
-            options["chosen_tense"] = "present"
-        elif ct == "2":
-            options["chosen_tense"] = "past"
-        elif ct == "3":
-            options["chosen_tense"] = "future"
-        elif ct == "4":
-            options["chosen_tense"] = "any"
-        elif ct == "x":
-            return
-
-    ##Verbs option 2 - Verb form (question/statement, positive/negative)
-    if lesson.__name__ in ("verb_tenses"):
-        options["verb_form"] = "0"
-        while options["verb_form"] not in ("1", "2", "3"):
-            print()
-            print("Practice which verb forms?")
-            print("1: Positive statements only")
-            print("2: Positive and negative statements")
-            print("3: Positive and negative statements and questions")
-            options["verb_form"] = (await is_utility.user_input("Verb forms: ")).lower().strip()
     
-    ##Translation direction
-    if lesson.__name__ in ("give_get", "possession_aig", "learn_nouns", "preferences", 
-                           "professions_annan", "emphasis_adjectives", "possession_mo", 
-                           "comparisons", "comparatives_superlatives", "plurals"):
-        options["translate"] = "0"
-        while options["translate"] not in ("x","1","2"):
-            print()
-            print("Select translation direction")
-            print("1: English to Gaelic")
-            print("2: Gaelic to English")
-            print("X: Exit")
-            options["translate"] = (await is_utility.user_input("Translation direction: ")).lower().strip()
-        if options["translate"] == "x":
-            return
-    elif lesson.__name__ in ("numbers", "time"):
-        options["translate"] = "0"
-        while options["translate"] not in ("x","1","2"):
-            print()
-            print("Select translation direction")
-            print("1: Digits to Gaelic")
-            print("2: Gaelic to Digits")
-            print("X: Exit")
-            options["translate"] = (await is_utility.user_input("Translation direction: ")).lower().strip()
-        if options["translate"] == "x":
-            return
-    
-    ##Full sentence or fill in the blank
-    QandA_lessons = ("where_from", "where_in")
-    other_lessons = ("give_get", "preferences", "possession_aig", "professions_annan", "possession_mo", "comparatives_superlatives")
-    if lesson.__name__ in QandA_lessons + other_lessons:
-        if lesson.__name__ in QandA_lessons:
-            sentence_tuple = ("x","1","2","3")
-        else:
-            sentence_tuple = ("x","1","2","3")    
-        options["sentence"] = "0"
-        while options["sentence"] not in sentence_tuple:
-            print()
-            print("Select practice mode")
-            print("1: Full sentence")
-            print("2: Fill in the blank")
-            if lesson.__name__ in QandA_lessons:
-                print("3: Question and answer")
-            print("X: Exit")
-            options["sentence"] = (await is_utility.user_input("Practice mode: ")).lower().strip()
-        if options["sentence"] == "x":
-            return
-        
     #Select vocab file
-    vocab_list = await is_utility.select_vocab(lesson, options)
+    vocab_list = await lo.select_vocab(lesson, options)
     if type(vocab_list) == str:
         return
     elif len(vocab_list) == 1:
         options["vocab_sample"] = vocab_list
     elif len(vocab_list) > 1:
-        user_size = ""
-        while user_size.isdigit()==False:
-            print()
-            print("How many words do you want to use from the list?")
-            user_size = await is_utility.user_input("(Max " + str(len(vocab_list)) + "): ")
-        user_size = max(1,min(int(user_size),len(vocab_list)))
-        if user_size == 1:
-            print()
-            print("Which word do you want to practice?")
-            print(vocab_list["english"])
-            row_num = ""
-            while row_num.isdigit()==False or int(row_num) > len(vocab_list["english"]):
-                    row_num = await is_utility.user_input("Number: ")
-            options["vocab_sample"] = vocab_list.iloc[[int(row_num)]].reset_index(drop=True)
-        else:
-            options["vocab_sample"] = vocab_list.sample(user_size).reset_index(drop=True)
+        await lo.vocab_sample_select(vocab_list, options)
     
     # Practice ----------------------------------------------------------------
     print()
@@ -179,7 +68,15 @@ async def run_lesson(lesson):
         question = question.replace("’","'")
         prompt = prompt.replace("’","'")
         solutions = [x.replace("’","'") for x in solutions]
-        solutions_comparison = [x.lower().strip().replace("?","").replace(".","").replace("!","") for x in solutions]
+        solutions_comparison = [re.sub("\?|\*|:|!|\.| \(sg\)| \(pl\)", "", x.lower().strip())
+                                for x in solutions]
+        #Add extra solutions by expanding "aren't" to "are not", "didn't" to "did not" etc
+        extra_solutions = []
+        for s in solutions_comparison:
+            if "n't" in s:
+                extra_solutions.append(re.sub("n't", " not", s.lower().strip()))
+        #"wo not" isn't a word so change it back
+        solutions_comparison += [re.sub("wo not", "won't", s.lower().strip()) for s in extra_solutions]
             
         #Display sentence to translate
         print()

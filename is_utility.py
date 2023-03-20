@@ -8,7 +8,6 @@ Created on Tue Nov  1 17:30:28 2022
 import pandas as pd
 import random as rd
 from sys import platform
-from os import listdir
 import re #regex
 en = pd.read_csv('Vocabulary/grammar_english.csv')
 numlist = pd.read_csv('Vocabulary/grammar_numbers.csv')
@@ -16,22 +15,6 @@ numlist = pd.read_csv('Vocabulary/grammar_numbers.csv')
 #---------------
 #Definitions----
 #---------------
-required_columns = {"give_get" : ("english", "nom_sing"),
-                    "possession_aig" : ("english", "nom_sing"),
-                    "gender" : ("english", "nom_sing", "gender"),
-                    "numbers" : (),
-                    "plurals" : ("english", "nom_sing", "nom_pl"),
-                    "learn_nouns" : ("english", "nom_sing"),
-                    "preferences" : ("english", "nom_sing"),
-                    "verb_tenses" : ("english", "en_past", "en_vn", "root", "verbal_noun"),
-                    "professions_annan" : (),
-                    "emphasis_adjectives" : ("english", "adj_gd"),
-                    "possession_mo" : ("english", "nom_sing", "nom_pl"),
-                    "where_from" : ("english", "nom_sing", "gender"),
-                    "where_in" : ("english", "nom_sing", "gender"),
-                    "comparisons" : (),
-                    "comparatives_superlatives": ("english", "nom_sing", "gender"),
-                    "time" : ()}
 
 vowels = set("aàáeèéiìíoòóuùú")
 broad_vowels = set("aàáoòóuùú")
@@ -79,123 +62,6 @@ def encourage():
     choose = rd.randint(0, len(encouragements)-1)
     print(encouragements.loc[choose,"gaelic"].capitalize()+"!",
           encouragements.loc[choose,"english"].capitalize()+"!")
-
-def check_vocab(lesson_name, vocab_sample, messages = True):
-    """Check that the chosen vocab file has the right columns for the lesson"""
-
-    list_ok = True
-    if len(required_columns[lesson_name]) > 0:
-        for column in required_columns[lesson_name]:
-            if column not in vocab_sample.columns:
-                list_ok = False
-                if messages == True:
-                    print()
-                    print("Error: Chosen vocabulary list must contain column {} (lower-case)".format(column))
-    if list_ok == False and messages == True:
-        print("Try another vocabulary list or add the required columns and try again")
-    return list_ok
-
-async def select_vocab(lesson, options):
-    """Select vocabulary file to use in lesson"""
-    if len(required_columns[lesson.__name__]) == 0:
-        return pd.DataFrame() #no vocab file needed
-    elif lesson.__name__ == "numbers" and options["num_mode"] in ("1","2"):
-            return pd.DataFrame({"a" : [1]}) #dummy vocab file
-    elif lesson.__name__ == "possession_mo":
-        vocab_num = ""
-        while vocab_num not in ("x","1","2","3"):
-            print()
-            print("Select topic")
-            print("1: Body parts")
-            print("2: Clothes")
-            print("3: Family")
-            print("X: Exit")
-            vocab_num = (await user_input("Practice mode: ")).lower().strip()
-        if vocab_num == "x":
-            return "x"
-        elif vocab_num == "1":
-            return pd.read_csv('Vocabulary/people_body.csv')
-        elif vocab_num == "2":
-            return pd.read_csv('Vocabulary/people_clothes.csv')
-        elif vocab_num == "3":
-            return pd.read_csv('Vocabulary/people_family.csv')
-    elif lesson.__name__ == "where_from":
-        vocab_num = ""
-        while vocab_num not in ("x","1","2"):
-            print()
-            print("Select geography")
-            print("1: Countries")
-            print("2: Places in Scotland")
-            print("X: Exit")
-            vocab_num = (await user_input("Practice mode: ")).lower().strip()
-        if vocab_num == "x":
-            return "x"
-        elif vocab_num == "1":
-            places = pd.read_csv('Vocabulary/places_world.csv')
-            places.rename(columns = {"place_en" : "english", "place_gd" : "nom_sing"}, inplace=True)
-            return places
-        elif vocab_num == "2":
-            places = pd.read_csv('Vocabulary/places_scotland.csv')
-            places.rename(columns = {"place_en" : "english", "place_gd" : "nom_sing"}, inplace=True)
-            return places
-    elif lesson.__name__ == "where_in":
-        vocab_num = ""
-        while vocab_num not in ("x","1","2","3","4"):
-            print()
-            print("Select places")
-            print("1: Countries")
-            print("2: Places in Scotland")
-            print("3: Around town")
-            print("4: In the house")
-            print("X: Exit")
-            vocab_num = (await user_input("Practice mode: ")).lower().strip()
-        if vocab_num == "x":
-            return "x"
-        elif vocab_num == "1":
-            options["contains_articles"] = True
-            places = pd.read_csv('Vocabulary/places_world.csv')
-            places.rename(columns = {"place_en" : "english", "place_gd" : "nom_sing"}, inplace=True)
-            return places
-        elif vocab_num == "2":
-            options["contains_articles"] = True
-            places = pd.read_csv('Vocabulary/places_scotland.csv')
-            places.rename(columns = {"place_en" : "english", "place_gd" : "nom_sing"}, inplace=True)
-            return places
-        elif vocab_num == "3":
-            options["contains_articles"] = False
-            return pd.read_csv('Vocabulary/places_town.csv')
-        elif vocab_num == "4":
-            options["contains_articles"] = False
-            return pd.read_csv('Vocabulary/places_home.csv')
-    else:
-        from os.path import exists
-        vocab_file = ""
-        suitable = False
-        print()
-        print("Name the vocabulary list to use in practice")
-        print("or type 'help' to list all possible vocabulary lists")
-        print("or X to exit")
-        while exists("Vocabulary/{}.csv".format(vocab_file)) == False or suitable == False:
-            print()
-            vocab_file = (await user_input("Vocabulary list: ")).lower().strip()
-            if vocab_file == "x":
-                return "x"
-            elif vocab_file == "help":
-                suggest_vocab(lesson.__name__)
-            elif exists("Vocabulary/{}.csv".format(vocab_file))==False:
-                print()
-                print("File not found: Check vocabulary list is a CSV file in the Vocabulary folder")
-            else:
-                vocab_list = pd.read_csv('Vocabulary/{}.csv'.format(vocab_file))
-                suitable = check_vocab(lesson.__name__, vocab_list)
-        return vocab_list
-
-def suggest_vocab(lesson_name):
-    allfiles = listdir("Vocabulary/")
-    for filename in allfiles:
-        checkfile = pd.read_csv("Vocabulary/"+filename)
-        if check_vocab(lesson_name, checkfile, messages=False) == True:
-            print(filename[:-4])
 
 #--------------------
 #Helper functions----
@@ -586,9 +452,11 @@ def en_pl(word):
         return word[0:-1] + "ies"
     elif word[-6:] == "person":
         return word[:-6] + "people"
+    elif word[-5:] == "child":
+        return word[:-5] + "children"
     elif word[-3:] == "man":
         return word[:-3] + "men"
-    elif word[-1] in ("s","x","z") or word[-2:] in ("sh","ch"):
+    elif word[-1] in ("s","x","z") or (word[-2:] in ("sh","ch") and word != "stomach"):
         return word + "es"
     elif word[-1] == "o" and word[-2] not in vowels:
         return word + "es"
