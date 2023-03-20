@@ -68,20 +68,31 @@ async def run_lesson(lesson):
         question = question.replace("’","'")
         prompt = prompt.replace("’","'")
         solutions = [x.replace("’","'") for x in solutions]
-        solutions_comparison = [re.sub("\?|\*|:|!|\.| \(sg\)| \(pl\)", "", x.lower().strip())
+        #Remove some punctuation from solutions list (and later from user response)
+        solutions_comparison = [re.sub("\?|\*|:|!|\.", "", x.lower().strip())
                                 for x in solutions]
+        #Add extra solutions where user did not include (sg) or (pl)
+        extra_solutions = []
+        for s in solutions_comparison:
+            if any((" (sg)" in s,
+                    " (pl)" in s)):
+                extra_solutions.append(re.sub(" \(sg\)| \(pl\)", "", s.lower()))
+        solutions_comparison += extra_solutions
+        
         #Add extra solutions by expanding "aren't" to "are not", "didn't" to "did not" etc
         extra_solutions = []
         for s in solutions_comparison:
             if "n't" in s:
-                extra_solutions.append(re.sub("n't", " not", s.lower().strip()))
-        #"wo not" isn't a word so change it back
-        solutions_comparison += [re.sub("wo not", "won't", s.lower().strip()) for s in extra_solutions]
+                s_alt = s.replace("n't", " not")
+                s_alt = s_alt.replace("wo not", "won't")
+                extra_solutions.append(s_alt)
+        solutions_comparison += extra_solutions
             
         #Display sentence to translate
         print()
         print(question)
-        answer = (await is_utility.user_input(prompt)).lower().strip().replace("?","").replace(".","").replace("!","")
+        answer = (await is_utility.user_input(prompt))
+        answer = re.sub("\?|\*|:|!|\.", "", answer.lower().strip())
             
         #Check answer
         if answer == "x":

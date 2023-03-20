@@ -5,6 +5,7 @@ Big Plan:
 Overall app:
  - when selecting pronouns, include names?
  - lessons to be grouped into hierarchy
+ - get rid of Pandas dependency (or reduce it) to speed the app up!
 
 Issues/bugs, or things for improvement:
  - Currently if there is more than one translation in a dictionary (e.g. in adjectives_food, searbh = sour and searbh = bitter) then it is decided by row number (index) - which might be frustrating to the user.

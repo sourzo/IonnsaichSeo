@@ -218,10 +218,12 @@ async def vocab_sample_select(vocab_list, options):
     if user_size == 1:
         print()
         print("Which word do you want to practice?")
-        print(vocab_list["english"])
-        row_num = ""
-        while row_num.isdigit()==False or int(row_num) > len(vocab_list["english"]):
-                row_num = await is_utility.user_input("Number: ")
-        options["vocab_sample"] = vocab_list.iloc[[int(row_num)]].reset_index(drop=True)
+        wordlist = list(vocab_list["english"])
+        for index, word in enumerate(wordlist):
+            print(str(index+1) + ": " + word)
+        user_response = ""
+        while user_response not in [str(n) for n in range(1,len(wordlist)+1)]:
+            user_response = await is_utility.user_input("Number: ")
+        options["vocab_sample"] = vocab_list.iloc[[int(user_response)-1]].reset_index(drop=True)
     else:
         options["vocab_sample"] = vocab_list.sample(user_size).reset_index(drop=True)

@@ -1,4 +1,4 @@
-test.py
+is_test.py
 *.pyc
 output/
 create-installer.ps1
