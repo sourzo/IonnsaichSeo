@@ -5,25 +5,23 @@ Created on Sun Nov 27 16:53:44 2022
 @author: Zoe
 """
 import is_utility
-import pandas as pd
 import random as rd
+import is_csvreader as csvr
 
-en = pd.read_csv('Vocabulary/grammar_english.csv')
-pp = pd.read_csv('Vocabulary/grammar_prepPronouns.csv')
-names = pd.read_csv('Vocabulary/people_names.csv')
-g_numbers = pd.read_csv('Vocabulary/grammar_numbers.csv')
-professions = pd.read_csv('Vocabulary/people_professions.csv')
+en = csvr.read_csv('grammar_english')
+pp = csvr.read_csv('grammar_prepPronouns')
+names = csvr.read_csv('people_names')
+g_numbers = csvr.read_csv('grammar_numbers')
+professions = csvr.read_csv('people_professions')
 
 def give_get(chosen_tense, translate_words, sentence, vocab_sample):
     #Load vocab --------------------------------------------------
-    
-    gifts = vocab_sample
     
     #Randomiser ---------------------------------------------------------------
     
     subject_num = rd.randrange(8)
     object_num = rd.randrange(8)
-    gift_num = rd.randrange(gifts["english"].count())
+    gift_num = rd.randrange(csvr.length(vocab_sample))
     give_get_num = rd.randrange(2) # 0 = give to, 1 = get from
     if chosen_tense == "any":
         chosen_tense = rd.choice(("past", "present", "future"))
@@ -36,7 +34,7 @@ def give_get(chosen_tense, translate_words, sentence, vocab_sample):
         subject_gd = pp["pronoun_gd"][subject_num]
     #subject: names
     elif subject_num == 7:
-        name = rd.randrange(names["english"].count())
+        name = rd.randrange(csvr.length(names))
         subject_en = names["english"][name]
         subject_gd = names["nom_sing"][name]
         
@@ -69,8 +67,8 @@ def give_get(chosen_tense, translate_words, sentence, vocab_sample):
         
         
     #the item that's being given
-    gift_en = is_utility.en_indef_article(gifts["english"][gift_num])
-    gift_gd = gifts["nom_sing"][gift_num]
+    gift_en = is_utility.en_indef_article(vocab_sample["english"][gift_num])
+    gift_gd = vocab_sample["nom_sing"][gift_num]
         
         
     #object: pronouns / names (object_en, object_gd)
@@ -84,7 +82,7 @@ def give_get(chosen_tense, translate_words, sentence, vocab_sample):
             
     #names
     elif object_num == 7:
-        name = rd.randrange(names["english"].count())
+        name = rd.randrange(csvr.length(names))
         object_en = names["english"][name]
         lenited_name = is_utility.lenite(names["nom_sing"][name])
         if give_get_num==0:
@@ -158,14 +156,14 @@ def possession_aig(translate_words, sentence, vocab_sample):
     #Randomiser ---------------------------------------------------------------
     
     subject_num = rd.randrange(6)
-    object_num = rd.randrange(len(vocab_sample))
-    obj_indef = is_utility.en_indef_article(vocab_sample.loc[object_num,"english"])
+    object_num = rd.randrange(csvr.length(vocab_sample))
+    obj_indef = is_utility.en_indef_article(vocab_sample["english"][object_num])
 
 
     #Construct sentences ------------------------------------------------------
     
-    sentence_en = en.loc[subject_num,"en_subj"].capitalize() + " " + en.loc[subject_num,"have_pres"].lower() + " " + obj_indef.lower()
-    sentence_gd = "Tha " + vocab_sample.loc[object_num,"nom_sing"].lower() + " " + pp.loc[subject_num,"aig"].lower()
+    sentence_en = en["en_subj"][subject_num].capitalize() + " " + en["have_pres"][subject_num].lower() + " " + obj_indef.lower()
+    sentence_gd = "Tha " + vocab_sample["nom_sing"][object_num].lower() + " " + pp["aig"][subject_num].lower()
 
     #Questions ----------------------------------------------------------------
     if translate_words == "en_gd":
@@ -178,7 +176,7 @@ def possession_aig(translate_words, sentence, vocab_sample):
         prompt1 = "Translation: "
     elif sentence == "blank":
         if translate_words == "en_gd":
-            prompt1 = "Tha " + vocab_sample.loc[object_num,"nom_sing"].lower() + " "
+            prompt1 = "Tha " + vocab_sample["nom_sing"][object_num].lower() + " "
         elif translate_words == "gd_en":
             prompt1 = "____ " + obj_indef.lower() + ": "
    
@@ -194,9 +192,9 @@ def possession_aig(translate_words, sentence, vocab_sample):
             
     elif sentence == "blank":
         if translate_words == "en_gd":
-            solutions.append(pp.loc[subject_num,"aig"].lower())
+            solutions.append(pp["aig"][subject_num].lower())
         elif translate_words == "gd_en":
-            solutions.append(en.loc[subject_num,"en_subj"].lower().capitalize() + " " + en.loc[subject_num,"have_pres"].lower())
+            solutions.append(en["en_subj"][subject_num].lower().capitalize() + " " + en["have_pres"][subject_num].lower())
         
     
     #Output -------------------------------------------------------------------
@@ -212,9 +210,9 @@ def gender(gender_mode, vocab_sample):
     
     
     #Randomiser ---------------------------------------------------------------
-    vocab_num = rd.randrange(len(vocab_sample))
-    if gender_mode == "adj":
-        gender_mode = rd.choice(("adj","def_nom"#, "def_prep", "def_poss"
+    vocab_num = rd.randrange(csvr.length(vocab_sample))
+    if gender_mode == "def_all":
+        gender_mode = rd.choice(("def_nom"#, "def_prep", "def_poss"
                                  ))
     #Parts of sentence --------------------------------------------------------
     adjective_en = "small"
@@ -321,7 +319,7 @@ def numbers(translate_numbers, max_num):
 def plurals(translate_generic, vocab_sample):
     
     #Randomiser ---------------------------------------------------------------
-    vocab_num = rd.randrange(len(vocab_sample))
+    vocab_num = rd.randrange(csvr.length(vocab_sample))
     
     #Work out the Gaelic for given number ----------------------------------
             
@@ -352,7 +350,7 @@ def learn_nouns(translate_words, vocab_sample):
     #Load vocab --------------------------------------------------
     
     #Randomiser ---------------------------------------------------------------
-    vocab_num = rd.randrange(len(vocab_sample))
+    vocab_num = rd.randrange(csvr.length(vocab_sample))
         
     #Questions ----------------------------------------------------------------
     
@@ -383,8 +381,7 @@ def preferences(translate_words, sentence, vocab_sample):
 
     #Randomiser ---------------------------------------------------------------
     subject_num = rd.randrange(6)
-    object_num = rd.randrange(len(vocab_sample))
-    obj_indef = is_utility.en_indef_article(vocab_sample.loc[object_num,"english"])
+    object_num = rd.randrange(csvr.length(vocab_sample))
     
     tense = rd.randrange(2) # 0 = present tense, 1 = future conditional
     pos_neg = rd.randrange(2) # 0 = positive, 1 = negative
@@ -392,6 +389,7 @@ def preferences(translate_words, sentence, vocab_sample):
 
         
     #Parts of sentence --------------------------------------------------------
+    obj_indef = is_utility.en_indef_article(vocab_sample["english"][object_num])
     
     ##English
 
@@ -399,7 +397,7 @@ def preferences(translate_words, sentence, vocab_sample):
         if pos_neg == 0:
             like_prefer_en = ""
         else:
-            like_prefer_en = en.loc[subject_num,"do_pres"].lower() + "n't "
+            like_prefer_en = en["do_pres"][subject_num].lower() + "n't "
     else:
         if pos_neg == 0:
             like_prefer_en = "would "
@@ -412,7 +410,7 @@ def preferences(translate_words, sentence, vocab_sample):
         like_prefer_en = like_prefer_en + "prefer"
         
     if tense == 0 and pos_neg == 0:
-        if en.loc[subject_num,"en_subj"].lower() in ("he", "she", "name"):
+        if en["en_subj"][subject_num].lower() in ("he", "she", "name"):
             like_prefer_en = like_prefer_en + "s"
         
     ##Gaelic
@@ -441,8 +439,8 @@ def preferences(translate_words, sentence, vocab_sample):
         
     
     #Construct sentences ------------------------------------------------------
-    sentence_en = en.loc[subject_num,"en_subj"].capitalize() + " " + like_prefer_en.lower() + " " + obj_indef.lower()
-    sentence_gd = like_prefer_gd.capitalize() + " " + pp.loc[subject_num,"le"].lower() + " " + vocab_sample.loc[object_num,"nom_sing"].lower()
+    sentence_en = en["en_subj"][subject_num].capitalize() + " " + like_prefer_en.lower() + " " + obj_indef.lower()
+    sentence_gd = like_prefer_gd.capitalize() + " " + pp["le"][subject_num].lower() + " " + vocab_sample["nom_sing"][object_num].lower()
 
     #Questions ----------------------------------------------------------------
     if translate_words == "en_gd":
@@ -455,7 +453,7 @@ def preferences(translate_words, sentence, vocab_sample):
         prompt1 = "Translation: "
     elif sentence == "blank":
         if translate_words == "en_gd":
-            prompt1 = like_prefer_gd.capitalize() + " ____ " + vocab_sample.loc[object_num,"nom_sing"].lower() + ": "
+            prompt1 = like_prefer_gd.capitalize() + " ____ " + vocab_sample["nom_sing"][object_num].lower() + ": "
         elif translate_words == "gd_en":
             prompt1 = "____ " + like_prefer_en.lower() + " " + obj_indef.lower() + ": "
             
@@ -469,9 +467,9 @@ def preferences(translate_words, sentence, vocab_sample):
             
     elif sentence == "blank":
         if translate_words == "en_gd":
-            solutions.append(pp.loc[subject_num,"le"].lower())
+            solutions.append(pp["le"][subject_num].lower())
         elif translate_words == "gd_en":
-            solutions.append(en.loc[subject_num,"en_subj"].lower().capitalize())
+            solutions.append(en["en_subj"][subject_num].lower().capitalize())
     
     #Output -------------------------------------------------------------------
     
@@ -502,20 +500,20 @@ def verb_tenses(chosen_tense, verb_form, vocab_sample):
         chosen_tense = rd.choice(("future", "vn_future"))
     
     ## verb
-    verb_num = rd.randrange(len(vocab_sample))
+    verb_num = rd.randrange(csvr.length(vocab_sample))
     
     ## person
-    pers_num = rd.randrange(len(pp))
+    pers_num = rd.randrange(csvr.length(pp))
     
     #Parts of sentence --------------------------------------------------------
-    person_gd = pp.loc[pers_num, "pronoun_gd"]
-    person_en = pp.loc[pers_num, "en_subj"]
+    person_gd = pp["pronoun_gd"][pers_num]
+    person_en = pp["en_subj"][pers_num]
     
     if chosen_tense in ("past", "future"):
-        v_root = vocab_sample.loc[verb_num,"root"]
+        v_root = vocab_sample["root"][verb_num]
         print(v_root)
     else:
-        v_noun = vocab_sample.loc[verb_num,"verbal_noun"]
+        v_noun = vocab_sample["verbal_noun"][verb_num]
         print(v_noun)
     
     #Construct sentences ------------------------------------------------------
@@ -562,22 +560,22 @@ def professions_annan(translate_words, sentence):
     
     #Randomiser ---------------------------------------------------------------
     person_num = rd.randrange(6)
-    profession_num = rd.randrange(len(professions))
+    profession_num = rd.randrange(csvr.length(professions))
     #Parts of sentence --------------------------------------------------------
-    pp_annan = pp.loc[person_num,"ann an"]
+    pp_annan = pp["ann an"][person_num]
     
     if person_num < 4:
-        profession_gd = professions.loc[profession_num,"nom_sing"]
+        profession_gd = professions["nom_sing"][profession_num]
     elif person_num in (4,5,6):
-        profession_gd = professions.loc[profession_num,"nom_pl"]
+        profession_gd = professions["nom_pl"][profession_num]
     
-    pronoun_en = pp.loc[person_num, "en_subj"]
-    be_en = en.loc[person_num, "be_pres"]
+    pronoun_en = pp["en_subj"][person_num]
+    be_en = en["be_pres"][person_num]
     
     if person_num < 4:
-        profession_en = is_utility.en_indef_article(professions.loc[profession_num,"english"])
+        profession_en = is_utility.en_indef_article(professions["english"][profession_num])
     elif person_num in (4,5,6):
-        profession_en = is_utility.en_pl(professions.loc[profession_num,"english"])
+        profession_en = is_utility.en_pl(professions["english"][profession_num])
     
     #Construct sentence -------------------------------------------------------
     sentence_gd = "'S e " + profession_gd.lower() + " a th' " + pp_annan.lower()
@@ -630,21 +628,21 @@ def emphasis_adjectives(translate_words, vocab_sample):
     #Randomiser ---------------------------------------------------------------
     person_num = rd.randrange(6)
     modifier_choice = modifiers[rd.randrange(len(modifiers))]
-    adj_num = rd.randrange(len(vocab_sample))
+    adj_num = rd.randrange(csvr.length(vocab_sample))
     
     #Parts of sentence --------------------------------------------------------
-    pers_emph = pp.loc[person_num,"emphatic"]
-    pronoun_en = pp.loc[person_num, "en_subj"]
+    pers_emph = pp["emphatic"][person_num]
+    pronoun_en = pp["en_subj"][person_num]
         
-    adjective_gd = vocab_sample.loc[adj_num, "adj_gd"]
-    adjective_en = modifier_choice[0] + vocab_sample.loc[adj_num, "english"]
+    adjective_gd = vocab_sample["adj_gd"][adj_num]
+    adjective_en = modifier_choice[0] + vocab_sample["english"][adj_num]
     
     if modifier_choice[1] in ("ro ", "glè "):
         adjective_gd = modifier_choice[1] + is_utility.lenite(adjective_gd)
     else:
         adjective_gd = modifier_choice[1] + adjective_gd
     
-    be_en = en.loc[person_num, "be_pres"]
+    be_en = en["be_pres"][person_num]
     
     #Construct sentence -------------------------------------------------------
     sentence_gd = "Tha " + pers_emph + " " + adjective_gd
@@ -678,16 +676,16 @@ def possession_mo(translate_words, sentence, vocab_sample):
     #Randomiser ---------------------------------------------------------------
     whose_num = rd.randrange(7)
     where_num = rd.randrange(3)
-    what_num = rd.randrange(len(vocab_sample))
+    what_num = rd.randrange(csvr.length(vocab_sample))
     
     #Parts of sentence --------------------------------------------------------
     ## what
-    what_en = vocab_sample.loc[what_num,"english"]
-    what_gd = vocab_sample.loc[what_num,"nom_sing"]
+    what_en = vocab_sample["english"][what_num]
+    what_gd = vocab_sample["nom_sing"][what_num]
     
     ### plurals
-    if whose_num in (4,5,6) and vocab_sample.loc[what_num,"english"] != "hair":
-        what_gd = vocab_sample.loc[what_num,"nom_pl"]
+    if whose_num in (4,5,6) and vocab_sample["english"][what_num] != "hair":
+        what_gd = vocab_sample["nom_pl"][what_num]
         what_en = is_utility.en_pl(what_en)
         is_are = "are"
     else:
@@ -710,18 +708,18 @@ def possession_mo(translate_words, sentence, vocab_sample):
     ## whose
     ### note - daughter and father take different grammatical structure
     if what_gd in ("nighean","duine"):
-        whosewhat_gd = "an " + what_gd + " " + pp.loc[whose_num, "aig"]
-        whose_en = pp.loc[whose_num,"en_poss"]
+        whosewhat_gd = "an " + what_gd + " " + pp["aig"][whose_num]
+        whose_en = pp["en_poss"][whose_num]
     elif what_gd in ("nigheanan","daoine"):
-        whosewhat_gd = "na " + what_gd + " " + pp.loc[whose_num, "aig"]
-        whose_en = pp.loc[whose_num,"en_poss"]
+        whosewhat_gd = "na " + what_gd + " " + pp["aig"][whose_num]
+        whose_en = pp["en_poss"][whose_num]
     else:
         ## possessive article
-        whose_en = pp.loc[whose_num,"en_poss"]
+        whose_en = pp["en_poss"][whose_num]
         if what_gd[0] in is_utility.vowels:
             whose_gd = ("m'", "d'", "", "a", "àr", "ùr", "an")[whose_num]
         elif whose_num < 6:
-            whose_gd = pp.loc[whose_num,"possessive"]
+            whose_gd = pp["possessive"][whose_num]
         elif whose_num == 6:
             if what_gd[0] in ("b","m","f","p"):
                 whose_gd = "am"
@@ -746,7 +744,7 @@ def possession_mo(translate_words, sentence, vocab_sample):
             sentence_gd = where_gd + " " + what_gd
         else:
             sentence_gd = where_gd + " " + whose_gd + " " + what_gd
-    sentence_en = where_en + " " + is_are + " " + whose_en + " " + what_en ####error
+    sentence_en = where_en + " " + is_are + " " + whose_en + " " + what_en
     
     #Questions ----------------------------------------------------------------
     if translate_words == "en_gd":
@@ -794,21 +792,21 @@ def where_from(sentence_qa, vocab_sample):
     
     #Randomiser ---------------------------------------------------------------
     person_num = rd.randrange(7)
-    where_num = rd.randrange(len(vocab_sample))
+    where_num = rd.randrange(csvr.length(vocab_sample))
     
     #Parts of sentence --------------------------------------------------------
     
-    if vocab_sample.loc[where_num,"nom_sing"].lower().startswith(is_utility.def_articles):
+    if vocab_sample["nom_sing"][where_num].lower().startswith(is_utility.def_articles):
         from_gd = "às " + is_utility.prep_def(vocab_sample, where_num)
     else:
-        from_gd = "à " + vocab_sample.loc[where_num,"nom_sing"]
+        from_gd = "à " + vocab_sample["nom_sing"][where_num]
     
     if sentence_qa == "q_and_a":
         who_question = ("thu", "mi", "e", "i", "sibh", "sinn", "iad")
         
     #Construct sentence -------------------------------------------------------
-    sentence_en = en.loc[person_num,"en_subj"].capitalize() + " " + en.loc[person_num,"be_pres"] + " from " + vocab_sample.loc[where_num,"english"]
-    sentence_gd = "Tha " + pp.loc[person_num, "pronoun_gd"] + " " + from_gd
+    sentence_en = en["en_subj"][person_num].capitalize() + " " + en["be_pres"][person_num] + " from " + vocab_sample["english"][where_num]
+    sentence_gd = "Tha " + pp["pronoun_gd"][person_num] + " " + from_gd
     
     #Questions ----------------------------------------------------------------
     if sentence_qa in ("full", "blank"): #Translate
@@ -820,9 +818,9 @@ def where_from(sentence_qa, vocab_sample):
     if sentence_qa == "full":
         prompt1 = "Translation: "
     elif sentence_qa == "blank":
-        prompt1 = "Tha " + pp.loc[person_num, "pronoun_gd"] + " "
+        prompt1 = "Tha " + pp["pronoun_gd"][person_num] + " "
     elif sentence_qa == "q_and_a":
-        prompt1 = "[" + vocab_sample.loc[where_num,"english"] + "]: "
+        prompt1 = "[" + vocab_sample["english"][where_num] + "]: "
     
     #Solutions ----------------------------------------------------------------
     solutions = []
@@ -847,9 +845,9 @@ def where_in(sentence_qa, contains_articles, vocab_sample):
     
     #Randomiser ---------------------------------------------------------------
     person_num = rd.randrange(7)
-    where_num = rd.randrange(len(vocab_sample))
+    where_num = rd.randrange(csvr.length(vocab_sample))
     if contains_articles == True:
-        if vocab_sample.loc[where_num,"nom_sing"].lower().startswith(is_utility.def_articles):
+        if vocab_sample["nom_sing"][where_num].lower().startswith(is_utility.def_articles):
             article_switch = 1
         else:
             article_switch = 0
@@ -861,24 +859,24 @@ def where_in(sentence_qa, contains_articles, vocab_sample):
     ##Indefinite article
     if article_switch == 0:
         if contains_articles == False:
-            where_en = is_utility.en_indef_article(vocab_sample.loc[where_num,"english"])
+            where_en = is_utility.en_indef_article(vocab_sample["english"][where_num])
         else:
-            where_en = vocab_sample.loc[where_num,"english"]
-        where_gd = "ann " + is_utility.anm(vocab_sample.loc[where_num,"nom_sing"])
+            where_en = vocab_sample["english"][where_num]
+        where_gd = "ann " + is_utility.anm(vocab_sample["nom_sing"][where_num])
     ##Definite article
     else:
         if contains_articles == False:
-            where_en = "the " + vocab_sample.loc[where_num,"english"]
+            where_en = "the " + vocab_sample["english"][where_num]
         else:
-            where_en = vocab_sample.loc[where_num,"english"]
+            where_en = vocab_sample["english"][where_num]
         where_gd = "anns " + is_utility.prep_def(vocab_sample, where_num)
     
     if sentence_qa == "q_and_a":
         who_question = ("thu", "mi", "e", "i", "sibh", "sinn", "iad")
     
     #Construct sentence -------------------------------------------------------
-    sentence_en = en.loc[person_num,"en_subj"].capitalize() + " " + en.loc[person_num, "be_pres"] + " in " + where_en
-    sentence_gd = "Tha " + pp.loc[person_num, "pronoun_gd"] + " " + where_gd
+    sentence_en = en["en_subj"][person_num].capitalize() + " " + en["be_pres"][person_num] + " in " + where_en
+    sentence_gd = "Tha " + pp["pronoun_gd"][person_num] + " " + where_gd
     
     #Questions ----------------------------------------------------------------
     if sentence_qa in ("full", "blank"): #Translate
@@ -890,7 +888,7 @@ def where_in(sentence_qa, contains_articles, vocab_sample):
     if sentence_qa == "full":
         prompt1 = "Translation: "
     elif sentence_qa == "blank":
-        prompt1 = "Tha " + pp.loc[person_num, "pronoun_gd"] + " "
+        prompt1 = "Tha " + pp["pronoun_gd"][person_num] + " "
     elif sentence_qa == "q_and_a":
         prompt1 = "[" + where_en + "]: "
         
@@ -913,14 +911,14 @@ def where_in(sentence_qa, contains_articles, vocab_sample):
 
 def comparisons(translate_words):
     #Load vocab --------------------------------------------------
-    similes = pd.read_csv("Vocabulary/adjectives_comparisons.csv")
+    similes = csvr.read_csv("adjectives_comparisons")
     
     #Randomiser ---------------------------------------------------------------
-    comparison_choice = rd.randrange(len(similes))
+    comparison_choice = rd.randrange(csvr.length(similes))
    
     #Construct sentence -------------------------------------------------------
-    sentence_en = "As " + similes.loc[comparison_choice,"english"] + " as " + similes.loc[comparison_choice,"simile_en"]
-    sentence_gd = "Cho " + similes.loc[comparison_choice,"adj_gd"] + " ri " + similes.loc[comparison_choice,"simile_gd"]
+    sentence_en = "As " + similes["english"][comparison_choice] + " as " + similes["simile_en"][comparison_choice]
+    sentence_gd = "Cho " + similes["adj_gd"][comparison_choice] + " ri " + similes["simile_gd"][comparison_choice]
     
     #Questions ----------------------------------------------------------------
     if translate_words == "en_gd":
@@ -946,40 +944,40 @@ def comparisons(translate_words):
 def comparatives_superlatives(vocab_sample, comp_sup, sentence, translate_words):
     #Load vocab --------------------------------------------------
     nouns = vocab_sample
-    adjectives = pd.read_csv("Vocabulary/adjectives_misc.csv").sample(10).reset_index(drop=True)
+    adjectives = csvr.read_csv("adjectives_misc").sample(10).reset_index(drop=True)
     #Randomiser ---------------------------------------------------------------
-    subject_num = rd.randrange(len(nouns))
-    object_num = rd.randrange(len(nouns))
-    adj_num = rd.randrange(len(adjectives))
+    subject_num = rd.randrange(csvr.length(nouns))
+    object_num = rd.randrange(csvr.length(nouns))
+    adj_num = rd.randrange(csvr.length(adjectives))
     
     if comp_sup not in ("comp", "sup"):
         comp_sup = rd.choice(("comp","sup"))
     
     #Parts of sentence --------------------------------------------------------
-    subject_en = nouns.loc[subject_num,"english"]
-    subject_gd = nouns.loc[subject_num,"nom_sing"]
+    subject_en = nouns["english"][subject_num]
+    subject_gd = nouns["nom_sing"][subject_num]
         
     if comp_sup == "comp":
         
-        object_en = nouns.loc[object_num,"english"]
-        object_gd = nouns.loc[object_num,"nom_sing"]
+        object_en = nouns["english"][object_num]
+        object_gd = nouns["nom_sing"][object_num]
         
-        comparative_gd = "nas " + adjectives.loc[adj_num, "comp_sup"]
+        comparative_gd = "nas " + adjectives["comp_sup"][adj_num]
         
-        comparative_en = adjectives.loc[adj_num, "comp_en"]
-        comparative_en_alt = "more " + adjectives.loc[adj_num, "english"]
+        comparative_en = adjectives["comp_en"][adj_num]
+        comparative_en_alt = "more " + adjectives["english"][adj_num]
     
     elif comp_sup == "sup":
-        subject_en = nouns.loc[subject_num, "english"]
-        subject_gd = is_utility.gd_common_article(nouns.loc[subject_num, "nom_sing"],
+        subject_en = nouns["english"][subject_num]
+        subject_gd = is_utility.gd_common_article(nouns["nom_sing"][subject_num],
                                                   "sg", 
-                                                  nouns.loc[subject_num, "gender"],
+                                                  nouns["gender"][subject_num],
                                                   "nom")
         
-        superlative_gd = "as " + adjectives.loc[adj_num, "comp_sup"]
+        superlative_gd = "as " + adjectives["comp_sup"][adj_num]
     
-        superlative_en = adjectives.loc[adj_num, "sup_en"]
-        superlative_en_alt = "most " + adjectives.loc[adj_num, "english"]
+        superlative_en = adjectives["sup_en"][adj_num]
+        superlative_en_alt = "most " + adjectives["english"][adj_num]
     #Construct sentence -------------------------------------------------------
     if comp_sup == "comp":
         sentence_gd = "A bheil " + subject_gd + " " + comparative_gd + " na " + object_gd
@@ -1075,8 +1073,7 @@ def time(translate_numbers):
         elif hrs12 == 2:
             return "dhà"
         elif hrs12 <= 10:
-            return is_utility.numlist.loc[is_utility.numlist["number"] == hrs12, 
-                                          "cardinal"].values[0]
+            return csvr.filter_matches(is_utility.numlist, "number", hrs12)["cardinal"][0]
         elif hrs12 == 11:
             return "aon uair deug"
         elif hrs12 == 12:

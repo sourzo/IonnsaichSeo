@@ -6,7 +6,7 @@ Created on Sat Mar 18 14:24:28 2023
 """
 import is_utility
 from collections import namedtuple
-import pandas as pd
+import is_csvreader as csvr
 
 #Part 1: General options menus (ie not including vocabulary)-------------------
 menu_option = namedtuple('menu_option', ['key', 'description'])
@@ -82,11 +82,8 @@ required_columns = {"give_get" : ("english", "nom_sing"),
 
 async def select_vocab(lesson, options):
     """Select vocabulary file to use in lesson"""
-    #Cases where vocab file needed for lesson
     if len(required_columns[lesson.__name__]) == 0:
-        return pd.DataFrame()
-    elif lesson.__name__ == "numbers" and options["num_mode"] in ("1","2"):
-            return pd.DataFrame({"a" : [1]})# dummy dataframe
+        return None
     #Cases where vocab file must be from selected list
     elif lesson.__name__ == "possession_mo":
         vocab_num = ""
@@ -101,11 +98,11 @@ async def select_vocab(lesson, options):
         if vocab_num == "x":
             return "x"
         elif vocab_num == "1":
-            return pd.read_csv('Vocabulary/people_body.csv')
+            return csvr.read_csv('people_body')
         elif vocab_num == "2":
-            return pd.read_csv('Vocabulary/people_clothes.csv')
+            return csvr.read_csv('people_clothes')
         elif vocab_num == "3":
-            return pd.read_csv('Vocabulary/people_family.csv')
+            return csvr.read_csv('people_family')
     elif lesson.__name__ == "where_from":
         vocab_num = ""
         while vocab_num not in ("x","1","2"):
@@ -118,11 +115,11 @@ async def select_vocab(lesson, options):
         if vocab_num == "x":
             return "x"
         elif vocab_num == "1":
-            places = pd.read_csv('Vocabulary/places_world.csv')
+            places = csvr.read_csv('places_world')
             places.rename(columns = {"place_en" : "english", "place_gd" : "nom_sing"}, inplace=True)
             return places
         elif vocab_num == "2":
-            places = pd.read_csv('Vocabulary/places_scotland.csv')
+            places = csvr.read_csv('places_scotland')
             places.rename(columns = {"place_en" : "english", "place_gd" : "nom_sing"}, inplace=True)
             return places
     elif lesson.__name__ == "where_in":
@@ -140,20 +137,22 @@ async def select_vocab(lesson, options):
             return "x"
         elif vocab_num == "1":
             options["contains_articles"] = True
-            places = pd.read_csv('Vocabulary/places_world.csv')
-            places.rename(columns = {"place_en" : "english", "place_gd" : "nom_sing"}, inplace=True)
+            places = csvr.read_csv('places_world')
+            csvr.rename_column(places, "place_en", "english")
+            csvr.rename_column(places, "place_gd", "nom_sing")
             return places
         elif vocab_num == "2":
             options["contains_articles"] = True
-            places = pd.read_csv('Vocabulary/places_scotland.csv')
-            places.rename(columns = {"place_en" : "english", "place_gd" : "nom_sing"}, inplace=True)
+            places = csvr.read_csv('places_scotland')
+            csvr.rename_column(places, "place_en", "english")
+            csvr.rename_column(places, "place_gd", "nom_sing")
             return places
         elif vocab_num == "3":
             options["contains_articles"] = False
-            return pd.read_csv('Vocabulary/places_town.csv')
+            return csvr.read_csv('places_town')
         elif vocab_num == "4":
             options["contains_articles"] = False
-            return pd.read_csv('Vocabulary/places_home.csv')
+            return csvr.read_csv('places_home')
     #Case where any compatible vocab file can be used
     else:
         from os.path import exists
@@ -162,7 +161,7 @@ async def select_vocab(lesson, options):
         allfiles = listdir("Vocabulary/")
         vocab_suggestions = []
         for filename in allfiles:
-            checkfile = pd.read_csv("Vocabulary/"+filename)
+            checkfile = csvr.read_csv(filename[:-4])
             if check_vocab(lesson.__name__, checkfile, messages=False) == True:
                 vocab_suggestions.append(filename[:-4])
         #Ask for user input
@@ -182,15 +181,15 @@ async def select_vocab(lesson, options):
                 for index, file in enumerate(vocab_suggestions):
                     print(str(index+1) + ": " + vocab_suggestions[index])
             elif vocab_file.isnumeric() and int(vocab_file) in range(1,len(vocab_suggestions)+1):
-                vocab_list = pd.read_csv('Vocabulary/{}.csv'.format(vocab_suggestions[int(vocab_file)]))
-            elif exists("Vocabulary/{}.csv".format(vocab_file))==False:
+                vocab_list = csvr.read_csv(f'{vocab_suggestions[int(vocab_file)]}')
+            elif exists(f"Vocabulary/{vocab_file}.csv")==False:
                 print()
                 print("File not found: Check vocabulary list is a CSV file in the Vocabulary folder")
             elif vocab_file not in vocab_suggestions:
                 print()
                 check_vocab(lesson.__name__, checkfile, messages=True)
             else:
-                vocab_list = pd.read_csv('Vocabulary/{}.csv'.format(vocab_file))
+                vocab_list = csvr.read_csv(f'{vocab_file}')
         return vocab_list
 
 def check_vocab(lesson_name, vocab_sample, messages = True):
@@ -198,12 +197,12 @@ def check_vocab(lesson_name, vocab_sample, messages = True):
 
     list_ok = True
     if len(required_columns[lesson_name]) > 0:
-        for column in required_columns[lesson_name]:
-            if column not in vocab_sample.columns:
+        for colname in required_columns[lesson_name]:
+            if colname not in vocab_sample:
                 list_ok = False
                 if messages == True:
                     print()
-                    print("Error: Chosen vocabulary list must contain column {} (lower-case)".format(column))
+                    print("Error: Chosen vocabulary list must contain column {colname} (lower-case)")
     if list_ok == False and messages == True:
         print("Try another vocabulary list or add the required columns and try again")
     return list_ok
@@ -218,12 +217,12 @@ async def vocab_sample_select(vocab_list, options):
     if user_size == 1:
         print()
         print("Which word do you want to practice?")
-        wordlist = list(vocab_list["english"])
+        wordlist = list(vocab_list[csvr.firstcol(vocab_list)])
         for index, word in enumerate(wordlist):
             print(str(index+1) + ": " + word)
         user_response = ""
         while user_response not in [str(n) for n in range(1,len(wordlist)+1)]:
             user_response = await is_utility.user_input("Number: ")
-        options["vocab_sample"] = vocab_list.iloc[[int(user_response)-1]].reset_index(drop=True)
+        options["vocab_sample"] = csvr.filter_rows(vocab_list, [int(user_response)-1])
     else:
-        options["vocab_sample"] = vocab_list.sample(user_size).reset_index(drop=True)
+        options["vocab_sample"] = csvr.random_sample(vocab_list, user_size)

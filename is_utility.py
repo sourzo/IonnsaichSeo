@@ -5,13 +5,14 @@ Created on Tue Nov  1 17:30:28 2022
 @author: Zoe
 """
 
-import pandas as pd
 import random as rd
 from sys import platform
 import re #regex
-en = pd.read_csv('Vocabulary/grammar_english.csv')
-numlist = pd.read_csv('Vocabulary/grammar_numbers.csv')
+import is_csvreader as csvr
 
+en = csvr.read_csv('grammar_english')
+numlist = csvr.read_csv('grammar_numbers')
+encouragements = csvr.read_csv('conversation_encouragement')
 #---------------
 #Definitions----
 #---------------
@@ -58,10 +59,10 @@ async def user_input(prompt):
     
 def encourage():
     """Print a random encouraging phrase in Gaelic and English"""
-    encouragements = pd.read_csv('Vocabulary/conversation_encouragement.csv')
-    choose = rd.randint(0, len(encouragements)-1)
-    print(encouragements.loc[choose,"gaelic"].capitalize()+"!",
-          encouragements.loc[choose,"english"].capitalize()+"!")
+    choose = rd.randint(0, csvr.length(encouragements)-1)
+    print(encouragements["gaelic"][choose].capitalize()+"!",
+          encouragements["english"][choose].capitalize()+"!")
+
 
 #--------------------
 #Helper functions----
@@ -150,10 +151,10 @@ def slenderise(word):
     ##Only slenderise broad words
     if end_width(w1) == "broad":
         ##Some words are exceptions to the usual slenderisation rules
-        slender_exceptions = pd.read_csv('Vocabulary/grammar_slenderisation.csv')
-        exceptions = list(slender_exceptions["broad"])
+        slender_exceptions = csvr.read_csv('grammar_slenderisation')
+        exceptions = slender_exceptions["broad"]
         if w1 in exceptions:
-            return slender_exceptions.loc[exceptions.index(w1),"slender"] + w2
+            return slender_exceptions["slender"][exceptions.index(w1)] + w2
         ##Regular slenderisation is adding an i after last vowel
         else:
             bv = [char for char in w1 if char in broad_vowels]
@@ -201,16 +202,16 @@ def cha(word):
 
 def digits_to_gd(n):
     num_unit = str(n)[-1]
-    num_unit_gd = numlist.loc[numlist["number"]==int(num_unit)].reset_index(drop=True).at[0,"cardinal"]
+    num_unit_gd = csvr.filter_matches(numlist, "number", num_unit)["cardinal"][0]
     if n <= 10: # 0-9
-        return numlist.loc[numlist["number"]==n].reset_index(drop=True).at[0,"cardinal"]
+        return csvr.filter_matches(numlist, "number", str(n))["cardinal"][0]
     elif n == 12:
         return "dà dheug" #lenition
     elif n < 20: #11-19
         return num_unit_gd + " deug"
     elif n < 100: #20-99
-        num_ten = int(str(n)[-2] + "0")
-        num_ten_gd = numlist.loc[numlist["number"]==int(num_ten)].reset_index(drop=True).at[0,"cardinal"]
+        num_ten = str(n)[-2] + "0"
+        num_ten_gd = csvr.filter_matches(numlist, "number", num_ten)["cardinal"][0]
         if num_unit == "0":
             return num_ten_gd
         else:
@@ -298,10 +299,10 @@ def gd_common_article(word,sg_pl,gender,case):
 def prep_def(df,row_num):
     """Turn a word with the definite article into prepositional"""
     ##get word
-    word = df.loc[row_num,"nom_sing"]
+    word = df["nom_sing"][row_num]
     word_lower = word.lower()
     ##get gender
-    gender = df.loc[row_num,"gender"]
+    gender = df["gender"][row_num]
     if gender not in ("masc", "fem"):
         gender = guess_gender(word_lower)
     ##get sing/pl
@@ -406,11 +407,13 @@ def verbal_noun(vn, person, tense, negative, question):
 
 def relative_time(relative_en, time_unit_en):
     """Last/this/next/(all)/every day/month/year etc
-    Note the time unit must be in the datetime units csv"""
-   # gd_common_article(word,sg_pl,gender,case)
-    time_units = pd.read_csv("Vocabulary/datetime_units.csv")
-    gender = time_units.loc[time_units["english"] == time_unit_en,"gender"].values[0]
-    time_unit_gd = time_units.loc[time_units["english"] == time_unit_en,"nom_sing"].values[0]
+    Note the time unit must be in the datetime units csv
+    This function is unfinished and unused"""
+    #gd_common_article(word,sg_pl,gender,case)
+    print("Warning - the relative time function is unfinished")
+    time_units = csvr.read_csv("datetime_units")
+    gender = csvr.filter_matches(time_units, "english", time_unit_en)["gender"][0]
+    time_unit_gd = csvr.filter_matches(time_units, "english", time_unit_en)["nom_sing"][0]
     if relative_en == "last":
         when_gd = gd_common_article(time_unit_gd, "sg", gender, "nom") + " seo chaidh"
     elif relative_en == "this":
@@ -477,18 +480,18 @@ def en_verb(vocab_sample, item, pronoun, tense, negative, question):
             neg = " "
 
         if tense == "present":
-            return pronoun + " " + en.loc[en["en_subj"] == pronoun,"be_pres"].values[0] + neg + vocab_sample.loc[item,"en_vn"]
+            return pronoun + " " + csvr.filter_matches(en, "en_subj", pronoun)["be_pres"][0] + neg + vocab_sample["en_vn"][item]
         elif tense == "past":
             if negative == False:
-                return pronoun + " " + vocab_sample.loc[item,"en_past"]
+                return pronoun + " " + vocab_sample["en_past"][item]
             else:
-                return pronoun + " did not " + vocab_sample.loc[item,"english"]
+                return pronoun + " did not " + vocab_sample["english"][item]
         elif tense == "vn_past":
-            return pronoun + " " + en.loc[en["en_subj"] == pronoun,"be_past"].values[0] + neg + vocab_sample.loc[item,"en_vn"]
+            return pronoun + " " + csvr.filter_matches(en, "en_subj", pronoun)["be_past"][0] + neg + vocab_sample["en_vn"][item]
         elif tense == "future":
-            return pronoun + " will" + neg + vocab_sample.loc[item,"english"]
+            return pronoun + " will" + neg + vocab_sample["english"][item]
         elif tense == "vn_future":
-            return pronoun + " will" + neg + "be " + vocab_sample.loc[item,"en_vn"]
+            return pronoun + " will" + neg + "be " + vocab_sample["en_vn"][item]
     else:
         if negative == True:
             neg = "n't "
@@ -497,19 +500,19 @@ def en_verb(vocab_sample, item, pronoun, tense, negative, question):
 
         if tense == "present":
             if pronoun.lower() == "i" and negative == True:
-                return "Aren't " + pronoun + " " +  vocab_sample.loc[item,"en_vn"]
+                return "Aren't " + pronoun + " " +  vocab_sample["en_vn"][item]
             else:
-                return en.loc[en["en_subj"] == pronoun,"be_pres"].values[0] + neg + pronoun + " " +  vocab_sample.loc[item,"en_vn"]
+                return csvr.filter_matches(en, "en_subj", pronoun)["be_pres"][0] + neg + pronoun + " " +  vocab_sample["en_vn"][item]
         elif tense == "past":
             return "Did" + neg + pronoun + " " + vocab_sample.loc[item,"english"]
         elif tense == "vn_past":
-            return en.loc[en["en_subj"] == pronoun,"be_past"].values[0] + neg + pronoun + " " +  vocab_sample.loc[item,"en_vn"]
+            return csvr.filter_matches(en, "en_subj", pronoun)["be_past"][0] + neg + pronoun + " " +  vocab_sample["en_vn"][item]
         else:
             if negative == True:
                 start = "Will "
             else:
                 start = "Won't "
             if tense == "future":
-                return start + pronoun + " " + vocab_sample.loc[item,"english"]
+                return start + pronoun + " " + vocab_sample["english"][item]
             elif tense == "vn_future":
-                return start + pronoun + " be " + vocab_sample.loc[item,"en_vn"]
+                return start + pronoun + " be " + vocab_sample["en_vn"][item]
