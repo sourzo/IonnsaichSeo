@@ -62,7 +62,7 @@ async def run_lesson(lesson):
     
     while answer != "x":
         q_count = q_count + 1
-        question, solutions, prompt = lesson(**options)
+        question, prompt, solutions = lesson(**options)
         
         #fix apostrophe issues
         question = question.replace("’","'")

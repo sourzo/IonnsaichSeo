@@ -13,6 +13,9 @@ pp = csvr.read_csv('grammar_prepPronouns')
 names = csvr.read_csv('people_names')
 g_numbers = csvr.read_csv('grammar_numbers')
 professions = csvr.read_csv('people_professions')
+similes = csvr.read_csv("adjectives_comparisons")
+adjectives = csvr.read_csv("adjectives_misc")
+adjectives = csvr.random_sample(adjectives, 10)
 
 adj_modifiers = [("", ""),
                  ("so ", "cho "), 
@@ -32,10 +35,10 @@ def give_get(chosen_tense, translate_words, sentence, vocab_sample, testvalues =
         gift_num = rd.randrange(csvr.length(vocab_sample))
         give_get_num = rd.randrange(2) # 0 = give to, 1 = get from
     else:
-        subject_num = testvalues[subject_num]
-        object_num = testvalues[object_num]
-        gift_num = testvalues[gift_num]
-        give_get_num = testvalues[give_get_num]
+        subject_num = testvalues["subject_num"]
+        object_num = testvalues["object_num"]
+        gift_num = testvalues["gift_num"]
+        give_get_num = testvalues["give_get_num"]
     if chosen_tense == "any":
         chosen_tense = rd.choice(("past", "present", "future"))
     
@@ -155,11 +158,8 @@ def give_get(chosen_tense, translate_words, sentence, vocab_sample, testvalues =
             
     #Output -------------------------------------------------------------------
     
-    #Return (question, solutions, prompt)
-    if translate_words == "en_gd":
-        return (q, solutions, prompt1)
-    elif translate_words == "gd_en":
-        return (q, solutions, prompt1)
+    #Return (question, prompt, solutions)
+    return (q, prompt1, solutions)
 
 def possession_aig(translate_words, sentence, vocab_sample, testvalues = None):
     
@@ -169,11 +169,11 @@ def possession_aig(translate_words, sentence, vocab_sample, testvalues = None):
     #Randomiser ---------------------------------------------------------------
     
     if testvalues == None:
-        subject_num = rd.randrange(6)
+        subject_num = rd.randrange(7)
         object_num = rd.randrange(csvr.length(vocab_sample))
     else:
-        subject_num = testvalues[subject_num]
-        object_num = testvalues[object_num]
+        subject_num = testvalues["subject_num"]
+        object_num = testvalues["object_num"]
         
     #Construct sentences ------------------------------------------------------
     obj_indef = is_utility.en_indef_article(vocab_sample["english"][object_num])
@@ -215,12 +215,8 @@ def possession_aig(translate_words, sentence, vocab_sample, testvalues = None):
     
     #Output -------------------------------------------------------------------
     
-    #Return (question, solutions, prompt)
-    if translate_words == "en_gd":
-        return (q, solutions, prompt1)
-    elif translate_words == "gd_en":
-        return (q, solutions, prompt1)
-
+    #Return (question, prompt, solutions)
+    return (q, prompt1, solutions)
 
 def gender(gender_mode, vocab_sample, testvalues = None):
     #Load vocab --------------------------------------------------
@@ -230,7 +226,7 @@ def gender(gender_mode, vocab_sample, testvalues = None):
     if testvalues == None:
         vocab_num = rd.randrange(csvr.length(vocab_sample))
     else:
-        vocab_num = testvalues[vocab_num]
+        vocab_num = testvalues["vocab_num"]
     
     if gender_mode == "def_all":
         gender_mode = rd.choice(("def_nom"#, "def_prep", "def_poss"
@@ -295,8 +291,8 @@ def gender(gender_mode, vocab_sample, testvalues = None):
     
     #Output -------------------------------------------------------------------
     
-    ##Return (question, solutions, prompt)
-    return (q, solutions, prompt1)
+    ##Return (question, prompt, solutions)
+    return (q, prompt1, solutions)
 
 def numbers(translate_numbers, max_num, testvalues = None):
     
@@ -304,7 +300,7 @@ def numbers(translate_numbers, max_num, testvalues = None):
     if testvalues == None:
         num = rd.randint(1,max_num)
     else:
-        num = testvalues[num]
+        num = testvalues["num"]
        
     #Work out the Gaelic for given number ----------------------------------
     num_gd = is_utility.digits_to_gd(num)
@@ -337,8 +333,8 @@ def numbers(translate_numbers, max_num, testvalues = None):
     
     #Output -------------------------------------------------------------------
     
-    ##Return (question, solutions, prompt)
-    return (q, solutions, prompt1)
+    ##Return (question, prompt, solutions)
+    return (q, prompt1, solutions)
 
 def plurals(translate_generic, vocab_sample, testvalues = None):
     
@@ -346,7 +342,7 @@ def plurals(translate_generic, vocab_sample, testvalues = None):
     if testvalues == None:
         vocab_num = rd.randrange(csvr.length(vocab_sample))
     else:
-        vocab_num = testvalues[vocab_num]
+        vocab_num = testvalues["vocab_num"]
     
     #Work out the Gaelic for given number ----------------------------------
             
@@ -370,8 +366,8 @@ def plurals(translate_generic, vocab_sample, testvalues = None):
             
     #Output -------------------------------------------------------------------
     
-    ##Return (question, solutions, prompt)
-    return (q, solutions, prompt1)
+    ##Return (question, prompt, solutions)
+    return (q, prompt1, solutions)
 
 def learn_nouns(translate_words, vocab_sample, testvalues = None):
     #Load vocab --------------------------------------------------
@@ -380,7 +376,7 @@ def learn_nouns(translate_words, vocab_sample, testvalues = None):
     if testvalues == None:
         vocab_num = rd.randrange(csvr.length(vocab_sample))
     else:
-        vocab_num = testvalues[vocab_num]
+        vocab_num = testvalues["vocab_num"]
         
     #Questions ----------------------------------------------------------------
     
@@ -402,8 +398,8 @@ def learn_nouns(translate_words, vocab_sample, testvalues = None):
     
     #Output -------------------------------------------------------------------
     
-    ##Return (question, solutions, prompt)
-    return (q, solutions, prompt1)
+    ##Return (question, prompt, solutions)
+    return (q, prompt1, solutions)
 
 def preferences(translate_words, sentence, vocab_sample, testvalues = None):
     #Load vocab --------------------------------------------------
@@ -411,17 +407,17 @@ def preferences(translate_words, sentence, vocab_sample, testvalues = None):
     
     #Randomiser ---------------------------------------------------------------
     if testvalues == None:
-        subject_num = rd.randrange(6)
+        subject_num = rd.randrange(7)
         object_num = rd.randrange(csvr.length(vocab_sample))
         tense = rd.randrange(2) # 0 = present tense, 1 = future conditional
         pos_neg = rd.randrange(2) # 0 = positive, 1 = negative
         likepref = rd.randrange(2) # 0 = like, 1 = prefer
     else:
-        subject_num = testvalues[subject_num]
-        object_num = testvalues[object_num]
-        tense = testvalues[tense]
-        pos_neg = testvalues[pos_neg]
-        likepref = testvalues[likepref]
+        subject_num = testvalues["subject_num"]
+        object_num = testvalues["object_num"]
+        tense = testvalues["tense"]
+        pos_neg = testvalues["pos_neg"]
+        likepref = testvalues["likepref"]
         
     #Parts of sentence --------------------------------------------------------
     obj_indef = is_utility.en_indef_article(vocab_sample["english"][object_num])
@@ -508,8 +504,8 @@ def preferences(translate_words, sentence, vocab_sample, testvalues = None):
     
     #Output -------------------------------------------------------------------
     
-    ##Return (question, solutions, prompt)
-    return (q, solutions, prompt1)
+    ##Return (question, prompt, solutions)
+    return (q, prompt1, solutions)
 
 def verb_tenses(chosen_tense, verb_form, vocab_sample, testvalues = None):
     #Randomiser ---------------------------------------------------------------
@@ -518,8 +514,8 @@ def verb_tenses(chosen_tense, verb_form, vocab_sample, testvalues = None):
         verb_num = rd.randrange(csvr.length(vocab_sample))
         pers_num = rd.randrange(csvr.length(pp))
     else:
-        verb_num = testvalues[verb_num]
-        pers_num = testvalues[pers_num]
+        verb_num = testvalues["verb_num"]
+        pers_num = testvalues["pers_num"]
     
     ## verb forms: statement/question, positive/negative
     if verb_form == "p_s":
@@ -590,18 +586,18 @@ def verb_tenses(chosen_tense, verb_form, vocab_sample, testvalues = None):
     
     #Output -------------------------------------------------------------------
     
-    ## Return (question, solutions, prompt)
-    return (q, solutions, prompt1)
+    ## Return (question, prompt, solutions)
+    return (q, prompt1, solutions)
 
 def professions_annan(translate_words, sentence, testvalues = None):
     
     #Randomiser ---------------------------------------------------------------
     if testvalues == None:
-        person_num = rd.randrange(6)
+        person_num = rd.randrange(7)
         profession_num = rd.randrange(csvr.length(professions))
     else:
-        person_num = testvalues[person_num]
-        profession_num = testvalues[profession_num]
+        person_num = testvalues["person_num"]
+        profession_num = testvalues["profession_num"]
         
     #Parts of sentence --------------------------------------------------------
     pp_annan = pp["ann an"][person_num]
@@ -654,21 +650,21 @@ def professions_annan(translate_words, sentence, testvalues = None):
     
     #Output -------------------------------------------------------------------
     
-    ##Return (question, solutions, prompt)
-    return (q, solutions, prompt1)
+    ##Return (question, prompt, solutions)
+    return (q, prompt1, solutions)
 
 def emphasis_adjectives(translate_words, vocab_sample, testvalues = None):
     
     
     #Randomiser ---------------------------------------------------------------
     if testvalues == None:
-        person_num = rd.randrange(6)
+        person_num = rd.randrange(7)
         modifier_choice = adj_modifiers[rd.randrange(len(adj_modifiers))]
         adj_num = rd.randrange(csvr.length(vocab_sample))
     else:
-        person_num = testvalues[person_num]
-        modifier_choice = testvalues[modifier_choice]
-        adj_num = testvalues[adj_num]
+        person_num = testvalues["person_num"]
+        modifier_choice = testvalues["modifier_choice"]
+        adj_num = testvalues["adj_num"]
     
     #Parts of sentence --------------------------------------------------------
     pers_emph = pp["emphatic"][person_num]
@@ -706,8 +702,8 @@ def emphasis_adjectives(translate_words, vocab_sample, testvalues = None):
     
     #Output -------------------------------------------------------------------
     
-    ##Return (question, solutions, prompt)
-    return (q, solutions, prompt1)
+    ##Return (question, prompt, solutions)
+    return (q, prompt1, solutions)
 
 def possession_mo(translate_words, sentence, vocab_sample, testvalues = None):
     #This module is only used with family or body parts vocab files
@@ -719,9 +715,9 @@ def possession_mo(translate_words, sentence, vocab_sample, testvalues = None):
         where_num = rd.randrange(3)
         what_num = rd.randrange(csvr.length(vocab_sample))
     else:
-        whose_num = testvalues[whose_num]
-        where_num = testvalues[where_num]
-        what_num = testvalues[what_num]
+        whose_num = testvalues["whose_num"]
+        where_num = testvalues["where_num"]
+        what_num = testvalues["what_num"]
     
     #Parts of sentence --------------------------------------------------------
     ## what
@@ -775,7 +771,7 @@ def possession_mo(translate_words, sentence, vocab_sample, testvalues = None):
         if whose_num in (0,1,2) and what_gd[0] not in is_utility.vowels:
             what_gd = is_utility.lenite(what_gd)
         ## her + vowel -> h-
-        elif whose_num ==3 and what_gd[0] in is_utility.vowels:
+        elif whose_num == 3 and what_gd[0] in is_utility.vowels:
             what_gd = "h-" + what_gd
         ## (y)our + vowel -> n-
         elif whose_num in (4, 5) and what_gd[0] in is_utility.vowels:
@@ -829,8 +825,8 @@ def possession_mo(translate_words, sentence, vocab_sample, testvalues = None):
     
     #Output -------------------------------------------------------------------
     
-    ##Return (question, solutions, prompt)
-    return (q, solutions, prompt1)
+    ##Return (question, prompt, solutions)
+    return (q, prompt1, solutions)
 
 def where_from(sentence_qa, vocab_sample, testvalues = None):
     #Load vocab --------------------------------------------------
@@ -840,8 +836,8 @@ def where_from(sentence_qa, vocab_sample, testvalues = None):
         person_num = rd.randrange(7)
         where_num = rd.randrange(csvr.length(vocab_sample))
     else:
-        person_num = testvalues[person_num]
-        where_num = testvalues[where_num]
+        person_num = testvalues["person_num"]
+        where_num = testvalues["where_num"]
     
     #Parts of sentence --------------------------------------------------------
     
@@ -886,8 +882,8 @@ def where_from(sentence_qa, vocab_sample, testvalues = None):
     
     #Output -------------------------------------------------------------------
     
-    ##Return (question, solutions, prompt)
-    return (q, solutions, prompt1)
+    ##Return (question, prompt, solutions)
+    return (q, prompt1, solutions)
 
 def where_in(sentence_qa, contains_articles, vocab_sample, testvalues = None):
     #Load vocab --------------------------------------------------
@@ -897,8 +893,8 @@ def where_in(sentence_qa, contains_articles, vocab_sample, testvalues = None):
         person_num = rd.randrange(7)
         where_num = rd.randrange(csvr.length(vocab_sample))
     else:
-        person_num = testvalues[person_num]
-        where_num = testvalues[where_num]
+        person_num = testvalues["person_num"]
+        where_num = testvalues["where_num"]
     if contains_articles == True:
         if vocab_sample["nom_sing"][where_num].lower().startswith(is_utility.def_articles):
             article_switch = 1
@@ -908,7 +904,7 @@ def where_in(sentence_qa, contains_articles, vocab_sample, testvalues = None):
         if testvalues == None:
             article_switch = rd.randrange(2)
         else:
-            article_switch = testvalues[article_switch]
+            article_switch = testvalues["article_switch"]
         
     #Parts of sentence --------------------------------------------------------
     
@@ -962,18 +958,17 @@ def where_in(sentence_qa, contains_articles, vocab_sample, testvalues = None):
     
     #Output -------------------------------------------------------------------
     
-    ##Return (question, solutions, prompt)
-    return (q, solutions, prompt1)
+    ##Return (question, prompt, solutions)
+    return (q, prompt1, solutions)
 
 def comparisons(translate_words, testvalues = None):
     #Load vocab --------------------------------------------------
-    similes = csvr.read_csv("adjectives_comparisons")
     
     #Randomiser ---------------------------------------------------------------
     if testvalues == None:
         comparison_choice = rd.randrange(csvr.length(similes))
     else:
-        comparison_choice = testvalues[comparison_choice]
+        comparison_choice = testvalues["comparison_choice"]
    
     #Construct sentence -------------------------------------------------------
     sentence_en = "As " + similes["english"][comparison_choice] + " as " + similes["simile_en"][comparison_choice]
@@ -997,23 +992,21 @@ def comparisons(translate_words, testvalues = None):
         
     #Output -------------------------------------------------------------------
     
-    ##Return (question, solutions, prompt)
-    return (q, solutions, prompt1)
+    ##Return (question, prompt, solutions)
+    return (q, prompt1, solutions)
 
 def comparatives_superlatives(vocab_sample, comp_sup, sentence, translate_words, testvalues = None):
     #Load vocab --------------------------------------------------
     nouns = vocab_sample
-    adjectives = csvr.read_csv("adjectives_misc")
-    adjectives = csvr.random_sample(adjectives, 10)
     #Randomiser ---------------------------------------------------------------
     if testvalues == None:
         subject_num = rd.randrange(csvr.length(nouns))
         object_num = rd.randrange(csvr.length(nouns))
         adj_num = rd.randrange(csvr.length(adjectives))
     else:
-        subject_num = testvalues[subject_num]
-        object_num = testvalues[object_num]
-        adj_num = testvalues[adj_num]
+        subject_num = testvalues["subject_num"]
+        object_num = testvalues["object_num"]
+        adj_num = testvalues["adj_num"]
     
     if comp_sup not in ("comp", "sup"):
         comp_sup = rd.choice(("comp","sup"))
@@ -1098,8 +1091,8 @@ def comparatives_superlatives(vocab_sample, comp_sup, sentence, translate_words,
     
     #Output -------------------------------------------------------------------
     
-    ##Return (question, solutions, prompt)
-    return (q, solutions, prompt1)
+    ##Return (question, prompt, solutions)
+    return (q, prompt1, solutions)
 
 def time(translate_numbers, testvalues = None):
     
@@ -1108,8 +1101,8 @@ def time(translate_numbers, testvalues = None):
         hrs_num = rd.randrange(24)
         mins_num = rd.randrange(0, 60, 5)
     else:
-        hrs_num = testvalues[hrs_num]
-        mins_num = testvalues[mins_num]
+        hrs_num = testvalues["hrs_num"]
+        mins_num = testvalues["mins_num"]
     
     #Helper functions ---------------------------------------------------------
     def get_12h(h24):
@@ -1142,7 +1135,7 @@ def time(translate_numbers, testvalues = None):
         elif hrs12 == 2:
             return "dhà"
         elif hrs12 <= 10:
-            return csvr.filter_matches(is_utility.numlist, "number", hrs12)["cardinal"][0]
+            return csvr.filter_matches(is_utility.numlist, "number", str(hrs12))["cardinal"][0]
         elif hrs12 == 11:
             return "aon uair deug"
         elif hrs12 == 12:
@@ -1230,5 +1223,5 @@ def time(translate_numbers, testvalues = None):
             
     #Output -------------------------------------------------------------------
     
-    ##Return (question, solutions, prompt)
-    return (q, solutions, prompt1)
+    ##Return (question, prompt, solutions)
+    return (q, prompt1, solutions)
