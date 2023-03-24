@@ -1170,6 +1170,8 @@ def time(translate_numbers, testvalues = None):
             mins_gd = is_utility.digits_to_gd(mins_tofrom)
             if mins_tofrom == 20:
                 mins_gd = mins_gd + " mionaid"
+            elif mins_tofrom == 25:
+                mins_gd = "còig mionaidean fichead"
             else:
                 mins_gd = mins_gd + " mionaidean"
             if mins_tofrom == mins:
