@@ -885,10 +885,11 @@ def where_from(sentence_qa, vocab_sample, testvalues = None):
     ##Return (question, prompt, solutions)
     return (q, prompt1, solutions)
 
-def where_in(sentence_qa, contains_articles, vocab_sample, testvalues = None):
+def where_in(sentence_qa, vocab_sample, testvalues = None):
     #Load vocab --------------------------------------------------
     
     #Randomiser ---------------------------------------------------------------
+    contains_articles = is_utility.contains_articles(vocab_sample)
     if testvalues == None:
         person_num = rd.randrange(7)
         where_num = rd.randrange(csvr.length(vocab_sample))

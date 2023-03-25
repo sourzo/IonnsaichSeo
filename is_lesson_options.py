@@ -8,11 +8,16 @@ import is_utility
 from collections import namedtuple
 import is_csvreader as csvr
 
-#Part 1: General options menus (ie not including vocabulary)-------------------
+#Part 1: General user options menus (ie not including vocabulary)-------------------
 menu_option = namedtuple('menu_option', ['key', 'description'])
 
 async def options_menu(options, options_name, message="Select practice option"):
-    options_list = eval(options_name)
+    """Display the specified options to the user and get chosen option from user.
+   * 'options' is just the 'options' object used by is_run_lesson.
+   * 'options_name' is one of the lists of named tuples below.
+   * 'message' is the message to be displayed to the user before the options
+   are presented."""
+    options_list = user_menu_options[options_name]
     user_response = "0"
     while user_response not in ["x"] + [str(n) for n in range(1,len(options_list)+1)]:
         print()
@@ -25,42 +30,54 @@ async def options_menu(options, options_name, message="Select practice option"):
         options[options_name] = options_list[int(user_response)-1].key
     else:
         options[options_name] = "x"
+        
+parameter_prompts = {"gender_mode" : "Select practice option",
+                     "comp_sup" : "Select practice option", 
+                     "chosen_tense" : "Select tense",
+                     "verb_form" : "Practice which verb forms?", 
+                     "translate_words" : "Select translation direction", 
+                     "translate_numbers" : "Select translation direction",
+                     "translate_generic" : "Select practice option", 
+                     "sentence" : "Select practice option", 
+                     "sentence_qa" : "Select practice option"}
+
        
-gender_mode = [menu_option("adj", "Adjectives"),
-               menu_option("def_nom", "Definite articles (nom.)")#,
-               #menu_option("def_prep", "Definite articles (prep.)"),
-               #menu_option("def_poss", "Definite articles (poss.)"),
-               #menu_option("def_all", "Definite articles (All.)"),
-               ]
-
-comp_sup = [menu_option("comp", "Comparatives ('better', 'faster', etc)"),
-            menu_option("sup", "Superlatives ('best', 'fastest', etc)"),
-            menu_option("both", "Both")]
-
-chosen_tense = [menu_option("present", "Present tense"),
-                menu_option("past", "Past tense"),
-                menu_option("future", "Future tense"),
-                menu_option("any", "All tenses")]
-
-verb_form = [menu_option("p_s", "Positive statements only"),
-             menu_option("pn_s", "Positive and negative statements"),
-             menu_option("pn_sq", "Positive and negative statements and questions")]
-
-translate_words = [menu_option("en_gd", "English to Gaelic"),
-                   menu_option("gd_en", "Gaelic to English")]
-
-translate_numbers = [menu_option("dig_gd", "Digits to Gaelic"),
-                     menu_option("gd_dig", "Gaelic to digits")]
-
-translate_generic = [menu_option("from_en", "English prompts"),
-                     menu_option("from_gd", "Gaelic prompts")]
-
-sentence = [menu_option("full", "Full sentence"),
-            menu_option("blank", "Fill in the blank")]
-
-sentence_qa = [menu_option("full", "Full sentence"),
-               menu_option("blank", "Fill in the blank"),
-               menu_option("q_and_a", "Question and answer")]
+user_menu_options = {"gender_mode" : [menu_option("adj", "Adjectives"),
+                                      menu_option("def_nom", "Definite articles (nom.)")#,
+                                      #menu_option("def_prep", "Definite articles (prep.)"),
+                                      #menu_option("def_poss", "Definite articles (poss.)"),
+                                      #menu_option("def_all", "Definite articles (All.)"),
+                                      ],
+                     
+                     "comp_sup" : [menu_option("comp", "Comparatives ('better', 'faster', etc)"),
+                                   menu_option("sup", "Superlatives ('best', 'fastest', etc)"),
+                                   menu_option("both", "Both")],
+                     
+                     "chosen_tense" : [menu_option("present", "Present tense"),
+                                       menu_option("past", "Past tense"),
+                                       menu_option("future", "Future tense"),
+                                       menu_option("any", "All tenses")],
+                     
+                     "verb_form" : [menu_option("p_s", "Positive statements only"),
+                                    menu_option("pn_s", "Positive and negative statements"),
+                                    menu_option("pn_sq", "Positive and negative statements and questions")],
+                     
+                     "translate_words" : [menu_option("en_gd", "English to Gaelic"),
+                                          menu_option("gd_en", "Gaelic to English")],
+                     
+                     "translate_numbers" : [menu_option("dig_gd", "Digits to Gaelic"),
+                                            menu_option("gd_dig", "Gaelic to digits")],
+                     
+                     "translate_generic" : [menu_option("from_en", "English prompts"),
+                                            menu_option("from_gd", "Gaelic prompts")],
+                     
+                     "sentence" : [menu_option("full", "Full sentence"),
+                                   menu_option("blank", "Fill in the blank")],
+                     
+                     "sentence_qa" : [menu_option("full", "Full sentence"),
+                                      menu_option("blank", "Fill in the blank"),
+                                      menu_option("q_and_a", "Question and answer")]
+                     }
 
 #Part 2: Vocabulary selection functions----------------------------------------
 required_columns = {"give_get" : ("english", "nom_sing"),
@@ -136,22 +153,18 @@ async def select_vocab(lesson, options):
         if vocab_num == "x":
             return "x"
         elif vocab_num == "1":
-            options["contains_articles"] = True
             places = csvr.read_csv('places_world')
             csvr.rename_column(places, "place_en", "english")
             csvr.rename_column(places, "place_gd", "nom_sing")
             return places
         elif vocab_num == "2":
-            options["contains_articles"] = True
             places = csvr.read_csv('places_scotland')
             csvr.rename_column(places, "place_en", "english")
             csvr.rename_column(places, "place_gd", "nom_sing")
             return places
         elif vocab_num == "3":
-            options["contains_articles"] = False
             return csvr.read_csv('places_town')
         elif vocab_num == "4":
-            options["contains_articles"] = False
             return csvr.read_csv('places_home')
     #Case where any compatible vocab file can be used
     else:

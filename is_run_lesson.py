@@ -18,18 +18,9 @@ async def run_lesson(lesson):
     options = dict()
     
     lesson_parameters = signature(lesson).parameters
-    parameter_prompts = {"gender_mode" : "Select practice option",
-                         "comp_sup" : "Select practice option", 
-                         "chosen_tense" : "Select tense",
-                         "verb_form" : "Practice which verb forms?", 
-                         "translate_words" : "Select translation direction", 
-                         "translate_numbers" : "Select translation direction",
-                         "translate_generic" : "Select practice option", 
-                         "sentence" : "Select practice option", 
-                         "sentence_qa" : "Select practice option"}
-    for param in parameter_prompts:
+    for param in lo.parameter_prompts:
         if param in lesson_parameters:
-            await lo.options_menu(options, param, parameter_prompts[param])
+            await lo.options_menu(options, param, lo.parameter_prompts[param])
             if options[param] == "x":
                 return
     

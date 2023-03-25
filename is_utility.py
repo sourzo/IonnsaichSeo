@@ -91,6 +91,18 @@ def end_width(word):
     elif test[-1] in slender_vowels:
         return "slender"
 
+def contains_articles(vocab_sample):
+    """Checks if a vocab file contains definite articles in the nom_sing/place_gd column.
+    You can't add the definite article to place-names if they don't already have a def art."""
+    if "nom_sing" in vocab_sample:
+        colname = "nom_sing"
+    elif "place_gd" in vocab_sample:
+        colname = "nom_sing"
+    for word in vocab_sample[colname]:
+        if word.lower().startswith(def_articles):
+            return True
+    return False
+
 def remove_articles(word):
     """Remove the definite article from a word"""
     if word.lower().startswith(def_articles):
