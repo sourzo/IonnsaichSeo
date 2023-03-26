@@ -111,9 +111,6 @@ async function loadPython(term) {
 
 // Load dependencies, then run Ionnsaich Seo.
 async function runApplication(pyodide) {
-    notifyLoading('Pandas')
-    await pyodide.loadPackage('pandas', { 'errorCallback': notifyLoadingError })
-
     notifyLoading('Ionnsaich Seo!')
     let appSourceZip = undefined
     try {
