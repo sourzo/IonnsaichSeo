@@ -1,65 +1,34 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Sat Mar 25 17:55:11 2023
+
+@author: Zoe
+"""
+
 import csv
-import random as rd
 def read_csv(filename):
-    """Read a csv file and return it as a vocab dict: a dictionary of lists,
-    where each dictionary item is a column of the csv file
-    and each list is the items in that column"""
+    """Read a csv file and return it as a list of dictionaries:
+    where each list item is a row of the csv file"""
     with open(f"Vocabulary/{filename}.csv", 'r', encoding = "utf-8") as infile:
-        csvfile = csv.DictReader(infile)
-        newdict=dict.fromkeys(csvfile.fieldnames)
-        for k in newdict:
-            newdict[k] = list()
-        for line in csvfile:
-            for key, value in line.items():
-                newdict[key].append(value)
-    return newdict
+        return [x for x in csv.DictReader(infile)]
 
-def rename_column(vocabdict, oldname, newname):
-    vocabdict[newname] = vocabdict.pop(oldname)
+def rename_column(vocablist, oldname, newname):
+    """Rename a column - note this changes the order of the columns,
+    but if this is a problem we can switch to using OrderedDict."""
+    for index, row in enumerate(vocablist):
+        vocablist[index][newname] = vocablist[index].pop(oldname)
 
-def filter_matches(vocabdict, colname, matchword):
-    """Create a new vocab dict where values in the 
+def filter_matches(vocablist, colname, matchword):
+    """Create a new vocab list where values in the 
     specified column match the specified matchword"""
-    newdict = dict.fromkeys(vocabdict)
-    for k in newdict:
-        newdict[k] = list()
-    searchlist = vocabdict[colname]
-    matchlist = []
-    for index, item in enumerate(searchlist):
-        if item.lower() == matchword.lower():
-            matchlist.append(index)
-    for item in newdict:
-        for index in matchlist:
-            newdict[item].append(vocabdict[item][index])
-    return newdict
+    return [x for x in vocablist if x[colname] == matchword]
 
-def filter_rows(vocabdict, rowlist):
-    """Create a new vocab dict where values in the 
-    specified column match the specified matchword"""
-    newdict = dict.fromkeys(vocabdict)
-    for k in newdict:
-        newdict[k] = list()
-    for item in newdict:
-        for index in rowlist:
-            newdict[item].append(vocabdict[item][index])
-    return newdict
+def filter_rows(vocablist, rowlist):
+    """Filter the vocab list by row numbers"""
+    newlist = []
+    for x in rowlist:
+        newlist.append(vocablist[x])
+    return newlist
 
-def random_sample(vocabdict, size):
-    """Create a new vocab dict which is a 
-    random sample of items from the original"""
-    newdict = dict.fromkeys(vocabdict)
-    for k in newdict:
-        newdict[k] = list()
-    matchlist = rd.sample(range(length(vocabdict)), size)
-    for item in newdict:
-        for index in matchlist:
-            newdict[item].append(vocabdict[item][index])
-    return newdict
-
-def length(vocabdict):
-    """Find the number of items in a vocab dict"""
-    return len(vocabdict[list(vocabdict.keys())[0]])
-
-def firstcol(vocabdict):
-    """Find the first column name in a vocab dict"""
-    return list(vocabdict.keys())[0]
+def getcol(vocablist, colname):
+    return [x[colname] for x in vocablist]

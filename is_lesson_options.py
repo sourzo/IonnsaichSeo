@@ -7,8 +7,9 @@ Created on Sat Mar 18 14:24:28 2023
 import is_utility
 from collections import namedtuple
 import is_csvreader as csvr
+import random as rd
 
-#Part 1: General user options menus (ie not including vocabulary)-------------------
+#Part 1: General user options menus (ie not including vocabulary)--------------
 menu_option = namedtuple('menu_option', ['key', 'description'])
 
 async def options_menu(options, options_name, message="Select practice option"):
@@ -154,12 +155,10 @@ async def select_vocab(lesson, options):
             return "x"
         elif vocab_num == "1":
             places = csvr.read_csv('places_world')
-            csvr.rename_column(places, "place_en", "english")
             csvr.rename_column(places, "place_gd", "nom_sing")
             return places
         elif vocab_num == "2":
             places = csvr.read_csv('places_scotland')
-            csvr.rename_column(places, "place_en", "english")
             csvr.rename_column(places, "place_gd", "nom_sing")
             return places
         elif vocab_num == "3":
@@ -211,11 +210,12 @@ def check_vocab(lesson_name, vocab_sample, messages = True):
     list_ok = True
     if len(required_columns[lesson_name]) > 0:
         for colname in required_columns[lesson_name]:
-            if colname not in vocab_sample:
-                list_ok = False
-                if messages == True:
-                    print()
-                    print("Error: Chosen vocabulary list must contain column {colname} (lower-case)")
+            for entry in vocab_sample:
+                if colname not in entry:
+                    list_ok = False
+                    if messages == True:
+                        print()
+                        print(f"Error: Chosen vocabulary list must contain column {colname} (lower-case)")
     if list_ok == False and messages == True:
         print("Try another vocabulary list or add the required columns and try again")
     return list_ok
@@ -230,7 +230,7 @@ async def vocab_sample_select(vocab_list, options):
     if user_size == 1:
         print()
         print("Which word do you want to practice?")
-        wordlist = list(vocab_list[csvr.firstcol(vocab_list)])
+        wordlist = csvr.getcol(vocab_list, "english")
         for index, word in enumerate(wordlist):
             print(str(index+1) + ": " + word)
         user_response = ""
@@ -238,4 +238,4 @@ async def vocab_sample_select(vocab_list, options):
             user_response = await is_utility.user_input("Number: ")
         options["vocab_sample"] = csvr.filter_rows(vocab_list, [int(user_response)-1])
     else:
-        options["vocab_sample"] = csvr.random_sample(vocab_list, user_size)
+        options["vocab_sample"] = rd.sample(vocab_list, user_size)
