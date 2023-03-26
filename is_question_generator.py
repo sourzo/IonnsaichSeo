@@ -662,7 +662,7 @@ def emphasis_adjectives(translate_words, vocab_sample, testvalues = None):
         adj_num = rd.randrange(len(vocab_sample))
     else:
         person_num = testvalues["person_num"]
-        modifier_choice = testvalues["modifier_choice"]
+        modifier_choice = adj_modifiers[testvalues["modifier_choice"]]
         adj_num = testvalues["adj_num"]
     
     #Parts of sentence --------------------------------------------------------

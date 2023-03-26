@@ -18,7 +18,10 @@ from inspect import signature
 def get_randomiser_params(lesson, vocab):
     """Returns a dictionary of the randomiser parameters with their range of values.
     Update the dictionary in here when a new lesson is created."""
-    range_vocab = range(len(vocab))
+    if vocab == None:
+        range_vocab = 0
+    else:
+        range_vocab = range(len(vocab))
     range_pronouns = range(7)
     range_pronouns_names = range(8)
     all_randomiser_params =  {"give_get" : {"subject_num" : range_pronouns_names,
@@ -31,7 +34,7 @@ def get_randomiser_params(lesson, vocab):
                               
                               "gender" : {"vocab_num" : range_vocab},
                               
-                              "numbers" : {"num" : range(1,100)},
+                              "numbers" : {"num" : range(100)},
                               
                               "plurals" : {"vocab_num" : range_vocab},
                               
@@ -83,6 +86,8 @@ def get_user_params(lesson, vocab):
     for each in all_lesson_params:
         if each in lo.user_menu_options:
             user_params[each] = [option[0] for option in lo.user_menu_options[each]]
+    if "max_num" in all_lesson_params:
+        user_params["max_num"] = [100]
     return user_params
 
 
