@@ -253,6 +253,7 @@ def gd_common_article(word,sg_pl,gender,case):
     gender: masc/fem
     case: nom/gen/prep (nominative, genitive, prepositional)
     (no vocative - slenderisation can't be automated) """
+    word = remove_articles(word)
     word_lower = word.lower()
     #singular
     if sg_pl == "sg":
