@@ -15,6 +15,9 @@ g_numbers = csvr.read_csv('grammar_numbers')
 professions = csvr.read_csv('people_professions')
 similes = csvr.read_csv("adjectives_comparisons")
 adjectives = rd.sample(csvr.read_csv("adjectives_misc"), 10)
+list_months = csvr.read_csv("datetime_months")
+list_holidays = csvr.read_csv("datetime_holidays")
+list_seasons = csvr.read_csv("datetime_seasons")
 
 adj_modifiers = [("", ""),
                  ("so ", "cho "), 
@@ -132,12 +135,12 @@ def give_get(chosen_tense, translate_words, sentence, vocab_sample, testvalues =
         
     #Prompts ------------------------------------------------------------------
     if sentence == "full":
-        prompt1 = "Translation: "
+        prompt = "Translation: "
     elif sentence == "blank":
         if translate_words == "en_gd":
-            prompt1 = verb_subj_gd + " " + gift_gd + " "
+            prompt = verb_subj_gd + " " + gift_gd + " "
         elif translate_words == "gd_en":
-            prompt1 = verb_subj_en + " " + gift_en + " "
+            prompt = verb_subj_en + " " + gift_en + " "
             
     #Solutions ----------------------------------------------------------------
     solutions = []
@@ -158,7 +161,7 @@ def give_get(chosen_tense, translate_words, sentence, vocab_sample, testvalues =
     #Output -------------------------------------------------------------------
     
     #Return (question, prompt, solutions)
-    return (q, prompt1, solutions)
+    return (q, prompt, solutions)
 
 def possession_aig(translate_words, sentence, vocab_sample, testvalues = None):
     
@@ -188,12 +191,12 @@ def possession_aig(translate_words, sentence, vocab_sample, testvalues = None):
         
     #Prompts ------------------------------------------------------------------
     if sentence == "full":
-        prompt1 = "Translation: "
+        prompt = "Translation: "
     elif sentence == "blank":
         if translate_words == "en_gd":
-            prompt1 = "Tha " + vocab_sample[object_num]["nom_sing"].lower() + " "
+            prompt = "Tha " + vocab_sample[object_num]["nom_sing"].lower() + " "
         elif translate_words == "gd_en":
-            prompt1 = "____ " + obj_indef.lower() + ": "
+            prompt = "____ " + obj_indef.lower() + ": "
    
     
     #Solutions ----------------------------------------------------------------
@@ -215,7 +218,7 @@ def possession_aig(translate_words, sentence, vocab_sample, testvalues = None):
     #Output -------------------------------------------------------------------
     
     #Return (question, prompt, solutions)
-    return (q, prompt1, solutions)
+    return (q, prompt, solutions)
 
 def gender(gender_mode, vocab_sample, testvalues = None):
     #Load vocab --------------------------------------------------
@@ -280,7 +283,7 @@ def gender(gender_mode, vocab_sample, testvalues = None):
     
     #Prompts ------------------------------------------------------------------
     
-    prompt1 = "Translation: "
+    prompt = "Translation: "
     
     #Solutions ----------------------------------------------------------------
     
@@ -291,7 +294,7 @@ def gender(gender_mode, vocab_sample, testvalues = None):
     #Output -------------------------------------------------------------------
     
     ##Return (question, prompt, solutions)
-    return (q, prompt1, solutions)
+    return (q, prompt, solutions)
 
 def numbers(translate_numbers, max_num, testvalues = None):
     
@@ -315,10 +318,10 @@ def numbers(translate_numbers, max_num, testvalues = None):
     #Prompts ------------------------------------------------------------------
     
     if translate_numbers == "dig_gd":
-        prompt1 = "Àireamh: "
+        prompt = "Àireamh: "
         
     elif translate_numbers == "gd_dig":
-        prompt1 = "Number (in digits): "
+        prompt = "Number (in digits): "
     
     #Solutions ----------------------------------------------------------------
     
@@ -333,7 +336,7 @@ def numbers(translate_numbers, max_num, testvalues = None):
     #Output -------------------------------------------------------------------
     
     ##Return (question, prompt, solutions)
-    return (q, prompt1, solutions)
+    return (q, prompt, solutions)
 
 def plurals(translate_generic, vocab_sample, testvalues = None):
     
@@ -355,7 +358,7 @@ def plurals(translate_generic, vocab_sample, testvalues = None):
         
     #Prompts ------------------------------------------------------------------
     
-    prompt1 = "Plural: "
+    prompt = "Plural: "
         
     #Solutions ----------------------------------------------------------------
     
@@ -366,7 +369,7 @@ def plurals(translate_generic, vocab_sample, testvalues = None):
     #Output -------------------------------------------------------------------
     
     ##Return (question, prompt, solutions)
-    return (q, prompt1, solutions)
+    return (q, prompt, solutions)
 
 def learn_nouns(translate_words, vocab_sample, testvalues = None):
     #Load vocab --------------------------------------------------
@@ -386,7 +389,7 @@ def learn_nouns(translate_words, vocab_sample, testvalues = None):
         
     #Prompts ------------------------------------------------------------------
         
-    prompt1 = "Translation: "
+    prompt = "Translation: "
     
     #Solutions ----------------------------------------------------------------
     solutions = []
@@ -398,7 +401,7 @@ def learn_nouns(translate_words, vocab_sample, testvalues = None):
     #Output -------------------------------------------------------------------
     
     ##Return (question, prompt, solutions)
-    return (q, prompt1, solutions)
+    return (q, prompt, solutions)
 
 def preferences(translate_words, sentence, vocab_sample, testvalues = None):
     #Load vocab --------------------------------------------------
@@ -480,12 +483,12 @@ def preferences(translate_words, sentence, vocab_sample, testvalues = None):
     
     #Prompts ------------------------------------------------------------------
     if sentence == "full":
-        prompt1 = "Translation: "
+        prompt = "Translation: "
     elif sentence == "blank":
         if translate_words == "en_gd":
-            prompt1 = like_prefer_gd.capitalize() + " ____ " + vocab_sample[object_num]["nom_sing"].lower() + ": "
+            prompt = like_prefer_gd.capitalize() + " ____ " + vocab_sample[object_num]["nom_sing"].lower() + ": "
         elif translate_words == "gd_en":
-            prompt1 = "____ " + like_prefer_en.lower() + " " + obj_indef.lower() + ": "
+            prompt = "____ " + like_prefer_en.lower() + " " + obj_indef.lower() + ": "
             
     #Solutions ----------------------------------------------------------------
     solutions = []
@@ -504,7 +507,7 @@ def preferences(translate_words, sentence, vocab_sample, testvalues = None):
     #Output -------------------------------------------------------------------
     
     ##Return (question, prompt, solutions)
-    return (q, prompt1, solutions)
+    return (q, prompt, solutions)
 
 def verb_tenses(chosen_tense, verb_form, vocab_sample, testvalues = None):
     #Randomiser ---------------------------------------------------------------
@@ -521,11 +524,11 @@ def verb_tenses(chosen_tense, verb_form, vocab_sample, testvalues = None):
         n_p = False #positive only
         q_s = False #statements only
     else:
-        n_p = bool(rd.getrandbits(1)) #negative (T) or positive (F)
+        n_p = bool(rd.randrange(2)) #negative (T) or positive (F)
         if verb_form == "pn_s":
             q_s = False #statements only
         else:
-            q_s = bool(rd.getrandbits(1)) #question (T) or statement (F)
+            q_s = bool(rd.randrange(2)) #question (T) or statement (F)
     
     if chosen_tense == "any":
         chosen_tense = rd.choice(("past","present","future"))
@@ -577,7 +580,7 @@ def verb_tenses(chosen_tense, verb_form, vocab_sample, testvalues = None):
     
     #Prompts ------------------------------------------------------------------
     
-    prompt1 = "Translation: "
+    prompt = "Translation: "
     
     #Solutions ----------------------------------------------------------------
     solutions = []
@@ -586,7 +589,7 @@ def verb_tenses(chosen_tense, verb_form, vocab_sample, testvalues = None):
     #Output -------------------------------------------------------------------
     
     ## Return (question, prompt, solutions)
-    return (q, prompt1, solutions)
+    return (q, prompt, solutions)
 
 def professions_annan(translate_words, sentence, testvalues = None):
     
@@ -626,12 +629,12 @@ def professions_annan(translate_words, sentence, testvalues = None):
         
     #Prompts ------------------------------------------------------------------
     if sentence == "full":
-        prompt1 = "Translation: "
+        prompt = "Translation: "
     elif sentence == "blank":
         if translate_words == "en_gd":
-            prompt1 = "'S e " + profession_gd.lower() + " a th' "
+            prompt = "'S e " + profession_gd.lower() + " a th' "
         elif translate_words == "gd_en":
-            prompt1 = "____" + profession_en.lower() + ": "
+            prompt = "____" + profession_en.lower() + ": "
         
     #Solutions ----------------------------------------------------------------
     solutions = []
@@ -650,7 +653,7 @@ def professions_annan(translate_words, sentence, testvalues = None):
     #Output -------------------------------------------------------------------
     
     ##Return (question, prompt, solutions)
-    return (q, prompt1, solutions)
+    return (q, prompt, solutions)
 
 def emphasis_adjectives(translate_words, vocab_sample, testvalues = None):
     
@@ -690,7 +693,7 @@ def emphasis_adjectives(translate_words, vocab_sample, testvalues = None):
         q = sentence_gd
     
     #Prompts ------------------------------------------------------------------
-    prompt1 = "Translation: "
+    prompt = "Translation: "
     
     #Solutions ----------------------------------------------------------------
     solutions = []
@@ -702,7 +705,7 @@ def emphasis_adjectives(translate_words, vocab_sample, testvalues = None):
     #Output -------------------------------------------------------------------
     
     ##Return (question, prompt, solutions)
-    return (q, prompt1, solutions)
+    return (q, prompt, solutions)
 
 def possession_mo(translate_words, sentence, vocab_sample, testvalues = None):
     #This module is only used with family or body parts vocab files
@@ -794,12 +797,12 @@ def possession_mo(translate_words, sentence, vocab_sample, testvalues = None):
     
     #Prompts ------------------------------------------------------------------
     if sentence == "full":
-        prompt1 = "Translation: "
+        prompt = "Translation: "
     elif sentence == "blank":
         if translate_words == "en_gd":
-            prompt1 = where_gd + " "
+            prompt = where_gd + " "
         elif translate_words == "gd_en":
-            prompt1 = where_en + " " + is_are + " ____ " + what_en + ": "
+            prompt = where_en + " " + is_are + " ____ " + what_en + ": "
     
     #Solutions ----------------------------------------------------------------
     solutions = []
@@ -825,7 +828,7 @@ def possession_mo(translate_words, sentence, vocab_sample, testvalues = None):
     #Output -------------------------------------------------------------------
     
     ##Return (question, prompt, solutions)
-    return (q, prompt1, solutions)
+    return (q, prompt, solutions)
 
 def where_from(sentence_qa, vocab_sample, testvalues = None):
     #Load vocab --------------------------------------------------
@@ -860,11 +863,11 @@ def where_from(sentence_qa, vocab_sample, testvalues = None):
     
     #Prompts ------------------------------------------------------------------
     if sentence_qa == "full":
-        prompt1 = "Translation: "
+        prompt = "Translation: "
     elif sentence_qa == "blank":
-        prompt1 = "Tha " + pp[person_num]["pronoun_gd"] + " "
+        prompt = "Tha " + pp[person_num]["pronoun_gd"] + " "
     elif sentence_qa == "q_and_a":
-        prompt1 = "[" + vocab_sample[where_num]["english"] + "]: "
+        prompt = "[" + vocab_sample[where_num]["english"] + "]: "
     
     #Solutions ----------------------------------------------------------------
     solutions = []
@@ -882,7 +885,7 @@ def where_from(sentence_qa, vocab_sample, testvalues = None):
     #Output -------------------------------------------------------------------
     
     ##Return (question, prompt, solutions)
-    return (q, prompt1, solutions)
+    return (q, prompt, solutions)
 
 def where_in(sentence_qa, vocab_sample, testvalues = None):
     #Load vocab --------------------------------------------------
@@ -938,11 +941,11 @@ def where_in(sentence_qa, vocab_sample, testvalues = None):
     
     #Prompts ------------------------------------------------------------------
     if sentence_qa == "full":
-        prompt1 = "Translation: "
+        prompt = "Translation: "
     elif sentence_qa == "blank":
-        prompt1 = "Tha " + pp[person_num]["pronoun_gd"] + " "
+        prompt = "Tha " + pp[person_num]["pronoun_gd"] + " "
     elif sentence_qa == "q_and_a":
-        prompt1 = "[" + where_en + "]: "
+        prompt = "[" + where_en + "]: "
         
     solutions = []
     if sentence_qa == "full":
@@ -959,7 +962,7 @@ def where_in(sentence_qa, vocab_sample, testvalues = None):
     #Output -------------------------------------------------------------------
     
     ##Return (question, prompt, solutions)
-    return (q, prompt1, solutions)
+    return (q, prompt, solutions)
 
 def comparisons(translate_words, testvalues = None):
     #Load vocab --------------------------------------------------
@@ -981,7 +984,7 @@ def comparisons(translate_words, testvalues = None):
         q = sentence_gd
         
     #Prompts ------------------------------------------------------------------
-    prompt1 = "Translation: "
+    prompt = "Translation: "
     
     #Solutions ----------------------------------------------------------------
     solutions = []
@@ -993,7 +996,7 @@ def comparisons(translate_words, testvalues = None):
     #Output -------------------------------------------------------------------
     
     ##Return (question, prompt, solutions)
-    return (q, prompt1, solutions)
+    return (q, prompt, solutions)
 
 def comparatives_superlatives(vocab_sample, comp_sup, sentence, translate_words, testvalues = None):
     #Load vocab --------------------------------------------------
@@ -1056,18 +1059,18 @@ def comparatives_superlatives(vocab_sample, comp_sup, sentence, translate_words,
             q = q + "?"
     #Prompts ------------------------------------------------------------------
     if sentence == "full":
-        prompt1 = "Translation: "
+        prompt = "Translation: "
     elif sentence == "blank":
         if translate_words == "en_gd":
             if comp_sup == "comp":
-                prompt1 = "A bheil " + subject_gd + " _____ na " + object_gd + "? : "
+                prompt = "A bheil " + subject_gd + " _____ na " + object_gd + "? : "
             elif comp_sup == "sup":
-                prompt1 = subject_gd.capitalize() + " "
+                prompt = subject_gd.capitalize() + " "
         elif translate_words == "gd_en":
             if comp_sup == "comp":
-                prompt1 = "Is " + is_utility.en_indef_article(subject_en) + " ____ than " + is_utility.en_indef_article(object_en) + "? : "
+                prompt = "Is " + is_utility.en_indef_article(subject_en) + " ____ than " + is_utility.en_indef_article(object_en) + "? : "
             elif comp_sup == "sup":
-                prompt1 = "The ____ " + subject_en + ": "
+                prompt = "The ____ " + subject_en + ": "
     
     #Solutions ----------------------------------------------------------------
     solutions = []
@@ -1092,7 +1095,7 @@ def comparatives_superlatives(vocab_sample, comp_sup, sentence, translate_words,
     #Output -------------------------------------------------------------------
     
     ##Return (question, prompt, solutions)
-    return (q, prompt1, solutions)
+    return (q, prompt, solutions)
 
 def time(translate_numbers, testvalues = None):
     
@@ -1189,9 +1192,9 @@ def time(translate_numbers, testvalues = None):
     #Prompts ------------------------------------------------------------------
     
     if translate_numbers == "dig_gd": #Digits to Gaelic
-        prompt1 = "Tha e "
+        prompt = "Tha e "
     elif translate_numbers == "gd_dig": #Gaelic to digits
-        prompt1 = "Time (digital): "
+        prompt = "Time (digital): "
         
     #Solutions ----------------------------------------------------------------
     
@@ -1226,4 +1229,128 @@ def time(translate_numbers, testvalues = None):
     #Output -------------------------------------------------------------------
     
     ##Return (question, prompt, solutions)
-    return (q, prompt1, solutions)
+    return (q, prompt, solutions)
+
+def which_season(sentence, testvalues = None):
+    #Randomiser ---------------------------------------------------------------
+    if testvalues == None:
+        month_num = rd.randrange(12)
+        use_prep = bool(rd.randrange(2)) #True = sentence with prepositional
+    else:
+        month_num = testvalues["month_num"]
+        use_prep = testvalues["use_prep"]
+        
+    #Parts of sentence --------------------------------------------------------
+    month_en = list_months[month_num]["english"]
+    month_gd = list_months[month_num]["nom_sing"]
+    
+    season = csvr.filter_matches(list_seasons, "english", list_months[month_num]["season_en"])
+    
+    season_en = season[0]["english"]
+    season_gd = season[0]["nom_sing"]
+    
+    #There are two ways to say the prepositional for seasons
+    season_in1 = season[0]["in_gd"]
+    season_in2 = "anns " + is_utility.gd_common_article(season_gd, "sg", "masc", "prep")
+    
+    #Construct sentence -------------------------------------------------------
+    if use_prep == True:
+        sentence_en = f"{month_en} is in {season_en}"
+        sentence_gd = f"Tha {month_gd} {season_in1}"
+    elif use_prep == False:
+        sentence_en = f"It is {season_en}"
+        sentence_gd = f"'S e {season_gd} a th' ann"
+    
+    #Questions ----------------------------------------------------------------
+    q = sentence_en
+    
+    #Prompts ------------------------------------------------------------------
+    if sentence == "full":
+        prompt = "Translation: "
+    elif sentence == "blank":
+        if use_prep == True:
+            prompt = f"Tha {month_gd} "
+        elif use_prep == False:
+            prompt = "'S e ____ a th' ann: "
+    
+    #Solutions ----------------------------------------------------------------
+    if sentence == "full":
+        solutions = [sentence_gd]
+        if use_prep == True:
+            solutions.append(f"Tha {month_gd} {season_in2}")
+    elif sentence == "blank":
+        if use_prep == True:
+            solutions = [season_in1, season_in2]
+        elif use_prep == False:
+            solutions = [season_gd]
+    #Output -------------------------------------------------------------------
+    
+    ##Return (question, main solution, alternative solution, prompt)
+    return (q, prompt, solutions)
+
+def which_month(sentence, testvalues=None):
+    #Randomiser ---------------------------------------------------------------
+    if testvalues == None:
+        holiday_num = rd.randrange(len(list_holidays) + 1)
+        month_num = rd.randrange(12)
+        use_prep = bool(rd.randrange(2))
+        pers_num = rd.randrange(7)
+    else:
+        holiday_num = testvalues["holiday_num"]
+        month_num = testvalues["month_num"]
+        use_prep = testvalues["use_prep"]
+        pers_num = testvalues["pers_num"]
+    
+    #Parts of sentence --------------------------------------------------------
+    
+    if holiday_num < len(list_holidays):
+        holiday_en = list_holidays[holiday_num]["english"]
+        holiday_gd = list_holidays[holiday_num]["nom_sing"]
+        month_en = list_holidays[holiday_num]["month_en"]
+        month_gd = csvr.filter_matches(list_months, "english", month_en)[0]["nom_sing"]
+        month_gender = csvr.filter_matches(list_months, "english", month_en)[0]["gender"]
+    else:
+        whose_en = pp[pers_num]["en_poss"].capitalize()
+        whose_gd = pp[pers_num]["aig"]
+        holiday_en = f"{whose_en} birthday"
+        holiday_gd = f"an co-là breith {whose_gd}"
+        month_en = list_months[month_num]["english"]
+        month_gd = list_months[month_num]["nom_sing"]
+        month_gender = list_months[month_num]["gender"]
+    
+    if use_prep == True:
+        month_prep = is_utility.gd_common_article(month_gd, "sg", month_gender, "prep")
+    
+    #Construct sentence -------------------------------------------------------
+    if use_prep == True:
+        sentence_en = f"{holiday_en} is in {month_en}"
+        sentence_gd = f"Tha {holiday_gd} anns {month_prep}"
+    elif use_prep == False:
+        sentence_en = f"It is {month_en}"
+        sentence_gd = f"'S e {month_gd} a th' ann"
+    
+    #Questions ----------------------------------------------------------------
+    q = sentence_en
+    
+    #Prompts ------------------------------------------------------------------
+    if sentence == "full":
+        prompt = "Translation: "
+    elif sentence == "blank":
+        if use_prep == True:
+            prompt = f"Tha {holiday_gd} anns "
+        elif use_prep == False:
+            prompt = "'S e ____ a th' ann: "
+            
+    #Solutions ----------------------------------------------------------------
+    if sentence == "full":
+        solutions = [sentence_gd]
+    elif sentence == "blank":
+        if use_prep == True:
+            solutions = [month_prep]
+        elif use_prep == False:
+            solutions = [month_gd]
+    
+    #Output -------------------------------------------------------------------
+    
+    ##Return (question, prompt, solutions)
+    return (q, prompt, solutions)

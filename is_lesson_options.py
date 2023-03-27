@@ -96,7 +96,9 @@ required_columns = {"give_get" : ("english", "nom_sing"),
                     "where_in" : ("english", "nom_sing", "gender"),
                     "comparisons" : (),
                     "comparatives_superlatives": ("english", "nom_sing", "gender"),
-                    "time" : ()}
+                    "time" : (),
+                    "which_season" : (),
+                    "which_month" : ()}
 
 async def select_vocab(lesson, options):
     """Select vocabulary file to use in lesson"""

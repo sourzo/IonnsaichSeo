@@ -24,6 +24,7 @@ def get_randomiser_params(lesson, vocab):
         range_vocab = range(len(vocab))
     range_pronouns = range(7)
     range_pronouns_names = range(8)
+    range_boolean = [True, False]
     all_randomiser_params =  {"give_get" : {"subject_num" : range_pronouns_names,
                                             "object_num" : range_pronouns_names,
                                             "gift_num" : range_vocab,
@@ -74,7 +75,14 @@ def get_randomiser_params(lesson, vocab):
                                                              "adj_num" : range(len(qgen.adjectives))},
                               
                               "time" : {"hrs_num" : range(0, 24),
-                                        "mins_num" : range(0, 60, 5)}
+                                        "mins_num" : range(0, 60, 5)},
+                              
+                              "which_season" : {"month_num" : range(12),
+                                                "use_prep" : range_boolean},
+                              "which_month" : {"holiday_num" : range(len(qgen.list_holidays)),
+                                               "month_num" : range(12),
+                                               "use_prep" : range_boolean,
+                                               "pers_num" : range_pronouns}
                               }
     return all_randomiser_params[lesson.__name__]
 
