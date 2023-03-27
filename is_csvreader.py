@@ -21,7 +21,7 @@ def rename_column(vocablist, oldname, newname):
 def filter_matches(vocablist, colname, matchword):
     """Create a new vocab list where values in the 
     specified column match the specified matchword"""
-    return [x for x in vocablist if x[colname] == matchword]
+    return [x for x in vocablist if x[colname].lower() == matchword.lower()]
 
 def filter_rows(vocablist, rowlist):
     """Filter the vocab list by row numbers"""
