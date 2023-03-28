@@ -546,10 +546,8 @@ def verb_tenses(chosen_tense, verb_form, vocab_sample, testvalues = None):
     
     if chosen_tense in ("past", "future"):
         v_root = vocab_sample[verb_num]["root"]
-        print(v_root)
     else:
         v_noun = vocab_sample[verb_num]["verbal_noun"]
-        print(v_noun)
     
     #Construct sentences ------------------------------------------------------
     if chosen_tense in ("past", "future"):
