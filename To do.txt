@@ -23,9 +23,9 @@ Additional modules:
  - number and time
    ... plurals & numbers?
    ... ordinals
-   ... "in" months and seasons
    ... personal numbers
    ... when (this/last month/year, yesterday, d-b yesterday, etc)
+   ... traditional counting system
  - possessive article
    ... prep possessive
  - adjectives
@@ -47,7 +47,7 @@ Additional modules:
    ... weather phrases (different sentence structures)
  - clothes & pp-orm (also body parts: hair/head on you, other body parts at you)
  - prepositions with(out) lenition (ro, cho, glè) 
- - ri: talk with, meet with, etc; le (use with)
+ - ri: talk with, meet with, enjoy, etc; le (use with)
  - dative, genitive?
 
 Vocab:
