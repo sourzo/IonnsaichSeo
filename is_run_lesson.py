@@ -38,6 +38,8 @@ async def run_lesson(lesson):
     vocab_list = await lo.select_vocab(lesson, options)
     if vocab_list == None:
         pass
+    elif vocab_list == "x":
+        return
     elif len(vocab_list) == 1:
         options["vocab_sample"] = vocab_list
     elif len(vocab_list) > 1:
