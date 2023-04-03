@@ -136,11 +136,11 @@ async def select_vocab(lesson, options):
             return "x"
         elif vocab_num == "1":
             places = csvr.read_csv('places_world')
-            places.rename(columns = {"place_en" : "english", "place_gd" : "nom_sing"}, inplace=True)
+            csvr.rename_column(places, "place_gd", "nom_sing")
             return places
         elif vocab_num == "2":
             places = csvr.read_csv('places_scotland')
-            places.rename(columns = {"place_en" : "english", "place_gd" : "nom_sing"}, inplace=True)
+            csvr.rename_column(places, "place_gd", "nom_sing")
             return places
     elif lesson.__name__ == "where_in":
         vocab_num = ""
