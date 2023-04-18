@@ -1383,7 +1383,7 @@ def going_to(chosen_tense, translate_words, vocab_sample, testvalues = None):
                                                   negative = False, 
                                                   question = False) + " " + person_gd
     else:
-        pers_going_gd = is_utility.verbal_noun(vn = "dòl",
+        pers_going_gd = is_utility.verbal_noun(vn = "dol",
                                                person = person_gd,
                                                tense = chosen_tense, 
                                                negative = False, 
