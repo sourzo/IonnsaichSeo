@@ -841,10 +841,10 @@ def where_from(sentence_qa, vocab_sample, testvalues = None):
     
     #Parts of sentence --------------------------------------------------------
     
-    if vocab_sample[where_num]["nom_sing"].lower().startswith(is_utility.def_articles):
+    if vocab_sample[where_num]["place_gd"].lower().startswith(is_utility.def_articles):
         from_gd = "às " + is_utility.prep_def(vocab_sample, where_num)
     else:
-        from_gd = "à " + vocab_sample[where_num]["nom_sing"]
+        from_gd = "à " + vocab_sample[where_num]["place_gd"]
     
     if sentence_qa == "q_and_a":
         who_question = ("thu", "mi", "e", "i", "sibh", "sinn", "iad")
@@ -852,6 +852,7 @@ def where_from(sentence_qa, vocab_sample, testvalues = None):
     #Construct sentence -------------------------------------------------------
     sentence_en = en[person_num]["en_subj"].capitalize() + " " + en[person_num]["be_pres"] + " from " + vocab_sample[where_num]["english"]
     sentence_gd = "Tha " + pp[person_num]["pronoun_gd"] + " " + from_gd
+    sentence_gd_alt = "'S ann " + from_gd + " a tha " + pp[person_num]["pronoun_gd"]
     
     #Questions ----------------------------------------------------------------
     if sentence_qa in ("full", "blank"): #Translate
@@ -870,11 +871,11 @@ def where_from(sentence_qa, vocab_sample, testvalues = None):
     #Solutions ----------------------------------------------------------------
     solutions = []
     if sentence_qa == "full":
-        solutions.append(sentence_gd)
+        solutions.extend((sentence_gd, sentence_gd_alt))
     elif sentence_qa == "blank":
         solutions.append(from_gd)
     elif sentence_qa == "q_and_a":
-        solutions.append(sentence_gd)
+        solutions.extend((sentence_gd, sentence_gd_alt))
         if person_num == 1: #mi -> thu/sibh
             solutions.append("Tha sibh " + from_gd)
         elif person_num == 4: #sibh -> sinn/mi
@@ -1351,4 +1352,429 @@ def which_month(sentence, testvalues=None):
     #Output -------------------------------------------------------------------
     
     ##Return (question, prompt, solutions)
+    return (q, prompt, solutions)
+
+def going_to(chosen_tense, translate_words, vocab_sample, testvalues = None):
+    #Randomiser ---------------------------------------------------------------
+    if testvalues == None:
+        person_num = rd.randrange(7)
+        where_num = rd.randrange(len(vocab_sample))
+    else:
+        person_num = testvalues["person_num"]
+        where_num = testvalues["where_num"]
+        
+    if chosen_tense == "any":
+        chosen_tense = rd.choice(("past","present","future"))
+    
+    #Verbal noun switch
+    if chosen_tense == "past":
+        chosen_tense = rd.choice(("past", "vn_past"))
+    elif chosen_tense == "future":
+        chosen_tense = rd.choice(("future", "vn_future"))
+    
+    #Parts of sentence --------------------------------------------------------
+    person_gd = pp[person_num]["pronoun_gd"]
+    person_en = pp[person_num]["en_subj"]
+    
+    ## "Going" in Gaelic
+    if chosen_tense in ("past", "future"):
+        pers_going_gd = is_utility.transform_verb("rach",
+                                                  tense = chosen_tense, 
+                                                  negative = False, 
+                                                  question = False) + " " + person_gd
+    else:
+        pers_going_gd = is_utility.verbal_noun(vn = "dòl",
+                                               person = person_gd,
+                                               tense = chosen_tense, 
+                                               negative = False, 
+                                               question = False)
+    ## "Going" in English
+    if chosen_tense == "past":
+        going_en = "went"
+    elif chosen_tense == "future":
+        going_en = "will go"
+    elif chosen_tense == "vn_future":
+        going_en = "will be going"
+    elif chosen_tense == "vn_past":
+        going_en = csvr.filter_matches(en, "en_subj", person_en)[0]["be_past"] + " going"
+    elif chosen_tense == "present":
+        going_en = csvr.filter_matches(en, "en_subj", person_en)[0]["be_pres"] + " going"
+    
+    ## Place
+    place_en = vocab_sample[where_num]["english"]
+    place_gd = vocab_sample[where_num]["place_gd"]
+    
+    ##lenite and add "do" form
+    if place_gd.lower().startswith(is_utility.def_articles) == False:
+        place_gd = is_utility.lenite(place_gd)
+        if place_gd[0].lower() in is_utility.vowels or place_gd[:2].lower() == "fh":
+            to_place_gd = "a dh'" + place_gd
+        else:
+            to_place_gd = "a " + place_gd
+    else:
+        art, sep, place = is_utility.extract_firstword(place_gd)
+        if art == "na":
+            to_place_gd = "dha na " + is_utility.lenite(place)
+        elif place[:2] == "t-":
+            to_place_gd = "dhan t-" + is_utility.lenite(place[2:])
+        else:
+            to_place_gd = "dhan " + is_utility.lenite(place)
+            
+    
+    #Construct sentence -------------------------------------------------------
+    sentence_en = person_en.capitalize() + " " + going_en + " to " + place_en
+    sentence_gd = pers_going_gd.capitalize() + " " + to_place_gd
+    #Questions ----------------------------------------------------------------
+    if translate_words == "en_gd":
+        q = sentence_en
+    elif translate_words == "gd_en":
+        q = sentence_gd
+
+    #Prompts ------------------------------------------------------------------
+    prompt = "Translation: "
+
+    #Solutions ----------------------------------------------------------------
+    solutions = []
+    if translate_words == "en_gd":
+        solutions.append(sentence_gd)
+    elif translate_words == "gd_en":
+        solutions.append(sentence_en)
+
+    #Output -------------------------------------------------------------------
+    
+    ##Return (question, prompt, solutions)
+    return (q, prompt, solutions)
+
+def coming_from(chosen_tense, translate_words, vocab_sample, testvalues = None):
+    #Randomiser ---------------------------------------------------------------
+    if testvalues == None:
+        person_num = rd.randrange(7)
+        where_num = rd.randrange(len(vocab_sample))
+    else:
+        person_num = testvalues["person_num"]
+        where_num = testvalues["where_num"]
+        
+    if chosen_tense == "any":
+        chosen_tense = rd.choice(("past","present","future"))
+    
+    #Verbal noun switch
+    if chosen_tense == "past":
+        chosen_tense = rd.choice(("past", "vn_past"))
+    elif chosen_tense == "future":
+        chosen_tense = rd.choice(("future", "vn_future"))
+    
+    #Parts of sentence --------------------------------------------------------
+    person_gd = pp[person_num]["pronoun_gd"]
+    person_en = pp[person_num]["en_subj"]
+    
+    ## "Coming" in Gaelic
+    if chosen_tense in ("past", "future"):
+        pers_coming_gd = is_utility.transform_verb("thig",
+                                                   tense = chosen_tense, 
+                                                   negative = False, 
+                                                   question = False) + " " + person_gd
+    else:
+        pers_coming_gd = is_utility.verbal_noun(vn = "tighinn",
+                                                person = person_gd,
+                                                tense = chosen_tense, 
+                                                negative = False, 
+                                                question = False)
+    ## "Coming" in English
+    if chosen_tense == "past":
+        coming_en = "came"
+    elif chosen_tense == "future":
+        coming_en = "will come"
+    elif chosen_tense == "vn_future":
+        coming_en = "will be coming"
+    elif chosen_tense == "vn_past":
+        coming_en = csvr.filter_matches(en, "en_subj", person_en)[0]["be_past"] + " coming"
+    elif chosen_tense == "present":
+        coming_en = csvr.filter_matches(en, "en_subj", person_en)[0]["be_pres"] + " coming"
+    
+    ## Place
+    place_en = vocab_sample[where_num]["english"]
+    place_gd = vocab_sample[where_num]["place_gd"]
+    
+    ##lenite and add "do" form
+    if place_gd.lower().startswith(is_utility.def_articles) == False:
+        place_gd = is_utility.lenite(place_gd)
+        if place_gd[0].lower() in is_utility.vowels or place_gd[:2].lower() == "fh":
+            from_place_gd = "a dh'" + place_gd
+        else:
+            from_place_gd = "a " + place_gd
+    else:
+        art, sep, place = is_utility.extract_firstword(place_gd)
+        if art == "na":
+            from_place_gd = "dha na " + is_utility.lenite(place)
+        elif place[:2] == "t-":
+            from_place_gd = "dhan t-" + is_utility.lenite(place[2:])
+        else:
+            from_place_gd = "dhan " + is_utility.lenite(place, extras = ("d","t"))
+            #note the final n of dhan prevents lenition of d, t
+            
+    
+    #Construct sentence -------------------------------------------------------
+    sentence_en = person_en.capitalize() + " " + coming_en + " from " + place_en
+    sentence_gd = pers_coming_gd.capitalize() + " " + from_place_gd
+    #Questions ----------------------------------------------------------------
+    if translate_words == "en_gd":
+        q = sentence_en
+    elif translate_words == "gd_en":
+        q = sentence_gd
+
+    #Prompts ------------------------------------------------------------------
+    prompt = "Translation: "
+
+    #Solutions ----------------------------------------------------------------
+    solutions = []
+    if translate_words == "en_gd":
+        solutions.append(sentence_gd)
+    elif translate_words == "gd_en":
+        solutions.append(sentence_en)
+
+    #Output -------------------------------------------------------------------
+    
+    ##Return (question, prompt, solutions)
+    return (q, prompt, solutions)
+
+def give_to(chosen_tense, prep_object, translate_words, sentence, vocab_sample, testvalues = None):
+    #Load vocab --------------------------------------------------
+    
+    #Randomiser ---------------------------------------------------------------
+    if testvalues == None:
+        subject_num = rd.randrange(7)
+        object_num = rd.randrange(7)
+        gift_num = rd.randrange(len(vocab_sample))
+        article_switch = bool(rd.randrange(2))
+    else:
+        subject_num = testvalues["subject_num"]
+        object_num = testvalues["object_num"]
+        gift_num = testvalues["gift_num"]
+        article_switch = testvalues["article_switch"]
+        
+    if chosen_tense == "any":
+        chosen_tense = rd.choice(("past", "present", "future"))
+    
+    if prep_object == "nouns":
+        names_sample = rd.sample(names, 7)
+        professions_sample = rd.sample(professions, 7)
+    
+    #Parts of sentence --------------------------------------------------------
+    
+    #subject: pronouns (subject_en, subject_gd)
+    if prep_object == "pronouns":
+        subject_en = pp[subject_num]["en_subj"]
+        subject_gd = pp[subject_num]["pronoun_gd"]
+    #subject: names
+    elif prep_object == "nouns":
+        if article_switch == True:
+            subject_en = "The " + professions_sample[subject_num]["english"]
+            subject_gd = is_utility.gd_common_article(professions_sample[subject_num]["nom_sing"], 
+                                                      "sg", "masc", "nom")
+        else:
+            subject_en = names_sample[subject_num]["english"]
+            subject_gd = names_sample[subject_num]["nom_sing"]
+        
+    #Subject and verb: giving to
+    if chosen_tense == "present":
+        verb_subj_gd = is_utility.verbal_noun("toirt", subject_gd, chosen_tense, negative=False, question=False).capitalize()
+        if prep_object == "pronouns":
+            verb_subj_en = subject_en.capitalize() + " " + en[subject_num]["be_pres"] + " giving"
+        elif prep_object == "nouns":
+            verb_subj_en = subject_en.capitalize() + " is giving"
+    elif chosen_tense == "past":
+        verb_subj_gd = is_utility.transform_verb("thig", chosen_tense, negative=False, question=False).capitalize() + " " + subject_gd
+        verb_subj_en = subject_en.capitalize() + " gave"
+    elif chosen_tense == "future":
+        verb_subj_gd = is_utility.transform_verb("thig", chosen_tense, negative=False, question=False).capitalize() + " " + subject_gd
+        verb_subj_en = subject_en.capitalize() + " will give"
+        
+        
+    #the item that's being given
+    gift_en = is_utility.en_indef_article(vocab_sample[gift_num]["english"])
+    gift_gd = vocab_sample[gift_num]["nom_sing"]
+        
+        
+    #object: pronouns (subject_en, subject_gd)
+    if prep_object == "pronouns":
+        object_en = pp[object_num]["en_obj"]
+        object_gd = pp[object_num]["do"]
+    #object: names
+    elif prep_object == "nouns":
+        if article_switch == True:
+            object_en = "the " + professions_sample[object_num]["english"]
+            object_gd = professions_sample[object_num]["nom_sing"]
+            if object_gd[0] == "s" and object_gd[1] in is_utility.vowels.union(set("lrn")):
+                object_gd = "dhan t-" + object_gd
+            else:
+                object_gd = "dhan " + is_utility.lenite(object_gd, extras = ("d","t"))
+                #note the final n of dhan prevents lenition of d, t
+        else:
+            object_en = names_sample[object_num]["english"]
+            object_gd = is_utility.lenite(names_sample[object_num]["nom_sing"])
+            if object_gd[0] in is_utility.vowels or object_gd[:2] == "fh":
+                object_gd = "do dh'" + object_gd
+            else:
+                object_gd = "do " + object_gd
+
+       
+    #Construct sentences ------------------------------------------------------
+    
+    #English
+    sentence_en = verb_subj_en + " " + object_en + " " + gift_en
+    sentence_en_alt = verb_subj_en + " " + gift_en + " to " + object_en
+    #Gaelic
+    sentence_gd = verb_subj_gd + " " + gift_gd + " " + object_gd
+    
+    
+    #Questions ----------------------------------------------------------------
+    if translate_words == "en_gd": #en-gd
+        q = sentence_en
+    elif translate_words == "gd_en":
+        q = sentence_gd
+        
+    #Prompts ------------------------------------------------------------------
+    if sentence == "full":
+        prompt = "Translation: "
+    elif sentence == "blank":
+        if translate_words == "en_gd":
+            prompt = verb_subj_gd + " " + gift_gd + " "
+        elif translate_words == "gd_en":
+            prompt = verb_subj_en + " " + gift_en + " "
+            
+    #Solutions ----------------------------------------------------------------
+    solutions = []
+    if sentence == "full":
+        if translate_words == "en_gd":
+            solutions.append(sentence_gd)
+        elif translate_words == "gd_en":
+            solutions.append(sentence_en)
+            solutions.append(sentence_en_alt)
+            
+    elif sentence == "blank":
+        if translate_words == "en_gd":
+            solutions.append(object_gd)
+        elif translate_words == "gd_en":
+           solutions.append("to " + object_en)
+            
+    #Output -------------------------------------------------------------------
+    
+    #Return (question, prompt, solutions)
+    return (q, prompt, solutions)
+
+def get_from(chosen_tense, prep_object, translate_words, sentence, vocab_sample, testvalues = None):
+    #Load vocab --------------------------------------------------
+    
+    #Randomiser ---------------------------------------------------------------
+    if testvalues == None:
+        subject_num = rd.randrange(7)
+        object_num = rd.randrange(7)
+        gift_num = rd.randrange(len(vocab_sample))
+        article_switch = bool(rd.randrange(2))
+    else:
+        subject_num = testvalues["subject_num"]
+        object_num = testvalues["object_num"]
+        gift_num = testvalues["gift_num"]
+        article_switch = testvalues["article_switch"]
+    if chosen_tense == "any":
+        chosen_tense = rd.choice(("past", "present", "future"))
+       
+    if prep_object == "nouns":
+        names_sample = rd.sample(names, 7)
+        professions_sample = rd.sample(professions, 7)
+ 
+    #Parts of sentence --------------------------------------------------------
+    
+    #subject: pronouns (subject_en, subject_gd)
+    if prep_object == "pronouns":
+        subject_en = pp[subject_num]["en_subj"]
+        subject_gd = pp[subject_num]["pronoun_gd"]
+    #subject: names
+    elif prep_object == "nouns":
+        if article_switch == True:
+            subject_en = "The " + professions_sample[subject_num]["english"]
+            subject_gd = is_utility.gd_common_article(professions_sample[subject_num]["nom_sing"], 
+                                                      "sg", "masc", "nom")
+        else:
+            subject_en = names_sample[subject_num]["english"]
+            subject_gd = names_sample[subject_num]["nom_sing"]
+        
+    #Subject and verb: getting from
+    if chosen_tense == "present":
+        verb_subj_gd = is_utility.verbal_noun("faighinn", subject_gd, chosen_tense, negative=False, question=False).capitalize()
+        if prep_object == "pronouns":
+            verb_subj_en = subject_en.capitalize() + " " + en[subject_num]["be_pres"] + " getting"
+        elif prep_object == "nouns":
+            verb_subj_en = subject_en.capitalize() + " is getting"
+    elif chosen_tense == "past":
+        verb_subj_gd = is_utility.transform_verb("faigh", chosen_tense, negative=False, question=False).capitalize() + " " + subject_gd
+        verb_subj_en = subject_en.capitalize() + " got"
+    elif chosen_tense == "future":
+        verb_subj_gd = is_utility.transform_verb("faigh", chosen_tense, negative=False, question=False).capitalize() + " " + subject_gd
+        verb_subj_en = subject_en.capitalize() + " will get"
+        
+        
+    #the item that's being received
+    gift_en = is_utility.en_indef_article(vocab_sample[gift_num]["english"])
+    gift_gd = vocab_sample[gift_num]["nom_sing"]
+        
+        
+    #object: pronouns (subject_en, subject_gd)
+    if prep_object == "pronouns":
+        object_en = pp[object_num]["en_obj"]
+        object_gd = pp[object_num]["bho"]
+    #object: names
+    elif prep_object == "nouns":
+        if article_switch == True:
+            object_en = "the " + professions_sample[object_num]["english"]
+            object_gd = professions_sample[object_num]["nom_sing"]
+            if object_gd[0] == "s" and object_gd[1] in is_utility.vowels.union(set("lrn")):
+                object_gd = "bhon t-" + object_gd
+            else:
+                object_gd = "bhon " + is_utility.lenite(object_gd, extras = ("d","t"))
+                #note the final n of bhon prevents lenition of d, t
+        else:
+            object_en = names_sample[object_num]["english"]
+            object_gd = "bho " + is_utility.lenite(names_sample[object_num]["nom_sing"])
+       
+    #Construct sentences ------------------------------------------------------
+    
+    #English
+    sentence_en = verb_subj_en + " " + gift_en + " from " + object_en
+    #Gaelic
+    sentence_gd = verb_subj_gd + " " + gift_gd + " " + object_gd
+    
+    
+    #Questions ----------------------------------------------------------------
+    if translate_words == "en_gd": #en-gd
+        q = sentence_en
+    elif translate_words == "gd_en":
+        q = sentence_gd
+        
+    #Prompts ------------------------------------------------------------------
+    if sentence == "full":
+        prompt = "Translation: "
+    elif sentence == "blank":
+        if translate_words == "en_gd":
+            prompt = verb_subj_gd + " " + gift_gd + " "
+        elif translate_words == "gd_en":
+            prompt = verb_subj_en + " " + gift_en + " "
+            
+    #Solutions ----------------------------------------------------------------
+    solutions = []
+    if sentence == "full":
+        if translate_words == "en_gd":
+            solutions.append(sentence_gd)
+        elif translate_words == "gd_en":
+            solutions.append(sentence_en)
+            
+    elif sentence == "blank":
+        if translate_words == "en_gd":
+            solutions.append(object_gd)
+        elif translate_words == "gd_en":
+           solutions.append("from " + object_en)
+            
+    #Output -------------------------------------------------------------------
+    
+    #Return (question, prompt, solutions)
     return (q, prompt, solutions)
