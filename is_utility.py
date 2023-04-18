@@ -70,17 +70,20 @@ def encourage():
 def extract_firstword(string):
     """Separate the first word from a string, using space and '-' as delimiters
     Examples:
-        an t-seòmar -> an + t-seomar
-        an taigh beag -> an + taigh beag
-        taigh-beag -> taigh + beag"""
-    split_st = re.split("-| ", string, maxsplit=1)
-    if len(split_st) == 2:
+        an t-seòmar -> "an" + " t-seomar"
+        an taigh beag -> "an" + " taigh beag"
+        taigh-beag -> "taigh" + " beag"
+    """
+    split_st = re.split("(-| )", string, maxsplit=1)
+    if len(split_st) == 3:
         s1 = split_st[0]
-        s2 = " " + split_st[1]
+        s2 = split_st[1]
+        s3 = split_st[2]
     else:
         s1 = string
         s2 = ""
-    return (s1, s2)
+        s3 = ""
+    return (s1, s2, s3)
 
 def end_width(word):
     """Does a word end with a broad or slender vowel?"""
@@ -129,7 +132,7 @@ def guess_gender(word):
             return guess_gender(remove_articles(w))
     #no definite articles
     else:
-        w1, w2 = extract_firstword(w)
+        w1 = extract_firstword(w)[0]
         if any((w1.endswith(("ag","achd")),
                 w1 == "cailleach")):
             return "fem"
@@ -159,20 +162,20 @@ def slenderise(word):
     I am not sure whether to do some general rules, eg '...each' -> '...ich'...
     ... also do this before lenition because of list matching for exceptions."""
     ##Only slenderise the first word in the string
-    w1, w2 = extract_firstword(word)
+    w1, w2, w3 = extract_firstword(word)
     ##Only slenderise broad words
     if end_width(w1) == "broad":
         ##Some words are exceptions to the usual slenderisation rules
         slender_exceptions = csvr.read_csv('grammar_slenderisation')
-        exceptions = slender_exceptions["broad"]
+        exceptions = csvr.getcol(slender_exceptions, "broad")
         if w1 in exceptions:
-            return slender_exceptions[exceptions.index(w1)]["slender"] + w2
+            return slender_exceptions[exceptions.index(w1)]["slender"] + w2 + w3
         ##Regular slenderisation is adding an i after last vowel
         else:
             bv = [char for char in w1 if char in broad_vowels]
             i_pos = w1.rfind(bv[-1]) + 1
             if i_pos <= len(w1):
-                return word[:i_pos] + "i" + word[i_pos:] + w2
+                return word[:i_pos] + "i" + word[i_pos:] + w2 + w3
             else:
                 return word
     else:
