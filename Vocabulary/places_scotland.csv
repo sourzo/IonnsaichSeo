@@ -11,6 +11,7 @@ the Isle of Skye,An t-Eilean Sgitheanach,masc
 Oban,an t-Òban,masc
 Arran,Arainn,fem
 Orkney,Arcaibh,?
+Govan,Baile a’ Ghobhainn,masc
 Pitlochry,Baile Chloichrigh,masc
 Balmoral,Baile Mhoireal,masc
 Barra,Barraigh,masc
@@ -20,6 +21,8 @@ Vatersay,Bhatarsaigh,masc
 Blair Atholl,Blàr an Athaill,?
 Bowmore,Bogha Mòr,masc
 Braemar,Bràigh Mhàrr,?
+Callanish,Calanais,masc
+Kyle of Lochalsh,Caol Loch Aillse,masc
 Kinlochleven,Ceann Loch Lìobhann,masc
 Killin,Cill Fhinn,fem
 St Andrews,Cill Rìmhinn,fem
@@ -28,7 +31,7 @@ Kilmarnock,Cille Mheàrnaig,fem
 Cumbernauld,Comar nan Allt,masc
 Crieff,Craoibh,?
 Culloden,Cùill Lodair,?
-Jura,Diura,masc
+Jura,Diùra,masc
 Dunblane,Dùn Blathain,masc
 Dumbarton,Dùn Breatann,masc
 Dunkeld,Dùn Chailleann,masc
@@ -48,6 +51,7 @@ Greenock,Grianaig,masc
 Islay,Ìle,fem
 Ayr,Inbhir Àir,masc
 Inveraray,Inbhir Aora,masc
+Nairn,Inbhir Narann,masc
 Inverness,Inbhir Nis,masc
 Dingwall,Inbhir Pheofharain,masc
 the Hebrides,Innse Gall,?
