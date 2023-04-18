@@ -40,7 +40,8 @@ parameter_prompts = {"gender_mode" : "Select practice option",
                      "translate_numbers" : "Select translation direction",
                      "translate_generic" : "Select practice option", 
                      "sentence" : "Select practice option", 
-                     "sentence_qa" : "Select practice option"}
+                     "sentence_qa" : "Select practice option",
+                     "prep_object" : "Use prepositions with pronouns or nouns?"}
 
        
 user_menu_options = {"gender_mode" : [menu_option("adj", "Adjectives"),
@@ -77,11 +78,16 @@ user_menu_options = {"gender_mode" : [menu_option("adj", "Adjectives"),
                      
                      "sentence_qa" : [menu_option("full", "Full sentence"),
                                       menu_option("blank", "Fill in the blank"),
-                                      menu_option("q_and_a", "Question and answer")]
+                                      menu_option("q_and_a", "Question and answer")],
+                     
+                     "prep_object" : [menu_option("pronouns", "Prepositional pronouns"),
+                                      menu_option("nouns", "Prepositions with nouns (names, professions)")]
                      }
 
 #Part 2: Vocabulary selection functions----------------------------------------
 required_columns = {"give_get" : ("english", "nom_sing"),
+                    "give_to" : ("english", "nom_sing"),
+                    "get_from" : ("english", "nom_sing"),
                     "possession_aig" : ("english", "nom_sing"),
                     "gender" : ("english", "nom_sing", "gender"),
                     "numbers" : (),
@@ -98,7 +104,8 @@ required_columns = {"give_get" : ("english", "nom_sing"),
                     "comparatives_superlatives": ("english", "nom_sing", "gender"),
                     "time" : (),
                     "which_season" : (),
-                    "which_month" : ()}
+                    "which_month" : (),
+                    "going_to" : ("english", "place_gd")}
 
 async def select_vocab(lesson, options):
     """Select vocabulary file to use in lesson"""
@@ -123,7 +130,7 @@ async def select_vocab(lesson, options):
             return csvr.read_csv('people_clothes')
         elif vocab_num == "3":
             return csvr.read_csv('people_family')
-    elif lesson.__name__ == "where_from":
+    elif lesson.__name__ in ("where_from", "going_to"):
         vocab_num = ""
         while vocab_num not in ("x","1","2"):
             print()
@@ -135,13 +142,9 @@ async def select_vocab(lesson, options):
         if vocab_num == "x":
             return "x"
         elif vocab_num == "1":
-            places = csvr.read_csv('places_world')
-            csvr.rename_column(places, "place_gd", "nom_sing")
-            return places
+            return csvr.read_csv('places_world')
         elif vocab_num == "2":
-            places = csvr.read_csv('places_scotland')
-            csvr.rename_column(places, "place_gd", "nom_sing")
-            return places
+            return csvr.read_csv('places_scotland')
     elif lesson.__name__ == "where_in":
         vocab_num = ""
         while vocab_num not in ("x","1","2","3","4"):

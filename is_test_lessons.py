@@ -79,10 +79,26 @@ def get_randomiser_params(lesson, vocab):
                               
                               "which_season" : {"month_num" : range(12),
                                                 "use_prep" : range_boolean},
+                              
                               "which_month" : {"holiday_num" : range(len(qgen.list_holidays)),
                                                "month_num" : range(12),
                                                "use_prep" : range_boolean,
-                                               "pers_num" : range_pronouns}
+                                               "pers_num" : range_pronouns},
+                              
+                              "going_to" : {"person_num" : range_pronouns,
+                                            "where_num" : range_vocab},
+                              
+                              "give_to" : {"subject_num" : range_pronouns,
+                                           "object_num" : range_pronouns,
+                                           "gift_num" : range_vocab,
+                                           "give_get_num" : range(2),
+                                           "article_switch" : range_boolean},
+                              
+                              "get_from" : {"subject_num" : range_pronouns,
+                                            "object_num" : range_pronouns,
+                                            "gift_num" : range_vocab,
+                                            "give_get_num" : range(2),
+                                            "article_switch" : range_boolean}
                               }
     return all_randomiser_params[lesson.__name__]
 
