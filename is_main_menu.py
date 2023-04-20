@@ -67,10 +67,10 @@ all_lessons = [menu_option("learn_nouns",
                            "Adjectives: Comparatives and superlatives", 
                            ["adjectives"]),
                menu_option("where_from",
-                           "Where are they from? [Prepositions]", 
+                           "Where are they from? - using the preposition 'à(s)'", 
                            ["prepositions", "place"]),
                menu_option("where_in",
-                           "Where are they (in)? [Prepositions]", 
+                           "Where are they (in)? - using the preposition 'ann an'", 
                            ["prepositions", "place"])
                ]
 

@@ -21,7 +21,7 @@ vowels = set("aàáeèéiìíoòóuùú")
 broad_vowels = set("aàáoòóuùú")
 slender_vowels = set("eèéiìí")
 labials = set("bmfp")
-never_lenite = tuple(vowels) + ("l","r","n","sm","st","sg","sp")
+never_lenite = tuple(vowels) + ("l","r","n","sm","st","sg","sp", "t-")
 dentals = tuple("dt")
 def_articles = tuple(("an ", "na ", "a' ", "a’ ", "am ", "an t-"))
 

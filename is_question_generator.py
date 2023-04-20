@@ -27,142 +27,6 @@ adj_modifiers = [("", ""),
                  ("really ", "gu math "),
                  ("a bit ", "beagan ")]
 
-def give_get(chosen_tense, translate_words, sentence, vocab_sample, testvalues = None):
-    #Load vocab --------------------------------------------------
-    
-    #Randomiser ---------------------------------------------------------------
-    if testvalues == None:
-        subject_num = rd.randrange(8)
-        object_num = rd.randrange(8)
-        gift_num = rd.randrange(len(vocab_sample))
-        give_get_num = rd.randrange(2) # 0 = give to, 1 = get from
-    else:
-        subject_num = testvalues["subject_num"]
-        object_num = testvalues["object_num"]
-        gift_num = testvalues["gift_num"]
-        give_get_num = testvalues["give_get_num"]
-    if chosen_tense == "any":
-        chosen_tense = rd.choice(("past", "present", "future"))
-    
-    #Parts of sentence --------------------------------------------------------
-    
-    #subject: pronouns (subject_en, subject_gd)
-    if subject_num < 7:
-        subject_en = pp[subject_num]["en_subj"]
-        subject_gd = pp[subject_num]["pronoun_gd"]
-    #subject: names
-    elif subject_num == 7:
-        name = rd.randrange(len(names))
-        subject_en = names[name]["english"]
-        subject_gd = names[name]["nom_sing"]
-        
-    
-    #Subject and verb: giving to
-    if give_get_num == 0:
-        if chosen_tense == "present":
-            verb_subj_gd = is_utility.verbal_noun("toirt", subject_gd, chosen_tense, negative=False, question=False).capitalize()
-            verb_subj_en = subject_en.capitalize() + " " + en[subject_num]["be_pres"] + " giving"
-        elif chosen_tense == "past":
-            verb_subj_gd = is_utility.transform_verb("thig", chosen_tense, negative=False, question=False).capitalize() + " " + subject_gd
-            verb_subj_en = subject_en.capitalize() + " gave"
-        elif chosen_tense == "future":
-            verb_subj_gd = is_utility.transform_verb("thig", chosen_tense, negative=False, question=False).capitalize() + " " + subject_gd
-            verb_subj_en = subject_en.capitalize() + " will give"
-        prep_en = "to"
-        
-    #Subject and verb: getting from
-    elif give_get_num == 1:
-        if chosen_tense == "present":
-            verb_subj_gd = is_utility.verbal_noun("faighinn", subject_gd, chosen_tense, negative=False, question=False).capitalize()
-            verb_subj_en = subject_en.capitalize() + " " + en[subject_num]["be_pres"] + " getting"
-        elif chosen_tense == "past":
-            verb_subj_gd = is_utility.transform_verb("faigh", chosen_tense, negative=False, question=False).capitalize() + " " + subject_gd
-            verb_subj_en = subject_en.capitalize() + " got"
-        elif chosen_tense == "future":
-            verb_subj_gd = is_utility.transform_verb("faigh", chosen_tense, negative=False, question=False).capitalize() + " " + subject_gd
-            verb_subj_en = subject_en.capitalize() + " will get"
-        prep_en = "from"
-        
-        
-    #the item that's being given
-    gift_en = is_utility.en_indef_article(vocab_sample[gift_num]["english"])
-    gift_gd = vocab_sample[gift_num]["nom_sing"]
-        
-        
-    #object: pronouns / names (object_en, object_gd)
-    if object_num < 7:
-        object_en = en[object_num]["en_obj"]
-        #Prep pronouns for do/bho
-        if give_get_num==0:
-            object_gd = pp[object_num]["do"]
-        else:
-            object_gd = pp[object_num]["bho"]
-            
-    #names
-    elif object_num == 7:
-        name = rd.randrange(len(names))
-        object_en = names[name]["english"]
-        lenited_name = is_utility.lenite(names[name]["nom_sing"])
-        if give_get_num==0:
-            if lenited_name[0].lower() in ("a","e","i","o","u","à","è","ì","ò","ù"):
-                object_gd = "do dh'" + lenited_name
-            elif lenited_name[0:2] == "fh":
-                object_gd = "do dh'" + lenited_name
-            else:
-                object_gd = "do " + lenited_name
-        elif give_get_num==1:
-            object_gd = "bho " + lenited_name
-    
-    
-       
-    #Construct sentences ------------------------------------------------------
-    
-    #English
-    if give_get_num == 0:
-        sentence_en = verb_subj_en + " " + object_en + " " + gift_en
-        sentence_en_alt = verb_subj_en + " " + gift_en + " " + prep_en + " " + object_en
-    elif give_get_num == 1:
-       sentence_en = verb_subj_en + " " + gift_en + " " + prep_en + " " + object_en
-    #Gaelic
-    sentence_gd = verb_subj_gd + " " + gift_gd + " " + object_gd
-    
-    
-    #Questions ----------------------------------------------------------------
-    if translate_words == "en_gd": #en-gd
-        q = sentence_en
-    elif translate_words == "gd_en":
-        q = sentence_gd
-        
-    #Prompts ------------------------------------------------------------------
-    if sentence == "full":
-        prompt = "Translation: "
-    elif sentence == "blank":
-        if translate_words == "en_gd":
-            prompt = verb_subj_gd + " " + gift_gd + " "
-        elif translate_words == "gd_en":
-            prompt = verb_subj_en + " " + gift_en + " "
-            
-    #Solutions ----------------------------------------------------------------
-    solutions = []
-    if sentence == "full":
-        if translate_words == "en_gd":
-            solutions.append(sentence_gd)
-        elif translate_words == "gd_en":
-            solutions.append(sentence_en)
-            if give_get_num == 0:
-                solutions.append(sentence_en_alt)
-            
-    elif sentence == "blank":
-        if translate_words == "en_gd":
-            solutions.append(object_gd)
-        elif translate_words == "gd_en":
-           solutions.append(prep_en + " " + object_en)
-            
-    #Output -------------------------------------------------------------------
-    
-    #Return (question, prompt, solutions)
-    return (q, prompt, solutions)
-
 def possession_aig(translate_words, sentence, vocab_sample, testvalues = None):
     
     #Load vocab --------------------------------------------------
@@ -842,7 +706,8 @@ def where_from(sentence_qa, vocab_sample, testvalues = None):
     #Parts of sentence --------------------------------------------------------
     
     if vocab_sample[where_num]["place_gd"].lower().startswith(is_utility.def_articles):
-        from_gd = "às " + is_utility.prep_def(vocab_sample, where_num)
+        from_gd = "às " + is_utility.art_standard(is_utility.remove_articles(vocab_sample[where_num]["place_gd"]))
+        ##NB prepositional case - I decided not to slenderise
     else:
         from_gd = "à " + vocab_sample[where_num]["place_gd"]
     
@@ -897,6 +762,8 @@ def where_in(sentence_qa, vocab_sample, testvalues = None):
     else:
         person_num = testvalues["person_num"]
         where_num = testvalues["where_num"]
+    
+    ##article_switch == 0 if word is indefinite, else ==1 if word has definite article
     if contains_articles == True:
         if vocab_sample[where_num]["nom_sing"].lower().startswith(is_utility.def_articles):
             article_switch = 1
@@ -919,11 +786,12 @@ def where_in(sentence_qa, vocab_sample, testvalues = None):
         where_gd = "ann " + is_utility.anm(vocab_sample[where_num]["nom_sing"])
     ##Definite article
     else:
+        ##NB prepositional case - I decided not to slenderise
+        where_gd = "anns " + is_utility.art_standard(is_utility.remove_articles(vocab_sample[where_num]["nom_sing"]))
         if contains_articles == False:
             where_en = "the " + vocab_sample[where_num]["english"]
         else:
             where_en = vocab_sample[where_num]["english"]
-        where_gd = "anns " + is_utility.prep_def(vocab_sample, where_num)
     
     if sentence_qa == "q_and_a":
         who_question = ("thu", "mi", "e", "i", "sibh", "sinn", "iad")
@@ -1319,6 +1187,7 @@ def which_month(sentence, testvalues=None):
     
     if use_prep == True:
         month_prep = is_utility.gd_common_article(month_gd, "sg", month_gender, "prep")
+        ##NB I decided not to slenderise months
     
     #Construct sentence -------------------------------------------------------
     if use_prep == True:
@@ -1405,18 +1274,19 @@ def going_to(chosen_tense, translate_words, vocab_sample, testvalues = None):
     place_gd = vocab_sample[where_num]["place_gd"]
     
     ##lenite and add "do" form
+    ##NB I decided not to slenderise place-names
     if place_gd.lower().startswith(is_utility.def_articles) == False:
         place_gd = is_utility.lenite(place_gd)
-        if place_gd[0].lower() in is_utility.vowels or place_gd[:2].lower() == "fh":
+        if place_gd.lower().startswith(tuple(is_utility.vowels) + tuple("fh")):
             to_place_gd = "a dh'" + place_gd
         else:
             to_place_gd = "a " + place_gd
     else:
         art, sep, place = is_utility.extract_firstword(place_gd)
         if art == "na":
-            to_place_gd = "dha na " + is_utility.lenite(place)
+            to_place_gd = "dha na " + place #dha doesn't lenite
         elif place[:2] == "t-":
-            to_place_gd = "dhan t-" + is_utility.lenite(place[2:])
+            to_place_gd = "dhan t-" + place[2:]
         else:
             to_place_gd = "dhan " + is_utility.lenite(place)
             
