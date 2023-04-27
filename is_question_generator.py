@@ -415,10 +415,13 @@ def verb_tenses(chosen_tense, verb_form, vocab_sample, testvalues = None):
     
     #Construct sentences ------------------------------------------------------
     if chosen_tense in ("past", "future"):
-        sentence_gd = is_utility.transform_verb(v_root,
-                                                tense = chosen_tense, 
-                                                negative = n_p, 
-                                                question = q_s) + " " + person_gd
+        verb_gd = is_utility.transform_verb(v_root,
+                                            tense = chosen_tense, 
+                                            negative = n_p, 
+                                            question = q_s)
+        if person_gd == "thu" and any((chosen_tense == "future" and verb_gd.endswith("idh") and verb_gd != "bidh", 
+                                       verb_gd in ("faca","cuala","chuala"))):
+            person_gd = "tu"
     else:
         sentence_gd = is_utility.verbal_noun(vn = v_noun,
                                              person = person_gd,
