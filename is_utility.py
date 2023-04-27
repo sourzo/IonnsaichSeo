@@ -186,11 +186,19 @@ def shorten(word):
     if word.endswith(("il","in","ir")):
         consonants = [char for char in word if char not in vowels]
         cut_pos = word.rfind(consonants[-2]) + 1
-        return word[:cut_pos] + word[-1]
+        shorter_word = word[:cut_pos] + word[-1]
+        if len([char for char in shorter_word if char in vowels]) == 0:
+            return word
+        else:
+            return shorter_word
     elif word.endswith(("inn")):
         consonants = [char for char in word if char not in vowels]
         cut_pos = word.rfind(consonants[-3]) + 1
-        return word[:cut_pos] + "n"
+        shorter_word = word[:cut_pos] + "n"
+        if len([char for char in shorter_word if char in vowels]) == 0:
+            return word
+        else:
+            return shorter_word
     else:
         return word
 
