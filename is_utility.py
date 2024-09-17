@@ -533,9 +533,9 @@ def en_verb(vocab_sample, item, pronoun, tense, negative, question):
             return csvr.filter_matches(en, "en_subj", pronoun)[0]["be_past"] + neg + pronoun + " " +  vocab_sample[item]["en_vn"]
         else:
             if negative == True:
-                start = "Will "
-            else:
                 start = "Won't "
+            else:
+                start = "Will "
             if tense == "future":
                 return start + pronoun + " " + vocab_sample[item]["english"]
             elif tense == "vn_future":
